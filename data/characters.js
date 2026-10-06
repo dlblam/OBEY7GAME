@@ -1,5 +1,18 @@
 const CHARACTER_POOL = [
 
+  {
+    id: "VIP",
+    name: "Tên nhân vật VIP",
+    title: "Supreme Being",
+    rarity: "VIP",
+    element: "Astral/Void",
+    power: 99999,
+    mediaType: "image",
+    mediaExt: "png",
+    mediaUrl: "LINK_ẢNH",
+    lore: "..."
+  },
+
   // ═══════════════════════════════════════
   // SSS — 6 tấm
   // ═══════════════════════════════════════

@@ -167,6 +167,14 @@
     .animate-float {
       animation:float 4s ease-in-out infinite;
     }
+    .rarity-vip {
+      border: 2px solid #fff;
+      box-shadow:
+        0 0 10px #fff,
+        0 0 25px #ffd700,
+        0 0 50px #ff00ff,
+        0 0 80px #00ffff;
+    }
   </style>
 </head>
 
@@ -1017,6 +1025,7 @@ const STORAGE_REDEEMED = "obey7_gacha_redeemed_codes_v1";
 const GIFT_CODES = {
 
   "LAMBAODANG": 100,
+  "LAMDEPTRAI": 100,
 
 };
 
@@ -1038,7 +1047,8 @@ let currentFilter = "ALL";
 ========================================================= */
 
 const RARITY_RATES = {
-  SSS: 1,
+  VIP: 0.1,
+  SSS: 0.9,
   SS: 3,
   S: 6,
   A: 10,
