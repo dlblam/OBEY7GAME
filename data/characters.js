@@ -35,7 +35,7 @@ const CHARACTER_POOL = [
     power: 99999,
     mediaType: "image",
     mediaExt: "png",
-    mediaUrl: "assets/cards/VIP/VIP1.mp4",
+    mediaUrl: "assets/cards/VIP/VIP3.mp4",
     lore: "Kẻ Có Thể Điều Khiển Trọng Lực Bằng Vệ Tinh"
   },
 
