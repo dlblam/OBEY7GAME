@@ -167,13 +167,487 @@
     .animate-float {
       animation:float 4s ease-in-out infinite;
     }
-    .rarity-vip {
-      border: 2px solid #fff;
+    /* =========================================================
+       VIP — OUTER EDGE LIGHT + CRYSTAL OVERLAY
+       Không dùng khung cầu vồng quay.
+       VIP tập trung vào viền ngoài cùng và badge overlay.
+       ========================================================= */
+
+    /* Viền VIP: ánh sáng ngoài cùng nhiều tầng, sang và ổn định */
+    .frame-VIP,
+    .vip-card-shell {
+      position:relative;
+      isolation:isolate;
+      border:1px solid rgba(255,246,205,.98)!important;
+      background:#08090e;
       box-shadow:
-        0 0 10px #fff,
-        0 0 25px #ffd700,
-        0 0 50px #ff00ff,
-        0 0 80px #00ffff;
+        0 0 0 1px rgba(255,255,255,.20),
+        0 0 5px rgba(255,255,255,.96),
+        0 0 12px rgba(255,235,160,.92),
+        0 0 24px rgba(255,205,75,.72),
+        0 0 44px rgba(255,184,55,.42),
+        0 0 72px rgba(255,220,125,.22),
+        inset 0 0 18px rgba(255,255,255,.08),
+        inset 0 0 34px rgba(255,210,90,.06);
+      transform-style:preserve-3d;
+      transition:transform .18s ease,filter .35s ease,box-shadow .35s ease;
+      animation:vip-aura-edge 4.6s ease-in-out infinite;
+    }
+
+    /* Lớp sáng ngoài viền — đứng yên, không xoay cầu vồng */
+    .frame-VIP::before,
+    .vip-card-shell::before {
+      content:'';
+      position:absolute;
+      inset:-2px;
+      border-radius:inherit;
+      pointer-events:none;
+      z-index:31;
+      border:1px solid rgba(255,239,171,.88);
+      box-shadow:
+        0 0 3px rgba(255,255,255,.98),
+        0 0 9px rgba(255,244,190,.92),
+        0 0 18px rgba(255,213,94,.82),
+        0 0 34px rgba(255,192,64,.52),
+        0 0 58px rgba(255,224,145,.22);
+      opacity:.94;
+      animation:vip-edge-breathe 3.8s ease-in-out infinite;
+    }
+
+    /* Tia sáng chạy dọc mép nhưng không tạo vòng cầu vồng */
+    .frame-VIP::after,
+    .vip-card-shell::after {
+      content:'';
+      position:absolute;
+      inset:-1px;
+      border-radius:inherit;
+      pointer-events:none;
+      z-index:32;
+      background:
+        linear-gradient(
+          105deg,
+          transparent 0%,
+          transparent 36%,
+          rgba(255,255,255,0) 43%,
+          rgba(255,255,255,.98) 48%,
+          rgba(255,235,157,.70) 51%,
+          rgba(255,255,255,0) 57%,
+          transparent 64%,
+          transparent 100%
+        );
+      background-size:260% 100%;
+      background-position:220% 0;
+      -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+      -webkit-mask-composite:xor;
+      mask-composite:exclude;
+      padding:1px;
+      mix-blend-mode:screen;
+      animation:vip-edge-sweep 5.2s cubic-bezier(.22,.61,.36,1) infinite;
+    }
+
+    .vip-card-shell:hover {
+      filter:brightness(1.12) saturate(1.08);
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,.30),
+        0 0 7px rgba(255,255,255,1),
+        0 0 16px rgba(255,239,165,1),
+        0 0 30px rgba(255,211,83,.88),
+        0 0 52px rgba(255,193,65,.58),
+        0 0 82px rgba(255,225,145,.30),
+        inset 0 0 25px rgba(255,255,255,.13);
+    }
+
+    /* Ánh sáng kính rất nhẹ trên artwork — không chiếm layout */
+    .vip-card-shell .vip-glass {
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      z-index:20;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 14% 8%,rgba(255,255,255,.24),transparent 11%),
+        radial-gradient(circle at 86% 91%,rgba(255,224,130,.08),transparent 24%),
+        linear-gradient(
+          125deg,
+          rgba(255,255,255,.055),
+          transparent 28%,
+          rgba(255,220,100,.025) 48%,
+          transparent 62%,
+          rgba(255,255,255,.035)
+        );
+      mix-blend-mode:screen;
+    }
+
+    /* Ánh sáng vàng lướt nhẹ TOÀN BỀ MẶT thẻ.
+       Đây là overlay tuyệt đối nên không làm ảnh/video đổi kích thước. */
+    .vip-card-shell .vip-glass::after {
+      content:'';
+      position:absolute;
+      inset:-28%;
+      pointer-events:none;
+      background:
+        linear-gradient(
+          112deg,
+          transparent 28%,
+          rgba(255,244,188,0) 38%,
+          rgba(255,232,126,.08) 43%,
+          rgba(255,248,205,.38) 47%,
+          rgba(255,211,71,.16) 50%,
+          rgba(255,244,174,.04) 54%,
+          transparent 61%
+        );
+      background-size:220% 100%;
+      background-position:220% 0;
+      mix-blend-mode:screen;
+      filter:blur(1px);
+      opacity:0;
+      animation:vip-surface-gold-sweep 7.5s cubic-bezier(.22,.61,.36,1) infinite;
+    }
+
+    /* Hạt sáng cực nhẹ, chỉ tạo cảm giác cao cấp */
+    .vip-sparkles {
+      position:absolute;
+      inset:0;
+      overflow:hidden;
+      pointer-events:none;
+      z-index:22;
+    }
+
+    .vip-sparkles::before,
+    .vip-sparkles::after {
+      content:'✦   ·   ✧       ·   ✦          ·      ✧';
+      position:absolute;
+      width:170%;
+      left:-35%;
+      color:rgba(255,250,220,.68);
+      font-size:10px;
+      letter-spacing:21px;
+      text-shadow:
+        0 0 5px rgba(255,255,255,.95),
+        0 0 12px rgba(255,220,110,.72);
+      animation:vip-stars-premium 9s linear infinite;
+    }
+
+    .vip-sparkles::before {
+      top:12%;
+      transform:rotate(-12deg);
+    }
+
+    .vip-sparkles::after {
+      top:69%;
+      animation-delay:-4.5s;
+      transform:rotate(10deg);
+      opacity:.42;
+    }
+
+    /*
+      Ô VIP pha lê:
+      IMPORTANT — position:absolute!important để badge đè lên ảnh/video,
+      không tham gia flow và không làm media bị co/méo/chừa khoảng trống.
+    */
+    .vip-badge {
+      position:absolute!important;
+      top:.5rem!important;
+      left:.5rem!important;
+      z-index:40!important;
+      isolation:isolate;
+      overflow:hidden;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width:58px;
+      min-height:24px;
+      padding:5px 11px!important;
+      border:1px solid rgba(255,248,202,.98)!important;
+      border-radius:8px!important;
+      color:#fff9dc!important;
+      font-family:Georgia,'Times New Roman',serif!important;
+      font-weight:900!important;
+      font-style:italic;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      line-height:1;
+      background:
+        linear-gradient(
+          145deg,
+          rgba(255,255,255,.42) 0%,
+          rgba(255,239,171,.25) 24%,
+          rgba(74,49,25,.56) 52%,
+          rgba(255,214,88,.18) 76%,
+          rgba(255,255,255,.30) 100%
+        );
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,.18),
+        0 0 5px rgba(255,255,255,.95),
+        0 0 12px rgba(255,226,125,.82),
+        0 0 24px rgba(255,193,55,.48),
+        inset 0 1px 0 rgba(255,255,255,.86),
+        inset 0 -5px 12px rgba(0,0,0,.25);
+      text-shadow:
+        0 0 4px rgba(255,255,255,.98),
+        0 0 9px rgba(255,222,120,.82);
+      animation:vip-badge-pulse 3.2s ease-in-out infinite;
+      backdrop-filter:blur(8px) saturate(1.25);
+      -webkit-backdrop-filter:blur(8px) saturate(1.25);
+      pointer-events:none;
+      box-sizing:border-box;
+    }
+
+    .vip-badge {
+      text-rendering:geometricPrecision;
+      -webkit-font-smoothing:antialiased;
+      font-variant:small-caps;
+      font-feature-settings:"kern","liga","smcp";
+    }
+
+    .vip-badge::before {
+      content:'';
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(
+          105deg,
+          transparent 0%,
+          transparent 31%,
+          rgba(255,255,255,.78) 45%,
+          rgba(255,255,255,.18) 51%,
+          transparent 64%,
+          transparent 100%
+        );
+      background-size:240% 100%;
+      animation:vip-badge-sheen 4.8s ease-in-out infinite;
+      pointer-events:none;
+      z-index:0;
+    }
+
+    .vip-badge::after {
+      content:'';
+      position:absolute;
+      inset:2px;
+      border:1px solid rgba(255,248,205,.30);
+      border-radius:6px;
+      box-shadow:
+        inset 0 0 8px rgba(255,230,120,.20),
+        0 0 5px rgba(255,255,255,.12);
+      pointer-events:none;
+      z-index:1;
+    }
+
+    .vip-mini-panel {
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,.05),
+        0 0 12px rgba(255,210,70,.16),
+        inset 0 0 14px rgba(255,210,70,.06);
+      background:
+        linear-gradient(135deg,rgba(255,255,255,.06),transparent 35%,rgba(255,210,70,.055)),
+        rgba(2,3,8,.82)!important;
+    }
+
+    .vip-label {
+      background:linear-gradient(
+        90deg,
+        #fff 0%,
+        #ffe99b 22%,
+        #fff 42%,
+        #a8f7ff 63%,
+        #fff 78%,
+        #ffe99b 100%
+      );
+      background-size:240% auto;
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent!important;
+      animation:vip-text-premium 3.8s linear infinite;
+      filter:drop-shadow(0 0 4px rgba(255,220,100,.65));
+    }
+
+    .vip-reveal {
+      animation:vip-reveal-premium 1.05s cubic-bezier(.16,1,.3,1) both;
+    }
+
+    .vip-reveal-backdrop {
+      position:fixed;
+      inset:0;
+      z-index:80;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at center,
+          rgba(255,255,255,.25) 0%,
+          rgba(255,225,120,.12) 18%,
+          rgba(255,0,170,.055) 40%,
+          rgba(0,238,255,.035) 52%,
+          transparent 72%);
+      animation:vip-flash-premium 1.2s ease-out forwards;
+    }
+
+    @keyframes vip-aura-premium {
+      0%,100% {
+        filter:brightness(1) saturate(1);
+        box-shadow:
+          0 0 0 1px rgba(255,255,255,.22),
+          0 0 5px rgba(255,255,255,.95),
+          0 0 16px rgba(255,236,150,.82),
+          0 0 34px rgba(255,190,45,.55),
+          0 0 58px rgba(255,55,190,.34),
+          0 0 86px rgba(0,225,255,.24),
+          inset 0 0 20px rgba(255,255,255,.10);
+      }
+      50% {
+        filter:brightness(1.10) saturate(1.13);
+        box-shadow:
+          0 0 0 1px rgba(255,255,255,.30),
+          0 0 8px rgba(255,255,255,1),
+          0 0 22px rgba(255,240,170,.95),
+          0 0 46px rgba(255,195,50,.72),
+          0 0 76px rgba(255,55,190,.46),
+          0 0 108px rgba(0,238,255,.32),
+          inset 0 0 30px rgba(255,255,255,.14);
+      }
+    }
+
+    @keyframes vip-surface-gold-sweep {
+      0%,18% {
+        background-position:220% 0;
+        opacity:0;
+      }
+      28% {
+        opacity:.18;
+      }
+      42% {
+        opacity:.52;
+      }
+      55% {
+        background-position:55% 0;
+        opacity:.72;
+      }
+      67% {
+        background-position:-35% 0;
+        opacity:.16;
+      }
+      76%,100% {
+        background-position:-35% 0;
+        opacity:0;
+      }
+    }
+
+    @keyframes vip-aura-edge {
+      0%,100% {
+        filter:brightness(1) saturate(1);
+        box-shadow:
+          0 0 0 1px rgba(255,255,255,.20),
+          0 0 5px rgba(255,255,255,.96),
+          0 0 12px rgba(255,235,160,.92),
+          0 0 24px rgba(255,205,75,.72),
+          0 0 44px rgba(255,184,55,.42),
+          0 0 72px rgba(255,220,125,.22),
+          inset 0 0 18px rgba(255,255,255,.08);
+      }
+      50% {
+        filter:brightness(1.08) saturate(1.04);
+        box-shadow:
+          0 0 0 1px rgba(255,255,255,.30),
+          0 0 7px rgba(255,255,255,1),
+          0 0 17px rgba(255,241,174,1),
+          0 0 32px rgba(255,213,91,.86),
+          0 0 55px rgba(255,192,65,.55),
+          0 0 88px rgba(255,225,145,.28),
+          inset 0 0 23px rgba(255,255,255,.12);
+      }
+    }
+
+    @keyframes vip-edge-breathe {
+      0%,100% { opacity:.72; filter:brightness(1); }
+      50% { opacity:1; filter:brightness(1.22); }
+    }
+
+    @keyframes vip-edge-sweep {
+      0%,18% { background-position:220% 0; opacity:0; }
+      35% { opacity:.55; }
+      48% { background-position:55% 0; opacity:.95; }
+      61%,100% { background-position:-40% 0; opacity:0; }
+    }
+
+    @keyframes vip-sheen-premium {
+      0%,18% { background-position:220% 0; opacity:0; }
+      34% { opacity:.55; }
+      48% { background-position:55% 0; opacity:.78; }
+      62%,100% { background-position:-40% 0; opacity:0; }
+    }
+
+    @keyframes vip-stars-premium {
+      from { transform:translate3d(-8%,0,0) rotate(-13deg); opacity:0; }
+      12% { opacity:.72; }
+      68% { opacity:.58; }
+      to { transform:translate3d(8%,-18%,0) rotate(-13deg); opacity:0; }
+    }
+
+    @keyframes vip-badge-pulse {
+      0%,100% {
+        filter:brightness(1) saturate(1);
+        transform:translateZ(0);
+      }
+      50% {
+        filter:brightness(1.13) saturate(1.10);
+        transform:translateZ(1px);
+      }
+    }
+
+    @keyframes vip-badge-sheen {
+      0%,20% { background-position:220% 0; opacity:0; }
+      42% { opacity:.85; }
+      58% { background-position:-35% 0; opacity:.42; }
+      70%,100% { background-position:-35% 0; opacity:0; }
+    }
+
+    @keyframes vip-text-premium {
+      to { background-position:240% center; }
+    }
+
+    @keyframes vip-reveal-premium {
+      0% {
+        opacity:0;
+        transform:perspective(1100px) rotateY(90deg) rotateZ(-2deg) scale(.72);
+        filter:brightness(3.2) blur(5px);
+      }
+      38% {
+        opacity:1;
+        transform:perspective(1100px) rotateY(-8deg) scale(1.045);
+        filter:brightness(1.75) blur(0);
+      }
+      72% {
+        transform:perspective(1100px) rotateY(2deg) scale(1.012);
+        filter:brightness(1.10);
+      }
+      100% {
+        transform:perspective(1100px) rotateY(0) scale(1);
+        filter:brightness(1);
+      }
+    }
+
+    @keyframes vip-flash-premium {
+      0% { opacity:0; }
+      12% { opacity:1; }
+      100% { opacity:0; }
+    }
+
+    @media (prefers-reduced-motion:reduce) {
+      .frame-VIP,
+      .vip-card-shell,
+      .frame-VIP::before,
+      .vip-card-shell::before,
+      .frame-VIP::after,
+      .vip-card-shell::after,
+      .vip-card-shell .vip-glass::after,
+      .vip-sparkles::before,
+      .vip-sparkles::after,
+      .vip-badge,
+      .vip-badge::before,
+      .vip-label,
+      .vip-reveal {
+        animation:none!important;
+      }
     }
   </style>
 </head>
@@ -311,50 +785,11 @@
       </p>
 
 
-      <div class="mt-5 grid grid-cols-4 sm:grid-cols-7 gap-1.5 text-center text-xs">
-
-        <div class="bg-slate-950/80 border border-slate-800 rounded p-1.5">
-          <span class="text-slate-400 block text-[10px]">D</span>
-          <span class="font-bold text-slate-400">40%</span>
-        </div>
-
-        <div class="bg-slate-950/80 border border-slate-800 rounded p-1.5">
-          <span class="text-slate-500 block text-[10px]">C</span>
-          <span class="font-bold text-slate-500">25%</span>
-        </div>
-
-        <div class="bg-slate-950/80 border border-slate-800 rounded p-1.5">
-          <span class="text-indigo-400 block text-[10px]">B</span>
-          <span class="font-bold text-indigo-400">15%</span>
-        </div>
-
-        <div class="bg-slate-950/80 border border-slate-800 rounded p-1.5">
-          <span class="text-emerald-400 block text-[10px]">A</span>
-          <span class="font-bold text-emerald-400">10%</span>
-        </div>
-
-        <div class="bg-slate-950/80 border border-slate-800 rounded p-1.5">
-          <span class="text-blue-400 block text-[10px]">S</span>
-          <span class="font-bold text-blue-400">6%</span>
-        </div>
-
-        <div class="bg-slate-950/80 border border-slate-800 rounded p-1.5">
-          <span class="text-purple-400 block text-[10px]">SS</span>
-          <span class="font-bold text-purple-400">3%</span>
-        </div>
-
-        <div class="bg-slate-950/80 border border-pink-900/50 rounded p-1.5 col-span-4 sm:col-span-1 bg-pink-950/20">
-
-          <span class="text-pink-400 block text-[10px]">
-            SSS
-          </span>
-
-          <span class="font-bold text-pink-400">
-            1%
-          </span>
-
-        </div>
-
+      <div class="mt-5 grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs">
+        <div class="bg-slate-950/80 border border-slate-800 rounded-lg p-2"><span class="text-slate-400 block text-[10px]">D → A</span><span class="font-semibold text-slate-300">Cấp thường</span></div>
+        <div class="bg-slate-950/80 border border-blue-500/20 rounded-lg p-2"><span class="text-blue-400 block text-[10px]">S → SS</span><span class="font-semibold text-blue-200">Cấp hiếm</span></div>
+        <div class="bg-slate-950/80 border border-pink-500/20 rounded-lg p-2"><span class="text-pink-400 block text-[10px]">SSS</span><span class="font-semibold text-pink-200">Cấp tối thượng</span></div>
+        <div class="vip-mini-panel bg-slate-950/80 border border-amber-300/40 rounded-lg p-2 relative overflow-hidden"><span class="vip-label block text-[10px] font-black">VIP</span><span class="font-cinzel font-black text-white">Đặc biệt</span></div>
       </div>
 
     </div>
@@ -786,6 +1221,14 @@
 
 
       <button
+        onclick="filterCollection('VIP')"
+        id="filter-btn-VIP"
+        class="px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-900 border border-amber-300/50 text-amber-300 hover:bg-slate-800 relative overflow-hidden"
+      >
+        <i class="fa-solid fa-crown mr-1"></i>VIP
+      </button>
+
+      <button
         onclick="filterCollection('SSS')"
         id="filter-btn-SSS"
         class="px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-900 border border-pink-500/40 text-pink-400 hover:bg-slate-800"
@@ -1025,7 +1468,6 @@ const STORAGE_REDEEMED = "obey7_gacha_redeemed_codes_v1";
 const GIFT_CODES = {
 
   "LAMBAODANG": 100,
-  "LAMDEPTRAI": 100,
 
 };
 
@@ -1659,6 +2101,8 @@ function performPull(amount) {
 
   }
 
+  if(batch.some(isVIP) && amount>1) showToast("✦ Bạn vừa nhận được một thẻ VIP! ✦","success");
+
 
   /*
     Kiểm tra số thẻ mới nhận được.
@@ -1694,6 +2138,7 @@ function getBadgeClass(rarity) {
 
   const m = {
 
+   VIP: "vip-badge",
    SSS: "bg-pink-500 text-white border-2 border-pink-300 shadow-[0_0_15px_rgba(236,72,153,0.9)] font-black animate-pulse",
     SS:  "bg-purple-600 text-white border-2 border-purple-300 shadow-[0_0_12px_rgba(139,92,246,0.8)] font-bold",
     S:   "bg-blue-600 text-white border border-blue-300 shadow-[0_0_8px_rgba(59,130,246,0.6)] font-bold",
@@ -1711,6 +2156,44 @@ function getBadgeClass(rarity) {
 
 
 /* =========================================================
+   VIP CARD ENGINE
+========================================================= */
+function isVIP(char){ return !!char && String(char.rarity).toUpperCase()==="VIP"; }
+function vipCardEnhance(el,char){
+  if(!el||!isVIP(char)) return;
+  el.classList.add("vip-card-shell");
+
+  /* VIP chỉ nâng cấp khung/ánh sáng, tuyệt đối không chèn chữ lên artwork. */
+  if(!el.querySelector(".vip-glass")){
+    const x=document.createElement("div");
+    x.className="vip-glass";
+    el.appendChild(x);
+  }
+
+  if(!el.querySelector(".vip-sparkles")){
+    const x=document.createElement("div");
+    x.className="vip-sparkles";
+    el.appendChild(x);
+  }
+
+  const move=e=>{
+    const r=el.getBoundingClientRect();
+    const x=(e.clientX-r.left)/r.width-.5;
+    const y=(e.clientY-r.top)/r.height-.5;
+    el.style.transform=`perspective(900px) rotateX(${(-y*7).toFixed(2)}deg) rotateY(${(x*9).toFixed(2)}deg)`;
+  };
+
+  const leave=()=>{
+    el.style.transform="perspective(900px) rotateX(0deg) rotateY(0deg)";
+  };
+
+  el.addEventListener("pointermove",move);
+  el.addEventListener("pointerleave",leave);
+}
+function createVIPReveal(){const old=document.querySelector(".vip-reveal-backdrop");if(old)old.remove();const x=document.createElement("div");x.className="vip-reveal-backdrop";document.body.appendChild(x);setTimeout(()=>x.remove(),1200)}
+function triggerVIPReveal(char,target){if(!isVIP(char))return;createVIPReveal();if(target){target.classList.remove("vip-reveal");void target.offsetWidth;target.classList.add("vip-reveal")}showToast("✦ THẺ VIP ĐÃ ĐƯỢC TRIỆU HỒI ✦","success")}
+
+/* =========================================================
    MEDIA RENDER
    Hỗ trợ IMAGE / GIF / VIDEO
 ========================================================= */
@@ -1720,7 +2203,27 @@ function renderMedia(
   cls = "w-full h-full object-cover"
 ) {
 
-  if (char.mediaType === "video") {
+  const type = String(char?.mediaType || "").toLowerCase().trim();
+  const ext = String(char?.mediaExt || "").toLowerCase().replace(/^\./, "").trim();
+  const url = String(char?.mediaUrl || "");
+  const urlExt = (url.split("?")[0].split("#")[0].split(".").pop() || "").toLowerCase();
+
+  /*
+    Hỗ trợ video theo cả 3 cách:
+    - mediaType: "video"
+    - mediaType: "mp4" / "webm" / ...
+    - mediaExt: "mp4" / "webm" / ...
+    - URL có đuôi video
+    => Không phụ thuộc riêng vào mediaType.
+  */
+  const videoExts = new Set(["mp4","webm","ogg","ogv","mov","m4v"]);
+  const isVideo =
+    type === "video" ||
+    videoExts.has(type) ||
+    videoExts.has(ext) ||
+    videoExts.has(urlExt);
+
+  if (isVideo) {
 
     return `
       <video
@@ -1729,19 +2232,20 @@ function renderMedia(
         loop
         muted
         playsinline
+        preload="metadata"
         class="${cls}"
       ></video>
     `;
 
   }
 
-
   return `
     <img
       src="${char.mediaUrl}"
-      alt="${char.name}"
+      alt="${char.name || ""}"
       class="${cls}"
-      onerror="this.src='https://placehold.co/400x600/1e293b/cbd5e1?text=${encodeURIComponent(char.name)}'"
+      draggable="false"
+      onerror="this.src='https://placehold.co/400x600/1e293b/cbd5e1?text=${encodeURIComponent(char.name || "Character")}'"
     />
   `;
 
@@ -1803,6 +2307,10 @@ function displaySingle(char) {
     frame.classList.remove("sss-particles");
 
   }
+
+  frame.classList.remove("vip-card-shell","vip-reveal");
+  frame.querySelectorAll(".vip-glass,.vip-sparkles,.vip-seal").forEach(x=>x.remove());
+  if(isVIP(char)){ vipCardEnhance(frame,char); triggerVIPReveal(char,frame); }
 
 
   const rb =
@@ -1978,8 +2486,10 @@ function displayMulti(batch) {
 
 
     grid.appendChild(el);
+    if(isVIP(char)) vipCardEnhance(el,char);
 
   });
+  if(batch.some(isVIP)) createVIPReveal();
 
 }
 
@@ -2012,6 +2522,7 @@ function filterCollection(rarity) {
 
   [
     "ALL",
+    "VIP",
     "SSS",
     "SS",
     "S",
@@ -2173,6 +2684,7 @@ function renderCollection() {
 
 
     grid.appendChild(el);
+    if(isVIP(char)) vipCardEnhance(el,char);
 
   });
 
@@ -2265,9 +2777,10 @@ function openModal(char) {
 
   inner.innerHTML = `
 
-    <div class="relative w-full aspect-[3/4] rounded-xl overflow-hidden frame-${char.rarity} bg-slate-950 flex items-center justify-center">
+    <div class="relative w-full aspect-[3/4] rounded-xl overflow-hidden frame-${char.rarity} ${isVIP(char) ? "vip-card-shell" : ""} bg-slate-950 flex items-center justify-center">
 
       ${renderMedia(char)}
+      ${isVIP(char) ? `<div class="vip-glass"></div><div class="vip-sparkles"></div>` : ""}
 
       <div class="absolute top-3 left-3 px-3 py-1 rounded text-xs font-bold font-cinzel ${getBadgeClass(char.rarity)}">
         HẠNG ${char.rarity}
@@ -2342,6 +2855,8 @@ function openModal(char) {
 
   `;
 
+
+  if(isVIP(char)){ const vipVisual=inner.querySelector(".vip-card-shell"); vipCardEnhance(vipVisual,char); }
 
   modal.classList.remove("hidden");
 

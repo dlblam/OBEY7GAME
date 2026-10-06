@@ -2,15 +2,41 @@ const CHARACTER_POOL = [
 
   {
     id: "VIP",
-    name: "Tên nhân vật VIP",
-    title: "Supreme Being",
+    name: "BLACK",
+    title: "OBEY 7",
     rarity: "VIP",
     element: "Astral/Void",
     power: 99999,
     mediaType: "image",
     mediaExt: "png",
-    mediaUrl: "LINK_ẢNH",
-    lore: "..."
+    mediaUrl: "assets/cards/VIP/VIP1.mp4",
+    lore: "Con Trai Của Quỷ Vương"
+  },
+
+  {
+    id: "VIP",
+    name: "Ayame",
+    title: "Phượng Cửu Thiên",
+    rarity: "VIP",
+    element: "Astral/Void",
+    power: 99999,
+    mediaType: "image",
+    mediaExt: "png",
+    mediaUrl: "assets/cards/VIP/VIP2.mp4",
+    lore: "Kĩ năng tối thượng của Phượng Hoàng Tái Sinh"
+  },
+
+  {
+    id: "VIP",
+    name: "Clever",
+    title: "Song Sát",
+    rarity: "VIP",
+    element: "Astral/Void",
+    power: 99999,
+    mediaType: "image",
+    mediaExt: "png",
+    mediaUrl: "assets/cards/VIP/VIP1.mp4",
+    lore: "Kẻ Có Thể Điều Khiển Trọng Lực Bằng Vệ Tinh"
   },
 
   // ═══════════════════════════════════════
