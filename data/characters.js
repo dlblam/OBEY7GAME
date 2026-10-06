@@ -1,7 +1,7 @@
 const CHARACTER_POOL = [
 
   {
-    id: "VIP",
+    id: "VIP1",
     name: "BLACK",
     title: "OBEY 7",
     rarity: "VIP",
@@ -14,7 +14,7 @@ const CHARACTER_POOL = [
   },
 
   {
-    id: "VIP",
+    id: "VIP2",
     name: "Ayame",
     title: "Phượng Cửu Thiên",
     rarity: "VIP",
@@ -27,7 +27,7 @@ const CHARACTER_POOL = [
   },
 
   {
-    id: "VIP",
+    id: "VIP3",
     name: "Clever",
     title: "Song Sát",
     rarity: "VIP",
