@@ -249,7 +249,7 @@
         10
       </span>
 
-      <span id="daily-limit-label" class="text-slate-500">
+      <span class="text-slate-500">
         /10
       </span>
 
@@ -414,74 +414,6 @@
         </div>
 
       </button>
-
-    </div>
-
-
-    <!-- =====================================================
-         GIFT CODE
-         -----------------------------------------------------
-         Người chơi nhập mã tại đây.
-         Mỗi mã chỉ được nhận 1 lần trên mỗi trình duyệt/máy.
-    ====================================================== -->
-
-    <div class="w-full max-w-xl mt-1">
-
-      <div class="relative overflow-hidden rounded-2xl border border-amber-500/30 bg-gradient-to-r from-amber-500/10 via-slate-900/90 to-purple-500/10 p-4 shadow-xl">
-
-        <div class="absolute -right-8 -top-8 w-24 h-24 rounded-full bg-amber-500/10 blur-2xl pointer-events-none"></div>
-
-        <div class="relative z-10">
-
-          <div class="flex items-center gap-2 mb-2">
-
-            <div class="w-8 h-8 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center">
-              <i class="fa-solid fa-gift text-amber-400"></i>
-            </div>
-
-            <div>
-              <h3 class="font-cinzel font-bold text-sm text-amber-300">
-                Mã Quà Tặng
-              </h3>
-
-              <p class="text-[10px] text-slate-400">
-                Nhập mã để nhận thêm lượt Gacha miễn phí.
-              </p>
-            </div>
-
-          </div>
-
-
-          <div class="flex flex-col sm:flex-row gap-2">
-
-            <input
-              type="text"
-              id="gift-code-input"
-              maxlength="50"
-              autocomplete="off"
-              spellcheck="false"
-              placeholder="Nhập mã quà tặng..."
-              onkeydown="if(event.key==='Enter') redeemGiftCode()"
-              class="flex-1 min-w-0 px-4 py-3 rounded-xl bg-slate-950/90 border border-slate-700 text-sm text-slate-100 placeholder:text-slate-600 outline-none focus:border-amber-500/70 focus:ring-2 focus:ring-amber-500/10 uppercase"
-            >
-
-            <button
-              onclick="redeemGiftCode()"
-              class="px-5 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-xs transition-all active:scale-95 shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2"
-            >
-              <i class="fa-solid fa-ticket"></i>
-              Nhận Quà
-            </button>
-
-          </div>
-
-          <p class="mt-2 text-[10px] text-slate-500">
-            Liên Hệ Zalo ADMIN 0942468642 Để Nhận Mã Quà Tặng!
-          </p>
-
-        </div>
-
-      </div>
 
     </div>
 
@@ -970,7 +902,7 @@
 <footer class="w-full border-t border-slate-900 bg-slate-950 py-4 text-center text-xs text-slate-500">
 
   <p>
-    OBEY 7 • Random Thẻ Nhân Vật • Daily Limit: 10 lượt + Gift Code
+    OBEY 7 • Random Thẻ Nhân Vật • Daily Limit: 10 lượt
   </p>
 
 </footer>
@@ -991,43 +923,13 @@
 
 const STORAGE_COL = "obey7_gacha_collection_v1";
 const STORAGE_DAILY = "obey7_gacha_daily_v1";
-const STORAGE_GIFT = "obey7_gacha_gift_spins_v1";
-const STORAGE_REDEEMED = "obey7_gacha_redeemed_codes_v1";
-
-
-/* =========================================================
-   TẠO MÃ QUÀ TẶNG
-   ---------------------------------------------------------
-   CỰC DỄ:
-
-   "TÊN_MÃ": SỐ_LƯỢT,
-
-   Ví dụ:
-   "OBEY7-10LUOT": 10,
-   "LAM2007": 20,
-
-   Muốn tạo mã mới chỉ cần thêm 1 dòng vào đây.
-   Mỗi mã chỉ nhận 1 lần trên mỗi máy/trình duyệt.
-
-   LƯU Ý:
-   Đây là web HTML/JS chạy phía trình duyệt nên mã
-   không thể được bảo mật tuyệt đối nếu không có server.
-========================================================= */
-//lambaodang
-const GIFT_CODES = {
-
-  "LAMBAODANG": 100,
-
-};
 
 let userState = {
   collection: [],
   daily: {
     date: new Date().toDateString(),
     count: 10
-  },
-  giftSpins: 0,
-  redeemedCodes: []
+  }
 };
 
 let currentFilter = "ALL";
@@ -1139,34 +1041,6 @@ function loadUserData() {
     }
 
 
-    const g = localStorage.getItem(STORAGE_GIFT);
-
-    if (g) {
-
-      const parsedGiftSpins = Number(g);
-
-      userState.giftSpins =
-        Number.isFinite(parsedGiftSpins) && parsedGiftSpins > 0
-          ? parsedGiftSpins
-          : 0;
-
-    }
-
-
-    const r = localStorage.getItem(STORAGE_REDEEMED);
-
-    if (r) {
-
-      const parsedRedeemed = JSON.parse(r);
-
-      userState.redeemedCodes =
-        Array.isArray(parsedRedeemed)
-          ? parsedRedeemed
-          : [];
-
-    }
-
-
     /*
       Lưu lại collection sau khi đã loại bỏ
       toàn bộ bản sao trùng ID.
@@ -1212,18 +1086,6 @@ function saveUserData() {
       JSON.stringify(userState.daily)
     );
 
-
-    localStorage.setItem(
-      STORAGE_GIFT,
-      String(userState.giftSpins || 0)
-    );
-
-
-    localStorage.setItem(
-      STORAGE_REDEEMED,
-      JSON.stringify(userState.redeemedCodes || [])
-    );
-
   } catch(e) {
 
     console.error("Không thể lưu dữ liệu:", e);
@@ -1263,27 +1125,10 @@ function updateDailyUI() {
 
   checkDailyReset();
 
-  const available =
-    Number(userState.daily.count || 0) +
-    Number(userState.giftSpins || 0);
-
   const el = document.getElementById("daily-count");
 
   if (el) {
-    el.textContent = available;
-  }
-
-
-  const limitLabel =
-    document.getElementById("daily-limit-label");
-
-  if (limitLabel) {
-
-    limitLabel.textContent =
-      userState.giftSpins > 0
-        ? `/10 + ${userState.giftSpins} quà`
-        : "/10";
-
+    el.textContent = userState.daily.count;
   }
 
 }
@@ -1382,98 +1227,6 @@ function rollChar(rarity) {
 
 
 /* =========================================================
-   GIFT CODE - REDEEM
-========================================================= */
-
-function redeemGiftCode() {
-
-  const input =
-    document.getElementById("gift-code-input");
-
-  if (!input) return;
-
-  const code =
-    input.value
-      .trim()
-      .toUpperCase();
-
-  if (!code) {
-
-    showToast(
-      "Vui lòng nhập mã quà tặng.",
-      "error"
-    );
-
-    input.focus();
-
-    return;
-
-  }
-
-
-  if (!Object.prototype.hasOwnProperty.call(GIFT_CODES, code)) {
-
-    showToast(
-      "Mã quà tặng không hợp lệ hoặc không tồn tại.",
-      "error"
-    );
-
-    input.select();
-
-    return;
-
-  }
-
-
-  if (userState.redeemedCodes.includes(code)) {
-
-    showToast(
-      "Mã này đã được sử dụng trên máy này.",
-      "error"
-    );
-
-    input.value = "";
-
-    return;
-
-  }
-
-
-  const spins =
-    Number(GIFT_CODES[code]);
-
-
-  if (!Number.isFinite(spins) || spins <= 0) {
-
-    showToast(
-      "Mã quà tặng đang bị lỗi.",
-      "error"
-    );
-
-    return;
-
-  }
-
-
-  userState.giftSpins += spins;
-
-  userState.redeemedCodes.push(code);
-
-  saveUserData();
-
-  updateDailyUI();
-
-  input.value = "";
-
-  showToast(
-    `Nhận thành công +${spins} lượt Gacha!`,
-    "success"
-  );
-
-}
-
-
-/* =========================================================
    PERFORM PULL
 ========================================================= */
 
@@ -1482,15 +1235,10 @@ function performPull(amount) {
   checkDailyReset();
 
 
-  const availableSpins =
-    Number(userState.daily.count || 0) +
-    Number(userState.giftSpins || 0);
-
-
-  if (availableSpins < amount) {
+  if (userState.daily.count < amount) {
 
     showToast(
-      `Hết lượt! Bạn chỉ còn ${availableSpins} lượt.`,
+      `Hết lượt! Bạn chỉ còn ${userState.daily.count} lượt hôm nay.`,
       "error"
     );
 
@@ -1501,32 +1249,9 @@ function performPull(amount) {
 
   /*
     Trừ lượt gacha.
-    Ưu tiên dùng 10 lượt miễn phí trong ngày trước,
-    sau đó mới dùng lượt quà tặng.
   */
 
-  let remainingToUse = amount;
-
-
-  const dailyUsed =
-    Math.min(
-      userState.daily.count,
-      remainingToUse
-    );
-
-  userState.daily.count -= dailyUsed;
-
-  remainingToUse -= dailyUsed;
-
-
-  if (remainingToUse > 0) {
-
-    userState.giftSpins -= remainingToUse;
-
-  }
-
-
-  saveUserData();
+  userState.daily.count -= amount;
 
   updateDailyUI();
 
