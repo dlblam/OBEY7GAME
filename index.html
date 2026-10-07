@@ -159,61 +159,6 @@
         inset 0 0 12px rgba(236,72,153,.18);
     }
 
-    /* =========================================================
-       SSS — TIA SÁNG TÍM LƯỚT NHẸ
-       Chỉ thêm visual overlay, không thay đổi JS/thuật toán.
-       ========================================================= */
-    .frame-SSS::before {
-      content:'';
-      position:absolute;
-      inset:-34%;
-      pointer-events:none;
-      z-index:17;
-      background:
-        linear-gradient(
-          112deg,
-          transparent 40%,
-          rgba(168,85,247,0) 44%,
-          rgba(168,85,247,.10) 47%,
-          rgba(216,180,254,.42) 49%,
-          rgba(255,255,255,.78) 50%,
-          rgba(192,132,252,.38) 51%,
-          rgba(168,85,247,.08) 54%,
-          transparent 59%
-        );
-      background-size:220% 100%;
-      background-position:220% 0;
-      mix-blend-mode:screen;
-      filter:blur(1.2px);
-      opacity:0;
-      animation:sss-purple-sweep 7.2s cubic-bezier(.22,.61,.36,1) infinite;
-    }
-
-    @keyframes sss-purple-sweep {
-      0%, 18% {
-        background-position:220% 0;
-        opacity:0;
-      }
-      31% {
-        opacity:.16;
-      }
-      45% {
-        opacity:.42;
-      }
-      53% {
-        background-position:52% 0;
-        opacity:.62;
-      }
-      61% {
-        background-position:-38% 0;
-        opacity:.14;
-      }
-      70%, 100% {
-        background-position:-38% 0;
-        opacity:0;
-      }
-    }
-
     /* Chỉ phụ SSS: một đường chỉ mảnh, bo góc theo khung chính */
     .frame-SSS::after {
       content:'';
@@ -777,7 +722,6 @@
     }
 
     @media (prefers-reduced-motion:reduce) {
-      .frame-SSS::before,
       .frame-SSS::after,
       .frame-VIP .vip-glass::before,
       .frame-VIP,
