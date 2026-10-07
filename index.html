@@ -649,7 +649,207 @@
         animation:none!important;
       }
     }
-  </style>
+
+    /* =========================================================
+       OBEY 7 — LEVEL / LUCKY WHEEL / MUSIC
+    ========================================================= */
+
+    .obey7-level-panel {
+      box-shadow:
+        0 0 0 1px rgba(245,158,11,.06),
+        0 0 28px rgba(245,158,11,.08),
+        inset 0 0 22px rgba(245,158,11,.035);
+    }
+
+    .obey7-level-bar {
+      background:
+        linear-gradient(
+          90deg,
+          rgba(245,158,11,.95),
+          rgba(251,191,36,.95),
+          rgba(168,85,247,.95)
+        );
+      box-shadow:0 0 14px rgba(245,158,11,.35);
+      transition:width .45s ease;
+    }
+
+    .music-control {
+      position:fixed;
+      left:18px;
+      bottom:18px;
+      z-index:70;
+      width:44px;
+      height:44px;
+      border-radius:999px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:rgba(15,23,42,.88);
+      border:1px solid rgba(245,158,11,.35);
+      color:#fbbf24;
+      box-shadow:0 8px 30px rgba(0,0,0,.35),0 0 18px rgba(245,158,11,.10);
+      backdrop-filter:blur(10px);
+      -webkit-backdrop-filter:blur(10px);
+      transition:all .2s ease;
+    }
+
+    .music-control:hover {
+      transform:translateY(-2px) scale(1.04);
+      border-color:rgba(245,158,11,.75);
+      box-shadow:0 10px 34px rgba(0,0,0,.42),0 0 24px rgba(245,158,11,.18);
+    }
+
+    .music-control.music-off {
+      color:#94a3b8;
+      border-color:rgba(148,163,184,.25);
+    }
+
+    .lucky-wheel-wrap {
+      position:relative;
+      width:min(78vw,390px);
+      aspect-ratio:1;
+      margin:0 auto;
+    }
+
+    .lucky-wheel-pointer {
+      position:absolute;
+      z-index:10;
+      top:-7px;
+      left:50%;
+      transform:translateX(-50%);
+      width:0;
+      height:0;
+      border-left:14px solid transparent;
+      border-right:14px solid transparent;
+      border-top:28px solid #fbbf24;
+      filter:drop-shadow(0 0 8px rgba(251,191,36,.65));
+    }
+
+    .lucky-wheel {
+      position:absolute;
+      inset:8px;
+      border-radius:50%;
+      border:8px solid #1e293b;
+      background:
+        conic-gradient(
+          #f59e0b 0deg 45deg,
+          #8b5cf6 45deg 90deg,
+          #ec4899 90deg 135deg,
+          #3b82f6 135deg 180deg,
+          #10b981 180deg 225deg,
+          #6366f1 225deg 270deg,
+          #f97316 270deg 315deg,
+          #14b8a6 315deg 360deg
+        );
+      box-shadow:
+        0 0 0 2px rgba(255,255,255,.08),
+        0 0 25px rgba(245,158,11,.22),
+        inset 0 0 30px rgba(0,0,0,.32);
+      transform:rotate(0deg);
+      transition:transform 4.8s cubic-bezier(.12,.72,.18,1);
+      overflow:hidden;
+    }
+
+    .lucky-wheel::after {
+      content:'';
+      position:absolute;
+      inset:0;
+      border-radius:50%;
+      background:radial-gradient(circle at 50% 42%,rgba(255,255,255,.20),transparent 34%,rgba(0,0,0,.18) 100%);
+      pointer-events:none;
+    }
+
+    .wheel-label {
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:82px;
+      margin-left:-41px;
+      margin-top:-12px;
+      text-align:center;
+      color:#fff;
+      font-family:'Cinzel',serif;
+      font-size:12px;
+      font-weight:900;
+      line-height:1;
+      text-shadow:0 2px 5px rgba(0,0,0,.8);
+      transform-origin:41px 12px;
+    }
+
+    .wheel-center {
+      position:absolute;
+      z-index:8;
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      width:76px;
+      height:76px;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:radial-gradient(circle,#fff8dc 0%,#fbbf24 30%,#92400e 72%,#1e293b 100%);
+      border:4px solid #fef3c7;
+      box-shadow:0 0 18px rgba(251,191,36,.7),inset 0 0 18px rgba(255,255,255,.45);
+      color:#1e293b;
+      font-size:22px;
+    }
+
+    .collection-progress-shell {
+      box-shadow:
+        0 0 0 1px rgba(245,158,11,.05),
+        0 0 24px rgba(245,158,11,.05),
+        inset 0 0 20px rgba(255,255,255,.015);
+    }
+
+    @media (max-width:640px) {
+      .music-control {
+        left:12px;
+        bottom:12px;
+      }
+    }
+
+  
+
+/* =========================================================
+   GIFT CARD REVEAL — PREMIUM CHARACTER DETAIL
+========================================================= */
+.gift-reward-overlay{position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(2,6,23,.82);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .25s ease,visibility .25s ease}
+.gift-reward-overlay.show{opacity:1;visibility:visible;pointer-events:auto}
+.gift-reward-box{position:relative;width:min(680px,96vw);max-height:92vh;overflow:auto;background:linear-gradient(145deg,rgba(15,23,42,.98),rgba(8,13,27,.99));border:1px solid rgba(245,158,11,.26);border-radius:26px;box-shadow:0 28px 90px rgba(0,0,0,.65),0 0 0 1px rgba(255,255,255,.025) inset,0 0 55px rgba(245,158,11,.08);transform:translateY(18px) scale(.96);transition:transform .3s cubic-bezier(.2,.8,.2,1);scrollbar-width:thin}
+.gift-reward-overlay.show .gift-reward-box{transform:translateY(0) scale(1)}
+.gift-reward-box:before{content:"";position:absolute;width:280px;height:280px;left:50%;top:30%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(245,158,11,.10),transparent 68%);pointer-events:none}
+.gift-reward-close{position:absolute;z-index:10;top:15px;right:15px;width:34px;height:34px;border-radius:11px;display:flex;align-items:center;justify-content:center;color:#94a3b8;background:rgba(2,6,23,.7);border:1px solid rgba(148,163,184,.18);transition:all .2s ease}
+.gift-reward-close:hover{color:#f8fafc;border-color:rgba(245,158,11,.45);background:rgba(245,158,11,.10)}
+.gift-reward-header{position:relative;z-index:1;text-align:center;padding:30px 55px 14px}
+.gift-reward-kicker{color:#fbbf24;font-size:9px;font-weight:800;letter-spacing:.24em;text-transform:uppercase}
+.gift-reward-title{margin-top:7px;color:#f8fafc;font-family:'Cinzel',serif;font-size:clamp(21px,4vw,29px);font-weight:900;letter-spacing:.02em}
+.gift-reward-message{margin-top:5px;color:#94a3b8;font-size:11px}
+.gift-reward-divider{width:120px;height:1px;margin:13px auto 0;background:linear-gradient(90deg,transparent,rgba(245,158,11,.7),transparent)}
+.gift-reward-card-detail{position:relative;z-index:1;display:grid;grid-template-columns:minmax(210px,270px) minmax(0,1fr);gap:22px;align-items:center;padding:10px 28px 24px}
+.gift-reward-art{position:relative;width:100%;aspect-ratio:3/4;overflow:hidden;border-radius:18px;background:#020617;border:1px solid rgba(245,158,11,.25);box-shadow:0 18px 40px rgba(0,0,0,.45),0 0 30px rgba(245,158,11,.08);animation:gift-card-enter .55s cubic-bezier(.2,.8,.2,1) both}
+.gift-reward-art:after{content:"";position:absolute;inset:-40%;background:linear-gradient(110deg,transparent 40%,rgba(255,255,255,.16) 50%,transparent 60%);transform:translateX(-80%) rotate(12deg);animation:gift-card-shine 1.4s .25s ease-out both;pointer-events:none}
+.gift-reward-art img,.gift-reward-art video{width:100%;height:100%;object-fit:cover}
+.gift-reward-rarity{position:absolute;z-index:2;left:11px;top:11px;padding:5px 8px;border-radius:7px;font-size:9px;font-weight:900;font-family:'Cinzel',serif;background:rgba(2,6,23,.72);color:#fbbf24;border:1px solid rgba(245,158,11,.35);backdrop-filter:blur(6px)}
+.gift-reward-info{min-width:0;animation:gift-info-enter .55s .08s cubic-bezier(.2,.8,.2,1) both}
+.gift-reward-congrats{display:inline-flex;align-items:center;gap:7px;margin-bottom:11px;padding:6px 9px;border-radius:8px;color:#fbbf24;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.18);font-size:8px;font-weight:900;letter-spacing:.12em;text-transform:uppercase}
+.gift-reward-name{color:#f8fafc;font-family:'Cinzel',serif;font-size:clamp(23px,4vw,34px);line-height:1.12;font-weight:900;word-break:break-word}
+.gift-reward-title-small{margin-top:7px;color:#fbbf24;font-size:10px;font-weight:800;letter-spacing:.13em;text-transform:uppercase}
+.gift-reward-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
+.gift-reward-meta-item{padding:9px 10px;border-radius:10px;background:rgba(2,6,23,.62);border:1px solid rgba(148,163,184,.12)}
+.gift-reward-meta-label{display:block;color:#64748b;font-size:8px;text-transform:uppercase;letter-spacing:.08em}
+.gift-reward-meta-value{display:block;margin-top:3px;color:#e2e8f0;font-size:11px;font-weight:800}
+.gift-reward-lore{margin-top:10px;padding:11px 12px;border-radius:11px;background:rgba(2,6,23,.52);border:1px solid rgba(148,163,184,.10);color:#94a3b8;font-size:10px;line-height:1.65;font-style:italic}
+.gift-reward-footer{position:relative;z-index:1;display:flex;justify-content:center;padding:0 28px 26px}
+.gift-reward-claim-btn{min-width:170px;padding:10px 18px;border-radius:10px;border:1px solid rgba(245,158,11,.35);background:linear-gradient(135deg,#f59e0b,#d97706);color:#020617;font-size:10px;font-weight:900;box-shadow:0 10px 25px rgba(245,158,11,.14);transition:all .2s ease}
+.gift-reward-claim-btn:hover{transform:translateY(-1px);box-shadow:0 13px 30px rgba(245,158,11,.22)}
+.gift-reward-spins-note{text-align:center;color:#64748b;font-size:9px;margin:-8px 28px 18px}
+@keyframes gift-card-enter{from{opacity:0;transform:translateY(18px) scale(.96) rotateY(5deg)}to{opacity:1;transform:translateY(0) scale(1) rotateY(0)}}
+@keyframes gift-info-enter{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:translateX(0)}}
+@keyframes gift-card-shine{from{transform:translateX(-80%) rotate(12deg)}to{transform:translateX(80%) rotate(12deg)}}
+@media(max-width:640px){.gift-reward-overlay{padding:10px}.gift-reward-box{width:min(470px,100%);border-radius:20px}.gift-reward-header{padding:24px 42px 10px}.gift-reward-card-detail{grid-template-columns:1fr;gap:15px;padding:8px 18px 18px}.gift-reward-art{width:min(250px,72vw);margin:0 auto}.gift-reward-info{text-align:center}.gift-reward-meta{text-align:left}.gift-reward-lore{text-align:left}.gift-reward-footer{padding:0 18px 20px}}
+
+</style>
 </head>
 
 <body class="min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-slate-950 to-black text-slate-100 flex flex-col justify-between">
@@ -862,6 +1062,59 @@
 
 
     <!-- =====================================================
+         LEVEL / LUCKY WHEEL
+         -----------------------------------------------------
+         Cứ 100 lượt Gacha thật = +1 Level.
+         Mỗi Level mới nhận 1 vé vòng quay may mắn.
+         Vé quay không tính ngược lại vào Level.
+    ====================================================== -->
+
+    <div class="w-full max-w-xl mt-1">
+      <div class="obey7-level-panel relative overflow-hidden rounded-2xl border border-amber-500/25 bg-gradient-to-r from-amber-500/10 via-slate-900/95 to-purple-500/10 p-4">
+        <div class="absolute -right-10 -top-10 w-28 h-28 rounded-full bg-purple-500/10 blur-3xl pointer-events-none"></div>
+
+        <div class="relative z-10">
+          <div class="flex items-center justify-between gap-3">
+            <div class="flex items-center gap-2 min-w-0">
+              <div class="w-9 h-9 rounded-xl bg-amber-500/15 border border-amber-400/30 flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-ranking-star text-amber-300"></i>
+              </div>
+
+              <div class="min-w-0">
+                <div class="flex items-center gap-2">
+                  <span class="font-cinzel font-black text-sm text-amber-300">
+                    LEVEL <span id="player-level">1</span>
+                  </span>
+                  <span class="text-[10px] text-slate-500">
+                    • Tổng lượt: <span id="total-pulls-count" class="text-slate-300 font-bold">0</span>
+                  </span>
+                </div>
+
+                <p id="level-progress-text" class="text-[10px] text-slate-400 mt-0.5">
+                  0 / 100 lượt đến Level tiếp theo
+                </p>
+              </div>
+            </div>
+
+            <button
+              id="btn-open-wheel"
+              onclick="openLuckyWheel()"
+              class="shrink-0 px-3 py-2 rounded-xl bg-purple-500/15 border border-purple-400/30 text-purple-200 text-[10px] font-black hover:bg-purple-500/25 transition-all active:scale-95 flex items-center gap-2"
+            >
+              <i class="fa-solid fa-dharmachakra"></i>
+              <span>Vé <b id="level-ticket-count">0</b></span>
+            </button>
+          </div>
+
+          <div class="mt-3 h-2 rounded-full bg-slate-950/90 border border-slate-800 overflow-hidden">
+            <div id="level-progress-bar" class="obey7-level-bar h-full rounded-full" style="width:0%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- =====================================================
          GIFT CODE
          -----------------------------------------------------
          Người chơi nhập mã tại đây.
@@ -888,7 +1141,7 @@
               </h3>
 
               <p class="text-[10px] text-slate-400">
-                Nhập mã để nhận thêm lượt Gacha miễn phí.
+                Nhập mã để nhận lượt Gacha và/hoặc tặng thẻ trực tiếp vào Túi Thẻ.
               </p>
             </div>
 
@@ -1326,6 +1579,42 @@
   </div>
 
 
+  <!-- =====================================================
+       COLLECTION PROGRESS
+  ====================================================== -->
+  <div class="collection-progress-shell rounded-2xl border border-slate-800 bg-slate-950/70 p-4">
+    <div class="flex items-center justify-between gap-3 mb-2">
+      <div class="flex items-center gap-2">
+        <i class="fa-solid fa-layer-group text-amber-400"></i>
+        <span class="font-cinzel font-bold text-sm text-slate-200">
+          Tiến Trình Sưu Tầm
+        </span>
+      </div>
+
+      <span id="collection-progress-count" class="text-xs font-bold text-amber-300">
+        0 / 0 thẻ
+      </span>
+    </div>
+
+    <div class="h-3 rounded-full bg-slate-900 border border-slate-800 overflow-hidden">
+      <div
+        id="collection-progress-bar"
+        class="h-full rounded-full bg-gradient-to-r from-amber-500 via-purple-500 to-pink-500 transition-all duration-500"
+        style="width:0%"
+      ></div>
+    </div>
+
+    <div class="flex items-center justify-between mt-2 text-[10px]">
+      <span class="text-slate-500">
+        Nhân vật độc nhất đã sưu tầm
+      </span>
+      <span id="collection-progress-percent" class="text-amber-300 font-bold">
+        0%
+      </span>
+    </div>
+  </div>
+
+
   <div
     id="collection-grid"
     class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"
@@ -1391,6 +1680,101 @@
 
 
 <!-- =========================================================
+     LUCKY WHEEL MODAL
+========================================================= -->
+
+<div
+  id="lucky-wheel-modal"
+  class="fixed inset-0 z-[60] bg-black/85 backdrop-blur-md hidden items-center justify-center p-4"
+>
+  <div class="bg-slate-950 border border-amber-500/25 rounded-3xl w-full max-w-lg p-5 md:p-7 shadow-2xl relative overflow-hidden">
+    <div class="absolute -top-24 -right-24 w-56 h-56 rounded-full bg-amber-500/10 blur-3xl pointer-events-none"></div>
+    <div class="absolute -bottom-24 -left-24 w-56 h-56 rounded-full bg-purple-500/10 blur-3xl pointer-events-none"></div>
+
+    <button
+      onclick="closeLuckyWheel()"
+      class="absolute top-4 right-4 z-30 w-9 h-9 rounded-full bg-slate-900/90 border border-slate-700 flex items-center justify-center text-slate-300 hover:text-white hover:bg-slate-800 transition-all"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+
+    <div class="relative z-10 text-center">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/25 text-purple-300 text-[10px] font-black uppercase tracking-widest">
+        <i class="fa-solid fa-clover text-amber-400"></i>
+        Lucky Wheel
+      </div>
+
+      <h3 class="font-cinzel font-black text-xl md:text-2xl text-amber-200 mt-3">
+        Vòng Quay May Mắn
+      </h3>
+
+      <p class="text-xs text-slate-400 mt-1">
+        Dùng 1 vé để nhận ngẫu nhiên <strong class="text-amber-300">1 • 2 • 4 • 8 • 16 • 32 • 64 • 100</strong> lượt Gacha.
+      </p>
+
+      <div class="lucky-wheel-wrap mt-6">
+        <div class="lucky-wheel-pointer"></div>
+
+        <div id="lucky-wheel" class="lucky-wheel">
+          <span class="wheel-label" style="transform:rotate(22.5deg) translateY(-142px)">1</span>
+          <span class="wheel-label" style="transform:rotate(67.5deg) translateY(-142px)">2</span>
+          <span class="wheel-label" style="transform:rotate(112.5deg) translateY(-142px)">4</span>
+          <span class="wheel-label" style="transform:rotate(157.5deg) translateY(-142px)">8</span>
+          <span class="wheel-label" style="transform:rotate(202.5deg) translateY(-142px)">16</span>
+          <span class="wheel-label" style="transform:rotate(247.5deg) translateY(-142px)">32</span>
+          <span class="wheel-label" style="transform:rotate(292.5deg) translateY(-142px)">64</span>
+          <span class="wheel-label" style="transform:rotate(337.5deg) translateY(-142px)">100</span>
+        </div>
+
+        <div class="wheel-center">
+          <i class="fa-solid fa-gift"></i>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-center gap-2 mt-5 text-xs text-slate-400">
+        <i class="fa-solid fa-ticket text-purple-400"></i>
+        Còn <strong id="wheel-ticket-count" class="text-purple-300">0</strong> vé
+      </div>
+
+      <button
+        id="btn-spin-wheel"
+        onclick="spinLuckyWheel()"
+        class="mt-4 w-full px-5 py-3.5 rounded-xl bg-gradient-to-r from-purple-600 via-fuchsia-500 to-amber-500 text-white font-black text-sm shadow-xl shadow-purple-500/20 hover:brightness-110 active:scale-[.98] transition-all"
+      >
+        <i class="fa-solid fa-rotate mr-2"></i>
+        QUAY MAY MẮN
+      </button>
+
+      <p id="wheel-result-text" class="min-h-[20px] mt-3 text-sm font-bold text-amber-300"></p>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- =========================================================
+     GIFT CARD REVEAL — CHARACTER DETAIL
+========================================================= -->
+<div id="gift-reward-overlay" class="gift-reward-overlay" onclick="if(event.target===this) closeGiftReward()">
+  <div class="gift-reward-box" role="dialog" aria-modal="true" aria-labelledby="gift-reward-title">
+    <button class="gift-reward-close" onclick="closeGiftReward()" aria-label="Đóng">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <div class="gift-reward-header">
+      <div class="gift-reward-kicker">OBEY 7 • GIFT CODE</div>
+      <div id="gift-reward-title" class="gift-reward-title">CHÚC MỪNG BẠN!</div>
+      <div id="gift-reward-message" class="gift-reward-message">Bạn vừa nhận được một thẻ nhân vật.</div>
+      <div class="gift-reward-divider"></div>
+    </div>
+    <div id="gift-reward-card-detail" class="gift-reward-card-detail"></div>
+    <div id="gift-reward-spins-note" class="gift-reward-spins-note hidden"></div>
+    <div class="gift-reward-footer">
+      <button class="gift-reward-claim-btn" onclick="closeGiftReward()"><i class="fa-solid fa-check mr-2"></i>Tuyệt vời</button>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================
      TOAST
 ========================================================= -->
 
@@ -1418,10 +1802,21 @@
      FOOTER
 ========================================================= -->
 
+<button
+  id="music-toggle"
+  class="music-control"
+  onclick="toggleMusic(event)"
+  aria-label="Bật hoặc tắt nhạc"
+  title="Bật / Tắt nhạc"
+>
+  <i id="music-toggle-icon" class="fa-solid fa-volume-high"></i>
+</button>
+
+
 <footer class="w-full border-t border-slate-900 bg-slate-950 py-4 text-center text-xs text-slate-500">
 
   <p>
-    OBEY 7 • Random Thẻ Nhân Vật • Daily Limit: 10 lượt + Gift Code
+    OBEY 7 • Random Thẻ Nhân Vật • Daily Limit: 10 lượt + Gift Code • Level & Lucky Wheel
   </p>
 
 </footer>
@@ -1444,6 +1839,8 @@ const STORAGE_COL = "obey7_gacha_collection_v1";
 const STORAGE_DAILY = "obey7_gacha_daily_v1";
 const STORAGE_GIFT = "obey7_gacha_gift_spins_v1";
 const STORAGE_REDEEMED = "obey7_gacha_redeemed_codes_v1";
+const STORAGE_PROGRESS = "obey7_gacha_progress_v1";
+const STORAGE_MUSIC = "obey7_gacha_music_v1";
 
 
 /* =========================================================
@@ -1467,8 +1864,29 @@ const STORAGE_REDEEMED = "obey7_gacha_redeemed_codes_v1";
 //lambaodang
 const GIFT_CODES = {
 
+  // Mã cũ vẫn hoạt động bình thường.
   "LAMBAODANG": 100,
   "LAMDEPTRAI": 100,
+  "VIP2007": { spins: 10, cards: ["VIP1"] },
+  /*
+    MÃ CÓ THỂ TẶNG THẺ TRỰC TIẾP:
+
+    "TENMA": {
+      spins: 10,
+      cards: ["601", "602"]
+    },
+
+    cards[] dùng ID chính xác trong data/characters.js.
+    Có thể chỉ tặng thẻ:
+      { spins: 0, cards: ["601"] }
+
+    Có thể vừa tặng lượt vừa tặng thẻ:
+      { spins: 20, cards: ["601"] }
+  */
+
+  // Ví dụ:
+  // "TANGTHE601": { spins: 0, cards: ["601"] },
+  // "VIP2007": { spins: 10, cards: ["VIP"] },
 
 };
 
@@ -1479,7 +1897,16 @@ let userState = {
     count: 10
   },
   giftSpins: 0,
-  redeemedCodes: []
+  redeemedCodes: [],
+
+  // Level được tính bằng TỔNG SỐ LƯỢT GACHA THẬT đã quay.
+  // 100 lượt = +1 Level.
+  // Vé vòng quay không tính ngược vào Level.
+  progress: {
+    totalPulls: 0,
+    level: 1,
+    tickets: 0
+  }
 };
 
 let currentFilter = "ALL";
@@ -1515,7 +1942,17 @@ window.addEventListener("DOMContentLoaded", () => {
 
   updateBadge();
 
+  syncLevelRewards();
+
+  saveUserData();
+
+  updateLevelUI();
+
+  updateCollectionProgress();
+
   renderCollection();
+
+  initMusic();
 
 });
 
@@ -1620,6 +2057,28 @@ function loadUserData() {
     }
 
 
+    const p = localStorage.getItem(STORAGE_PROGRESS);
+
+    if (p) {
+
+      const parsedProgress = JSON.parse(p);
+
+      if (parsedProgress && typeof parsedProgress === "object") {
+
+        userState.progress.totalPulls =
+          Math.max(0, Number(parsedProgress.totalPulls) || 0);
+
+        userState.progress.level =
+          Math.max(1, Number(parsedProgress.level) || 1);
+
+        userState.progress.tickets =
+          Math.max(0, Number(parsedProgress.tickets) || 0);
+
+      }
+
+    }
+
+
     /*
       Lưu lại collection sau khi đã loại bỏ
       toàn bộ bản sao trùng ID.
@@ -1675,6 +2134,16 @@ function saveUserData() {
     localStorage.setItem(
       STORAGE_REDEEMED,
       JSON.stringify(userState.redeemedCodes || [])
+    );
+
+
+    localStorage.setItem(
+      STORAGE_PROGRESS,
+      JSON.stringify({
+        totalPulls: Math.max(0, Number(userState.progress?.totalPulls) || 0),
+        level: Math.max(1, Number(userState.progress?.level) || 1),
+        tickets: Math.max(0, Number(userState.progress?.tickets) || 0)
+      })
     );
 
   } catch(e) {
@@ -1775,6 +2244,66 @@ function updateBadge() {
     a.textContent = userState.collection.length;
   }
 
+  updateCollectionProgress();
+
+}
+
+
+/* =========================================================
+   COLLECTION PROGRESS
+========================================================= */
+
+function getTotalUniqueCharacters() {
+
+  if (!Array.isArray(CHARACTER_POOL)) {
+    return 0;
+  }
+
+  return new Set(
+    CHARACTER_POOL
+      .filter(c => c && c.id !== undefined && c.id !== null)
+      .map(c => String(c.id))
+  ).size;
+
+}
+
+
+function updateCollectionProgress() {
+
+  const total =
+    getTotalUniqueCharacters();
+
+  const owned =
+    getUniqueCollection(userState.collection).length;
+
+  const percent =
+    total > 0
+      ? Math.min(100, (owned / total) * 100)
+      : 0;
+
+  const count =
+    document.getElementById("collection-progress-count");
+
+  if (count) {
+    count.textContent =
+      `${owned} / ${total} thẻ`;
+  }
+
+  const bar =
+    document.getElementById("collection-progress-bar");
+
+  if (bar) {
+    bar.style.width = `${percent}%`;
+  }
+
+  const percentEl =
+    document.getElementById("collection-progress-percent");
+
+  if (percentEl) {
+    percentEl.textContent =
+      `${percent.toFixed(percent % 1 ? 1 : 0)}%`;
+  }
+
 }
 
 
@@ -1838,6 +2367,80 @@ function rollChar(rarity) {
    GIFT CODE - REDEEM
 ========================================================= */
 
+
+/* =========================================================
+   GIFT REWARD REVEAL
+========================================================= */
+
+function closeGiftReward() {
+  const overlay = document.getElementById("gift-reward-overlay");
+  if (!overlay) return;
+  overlay.classList.remove("show");
+  setTimeout(() => {
+    if (!overlay.classList.contains("show")) overlay.classList.add("hidden");
+  }, 300);
+  document.body.classList.remove("overflow-hidden");
+}
+
+
+function showGiftReward(code, giftCards, addedCards, spins) {
+  const overlay = document.getElementById("gift-reward-overlay");
+  const detail = document.getElementById("gift-reward-card-detail");
+  const message = document.getElementById("gift-reward-message");
+  const spinNote = document.getElementById("gift-reward-spins-note");
+
+  if (!overlay || !detail || !Array.isArray(giftCards) || giftCards.length === 0) return;
+
+  /* Chỉ hiển thị giao diện này khi Gift Code thực sự tặng thẻ. */
+  const char = giftCards[0];
+
+  if (message) {
+    message.textContent = giftCards.length > 1
+      ? `Chúc mừng! Bạn vừa nhận được ${giftCards.length} thẻ nhân vật.`
+      : "Chúc mừng! Bạn vừa nhận được một thẻ nhân vật.";
+  }
+
+  detail.innerHTML = `
+    <div class="gift-reward-art frame-${char.rarity || "D"} ${isVIP(char) ? "vip-card-shell" : ""}">
+      ${renderMedia(char)}
+      ${isVIP(char) ? `<div class="vip-glass"></div><div class="vip-sparkles"></div>` : ""}
+      <span class="gift-reward-rarity">HẠNG ${char.rarity || "CARD"}</span>
+    </div>
+    <div class="gift-reward-info">
+      <div class="gift-reward-congrats"><i class="fa-solid fa-sparkles"></i>THẺ ĐÃ ĐƯỢC NHẬN</div>
+      <div class="gift-reward-name">${char.name || "Unknown"}</div>
+      <div class="gift-reward-title-small">${char.title || char.element || "OBEY 7 CHARACTER"}</div>
+      <div class="gift-reward-meta">
+        <div class="gift-reward-meta-item"><span class="gift-reward-meta-label">Cấp độ</span><span class="gift-reward-meta-value">${char.rarity || "—"}</span></div>
+        <div class="gift-reward-meta-item"><span class="gift-reward-meta-label">Sức mạnh</span><span class="gift-reward-meta-value">${Number(char.power || 0).toLocaleString()}</span></div>
+        <div class="gift-reward-meta-item"><span class="gift-reward-meta-label">Hệ</span><span class="gift-reward-meta-value">${char.element || "—"}</span></div>
+        <div class="gift-reward-meta-item"><span class="gift-reward-meta-label">Mã thẻ</span><span class="gift-reward-meta-value">#${char.id}</span></div>
+      </div>
+      <div class="gift-reward-lore">"${char.lore || "Một nhân vật mới đã gia nhập bộ sưu tập của bạn."}"</div>
+    </div>
+  `;
+
+  if (isVIP(char)) {
+    const vipVisual = detail.querySelector(".vip-card-shell");
+    vipCardEnhance(vipVisual, char);
+  }
+
+  if (spinNote) {
+    if (spins > 0) {
+      spinNote.classList.remove("hidden");
+      spinNote.innerHTML = `Mã <strong class="text-amber-400">${code}</strong> tặng thêm <strong class="text-amber-400">+${spins} lượt Gacha</strong>.`;
+    } else {
+      spinNote.classList.add("hidden");
+      spinNote.textContent = "";
+    }
+  }
+
+  overlay.classList.remove("hidden");
+  requestAnimationFrame(() => requestAnimationFrame(() => overlay.classList.add("show")));
+  document.body.classList.add("overflow-hidden");
+}
+
+
 function redeemGiftCode() {
 
   const input =
@@ -1892,14 +2495,67 @@ function redeemGiftCode() {
   }
 
 
+  /*
+    Hỗ trợ cả 2 kiểu:
+
+    Kiểu cũ:
+      "CODE": 100
+
+    Kiểu mới:
+      "CODE": {
+        spins: 10,
+        cards: ["601", "VIP"]
+      }
+  */
+
+  const rawConfig =
+    GIFT_CODES[code];
+
+  const config =
+    typeof rawConfig === "number"
+      ? {
+          spins: rawConfig,
+          cards: []
+        }
+      : (rawConfig || {});
+
+
   const spins =
-    Number(GIFT_CODES[code]);
+    Math.max(
+      0,
+      Number(config.spins) || 0
+    );
 
 
-  if (!Number.isFinite(spins) || spins <= 0) {
+  const requestedCards =
+    Array.isArray(config.cards)
+      ? config.cards.map(id => String(id))
+      : [];
+
+
+  /*
+    Kiểm tra toàn bộ ID thẻ trước khi nhận.
+    Nếu admin nhập sai ID, mã sẽ KHÔNG bị đánh dấu đã dùng.
+  */
+
+  const giftCards =
+    requestedCards.map(id =>
+      CHARACTER_POOL.find(
+        char => String(char.id) === id
+      )
+    );
+
+
+  const missingIds =
+    requestedCards.filter(
+      (_, index) => !giftCards[index]
+    );
+
+
+  if (missingIds.length) {
 
     showToast(
-      "Mã quà tặng đang bị lỗi.",
+      `Mã quà tặng lỗi: không tìm thấy ID thẻ ${missingIds.join(", ")}.`,
       "error"
     );
 
@@ -1908,22 +2564,116 @@ function redeemGiftCode() {
   }
 
 
+  if (spins <= 0 && giftCards.length === 0) {
+
+    showToast(
+      "Mã quà tặng đang bị lỗi hoặc chưa có phần thưởng.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  let addedCards = 0;
+
+
+  /*
+    Tặng thẻ trực tiếp vào Túi Thẻ.
+
+    Thẻ đã sở hữu vẫn không tạo duplicate,
+    đúng với cơ chế Túi Thẻ hiện tại.
+  */
+
+  giftCards.forEach(base => {
+
+    const alreadyOwned =
+      userState.collection.some(
+        c => String(c.id) === String(base.id)
+      );
+
+    if (!alreadyOwned) {
+
+      userState.collection.unshift({
+        ...base,
+
+        instanceId:
+          "gift_" +
+          Date.now() +
+          "_" +
+          Math.random()
+            .toString(36)
+            .slice(2, 8),
+
+        pulledAt:
+          new Date().toLocaleTimeString(),
+
+        giftGranted: true
+
+      });
+
+      addedCards++;
+
+    }
+
+  });
+
+
   userState.giftSpins += spins;
 
   userState.redeemedCodes.push(code);
+
+  userState.collection =
+    getUniqueCollection(
+      userState.collection
+    );
+
 
   saveUserData();
 
   updateDailyUI();
 
+  updateBadge();
+
+  renderCollection();
+
   input.value = "";
 
+
+  const rewardParts = [];
+
+  if (spins > 0) {
+    rewardParts.push(`+${spins} lượt`);
+  }
+
+  if (giftCards.length > 0) {
+
+    rewardParts.push(
+      `+${addedCards} thẻ trực tiếp`
+    );
+
+    if (addedCards < giftCards.length) {
+      rewardParts.push(
+        `${giftCards.length - addedCards} thẻ đã có sẵn`
+      );
+    }
+
+  }
+
+
   showToast(
-    `Nhận thành công +${spins} lượt Gacha!`,
+    `Nhận thành công: ${rewardParts.join(" • ")}!`,
     "success"
   );
 
+  // Chỉ mở giao diện thẻ khi mã thực sự tặng thẻ.
+  if (giftCards.length > 0) {
+    showGiftReward(code, giftCards, addedCards, spins);
+  }
+
 }
+
 
 
 /* =========================================================
@@ -2077,11 +2827,39 @@ function performPull(amount) {
   );
 
 
+  /*
+    LEVEL:
+    Chỉ số lượt Gacha thật mới được cộng vào đây.
+    Lượt nhận từ vòng quay may mắn sẽ được cộng vào giftSpins
+    nhưng khi đem đi Gacha vẫn được tính là lượt Gacha thật.
+    Chính vòng quay may mắn KHÔNG tự cộng Level.
+  */
+
+  userState.progress.totalPulls += amount;
+
+  const levelUps =
+    syncLevelRewards();
+
+
   saveUserData();
+
+  updateDailyUI();
+
+  updateLevelUI();
 
   updateBadge();
 
   renderCollection();
+
+
+  if (levelUps > 0) {
+
+    showToast(
+      `✦ LEVEL UP! Bạn lên Level ${userState.progress.level} và nhận ${levelUps} vé vòng quay!`,
+      "success"
+    );
+
+  }
 
 
   /*
@@ -2513,8 +3291,432 @@ function backToSingleView() {
 
 
 /* =========================================================
+   LEVEL SYSTEM
+========================================================= */
+
+function syncLevelRewards() {
+
+  if (!userState.progress) {
+
+    userState.progress = {
+      totalPulls: 0,
+      level: 0,
+      tickets: 0
+    };
+
+  }
+
+
+  const totalPulls =
+    Math.max(
+      0,
+      Number(userState.progress.totalPulls) || 0
+    );
+
+
+  // Level bắt đầu từ 0: 0-99 lượt = Level 0, 100-199 = Level 1...
+  const calculatedLevel =
+    Math.floor(totalPulls / 100);
+
+
+  const currentLevel =
+    Math.max(
+      0,
+      Number(userState.progress.level) || 0
+    );
+
+
+  let levelUps = 0;
+
+
+  if (calculatedLevel > currentLevel) {
+
+    levelUps =
+      calculatedLevel - currentLevel;
+
+    userState.progress.tickets += levelUps;
+
+  }
+
+
+  userState.progress.level =
+    calculatedLevel;
+
+
+  userState.progress.tickets =
+    Math.max(
+      0,
+      Number(userState.progress.tickets) || 0
+    );
+
+
+  return levelUps;
+
+}
+
+
+function updateLevelUI() {
+
+  syncLevelRewards();
+
+
+  const totalPulls =
+    Math.max(
+      0,
+      Number(userState.progress.totalPulls) || 0
+    );
+
+
+  const level =
+    Math.max(
+      0,
+      Number(userState.progress.level) || 0
+    );
+
+
+  const tickets =
+    Math.max(
+      0,
+      Number(userState.progress.tickets) || 0
+    );
+
+
+  const progressInLevel =
+    totalPulls % 100;
+
+
+  const percent =
+    progressInLevel;
+
+
+  const levelEl =
+    document.getElementById("player-level");
+
+  if (levelEl) {
+    levelEl.textContent = level;
+  }
+
+
+  const totalEl =
+    document.getElementById("total-pulls-count");
+
+  if (totalEl) {
+    totalEl.textContent =
+      totalPulls.toLocaleString();
+  }
+
+
+  const textEl =
+    document.getElementById("level-progress-text");
+
+  if (textEl) {
+
+    textEl.textContent =
+      progressInLevel === 0
+        ? "0 / 100 lượt đến Level tiếp theo"
+        : `${progressInLevel} / 100 lượt đến Level tiếp theo`;
+
+  }
+
+
+  const bar =
+    document.getElementById("level-progress-bar");
+
+  if (bar) {
+    bar.style.width = `${percent}%`;
+  }
+
+
+  const ticketEl =
+    document.getElementById("level-ticket-count");
+
+  if (ticketEl) {
+    ticketEl.textContent = tickets;
+  }
+
+
+  const wheelTicketEl =
+    document.getElementById("wheel-ticket-count");
+
+  if (wheelTicketEl) {
+    wheelTicketEl.textContent = tickets;
+  }
+
+
+  const wheelButton =
+    document.getElementById("btn-open-wheel");
+
+  if (wheelButton) {
+
+    wheelButton.disabled =
+      tickets <= 0;
+
+    wheelButton.classList.toggle(
+      "opacity-50",
+      tickets <= 0
+    );
+
+    wheelButton.classList.toggle(
+      "cursor-not-allowed",
+      tickets <= 0
+    );
+
+  }
+
+
+  const spinButton =
+    document.getElementById("btn-spin-wheel");
+
+  if (spinButton) {
+
+    spinButton.disabled =
+      tickets <= 0;
+
+    spinButton.classList.toggle(
+      "opacity-50",
+      tickets <= 0
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   LUCKY WHEEL
+========================================================= */
+
+const LUCKY_WHEEL_PRIZES =
+  [1, 2, 4, 8, 16, 32, 64, 100];
+
+let luckyWheelRotation = 0;
+let luckyWheelSpinning = false;
+
+
+function openLuckyWheel() {
+
+  if (
+    !userState.progress ||
+    userState.progress.tickets <= 0
+  ) {
+
+    showToast(
+      "Bạn chưa có vé vòng quay.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  const modal =
+    document.getElementById(
+      "lucky-wheel-modal"
+    );
+
+  if (!modal) return;
+
+
+  updateLevelUI();
+
+  const result =
+    document.getElementById(
+      "wheel-result-text"
+    );
+
+  if (result) {
+    result.textContent = "";
+  }
+
+
+  modal.classList.remove("hidden");
+  modal.classList.add("flex");
+
+}
+
+
+function closeLuckyWheel() {
+
+  if (luckyWheelSpinning) {
+    return;
+  }
+
+
+  const modal =
+    document.getElementById(
+      "lucky-wheel-modal"
+    );
+
+  if (!modal) return;
+
+
+  modal.classList.add("hidden");
+  modal.classList.remove("flex");
+
+}
+
+
+function spinLuckyWheel() {
+
+  if (luckyWheelSpinning) {
+    return;
+  }
+
+
+  if (
+    !userState.progress ||
+    userState.progress.tickets <= 0
+  ) {
+
+    showToast(
+      "Bạn không còn vé vòng quay.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  luckyWheelSpinning = true;
+
+
+  userState.progress.tickets--;
+
+  saveUserData();
+
+  updateLevelUI();
+
+
+  const index =
+    Math.floor(
+      Math.random() * LUCKY_WHEEL_PRIZES.length
+    );
+
+
+  const prize =
+    LUCKY_WHEEL_PRIZES[index];
+
+
+  /*
+    Mỗi ô rộng 45 độ.
+    Căn tâm ô trúng thưởng vào đúng mũi tên ở phía trên.
+  */
+
+  const segmentCenter =
+    index * 45 + 22.5;
+
+
+  const currentNormalized =
+    ((luckyWheelRotation % 360) + 360) % 360;
+
+
+  const delta =
+    (360 - ((currentNormalized + segmentCenter) % 360)) % 360;
+
+
+  const extraTurns =
+    6 + Math.floor(Math.random() * 3);
+
+
+  luckyWheelRotation +=
+    extraTurns * 360 + delta;
+
+
+  const wheel =
+    document.getElementById(
+      "lucky-wheel"
+    );
+
+
+  const result =
+    document.getElementById(
+      "wheel-result-text"
+    );
+
+
+  const button =
+    document.getElementById(
+      "btn-spin-wheel"
+    );
+
+
+  if (button) {
+    button.disabled = true;
+    button.classList.add("opacity-50");
+  }
+
+
+  if (result) {
+    result.textContent =
+      "Đang quay...";
+    result.className =
+      "min-h-[20px] mt-3 text-sm font-bold text-slate-400 animate-pulse";
+  }
+
+
+  if (wheel) {
+
+    wheel.style.transform =
+      `rotate(${luckyWheelRotation}deg)`;
+
+  }
+
+
+  setTimeout(() => {
+
+    userState.giftSpins += prize;
+
+    saveUserData();
+
+    updateDailyUI();
+
+    updateLevelUI();
+
+
+    if (result) {
+
+      result.textContent =
+        `✦ CHÚC MỪNG! +${prize} LƯỢT GACHA ✦`;
+
+      result.className =
+        "min-h-[20px] mt-3 text-sm font-black text-amber-300";
+
+    }
+
+
+    showToast(
+      `Vòng quay may mắn: +${prize} lượt Gacha!`,
+      "success"
+    );
+
+
+    luckyWheelSpinning = false;
+
+    if (button) {
+
+      button.disabled =
+        userState.progress.tickets <= 0;
+
+      button.classList.toggle(
+        "opacity-50",
+        button.disabled
+      );
+
+    }
+
+    updateLevelUI();
+
+  }, 5000);
+
+}
+
+
+/* =========================================================
    COLLECTION FILTER
 ========================================================= */
+
 
 function filterCollection(rarity) {
 
@@ -2890,6 +4092,17 @@ window.onclick = e => {
 
   }
 
+  if (
+    e.target ===
+    document.getElementById(
+      "lucky-wheel-modal"
+    )
+  ) {
+
+    closeLuckyWheel();
+
+  }
+
 };
 
 
@@ -2953,8 +4166,260 @@ function showToast(
 
 
 /* =========================================================
+   BACKGROUND MUSIC
+========================================================= */
+
+const MUSIC_URL =
+  "assets/audio/obey7.mp3";
+
+let obey7Music = null;
+let musicStarted = false;
+
+
+function initMusic() {
+
+  try {
+
+    obey7Music =
+      new Audio(MUSIC_URL);
+
+    obey7Music.loop = true;
+    obey7Music.volume = 0.35;
+    obey7Music.preload = "auto";
+
+
+    const savedMusic =
+      localStorage.getItem(STORAGE_MUSIC);
+
+
+    /*
+      Mặc định bật nhạc.
+      Nếu người chơi từng bấm tắt thì giữ nguyên lựa chọn đó.
+    */
+
+    const enabled =
+      savedMusic !== "off";
+
+
+    updateMusicUI(enabled);
+
+
+    if (enabled) {
+
+      /*
+        Trình duyệt có thể chặn autoplay có tiếng.
+        play() thất bại thì chờ click/pointer/keyboard đầu tiên.
+      */
+
+      startMusic();
+
+
+      const unlockMusic =
+        event => {
+
+          if (
+            event?.target?.closest &&
+            event.target.closest("#music-toggle")
+          ) {
+            return;
+          }
+
+          startMusic();
+
+          document.removeEventListener(
+            "pointerdown",
+            unlockMusic,
+            true
+          );
+
+          document.removeEventListener(
+            "touchstart",
+            unlockMusic,
+            true
+          );
+
+          document.removeEventListener(
+            "keydown",
+            unlockMusic,
+            true
+          );
+
+          document.removeEventListener(
+            "click",
+            unlockMusic,
+            true
+          );
+
+        };
+
+
+      document.addEventListener(
+        "pointerdown",
+        unlockMusic,
+        true
+      );
+
+      document.addEventListener(
+        "touchstart",
+        unlockMusic,
+        true
+      );
+
+      document.addEventListener(
+        "keydown",
+        unlockMusic,
+        true
+      );
+
+      document.addEventListener(
+        "click",
+        unlockMusic,
+        true
+      );
+
+    }
+
+  } catch (error) {
+
+    console.warn(
+      "Không thể khởi tạo nhạc OBEY 7:",
+      error
+    );
+
+  }
+
+}
+
+
+async function startMusic() {
+
+  if (!obey7Music || musicStarted) {
+    return;
+  }
+
+
+  try {
+
+    await obey7Music.play();
+
+    musicStarted = true;
+
+    updateMusicUI(true);
+
+  } catch (error) {
+
+    /*
+      Không báo lỗi cho người chơi.
+      Trình duyệt chỉ đang yêu cầu một thao tác người dùng.
+    */
+
+  }
+
+}
+
+
+function toggleMusic(event) {
+
+  if (event) {
+    event.stopPropagation();
+  }
+
+
+  if (!obey7Music) {
+    initMusic();
+    return;
+  }
+
+
+  if (!obey7Music.paused) {
+
+    obey7Music.pause();
+
+    musicStarted = false;
+
+    localStorage.setItem(
+      STORAGE_MUSIC,
+      "off"
+    );
+
+    updateMusicUI(false);
+
+    return;
+
+  }
+
+
+  localStorage.setItem(
+    STORAGE_MUSIC,
+    "on"
+  );
+
+
+  obey7Music
+    .play()
+    .then(() => {
+
+      musicStarted = true;
+
+      updateMusicUI(true);
+
+    })
+    .catch(() => {
+
+      /*
+        Nếu play vẫn bị chặn, lần click tiếp theo
+        sẽ thử lại.
+      */
+
+      updateMusicUI(false);
+
+    });
+
+}
+
+
+function updateMusicUI(isPlaying) {
+
+  const button =
+    document.getElementById(
+      "music-toggle"
+    );
+
+  const icon =
+    document.getElementById(
+      "music-toggle-icon"
+    );
+
+
+  if (!button || !icon) {
+    return;
+  }
+
+
+  icon.className =
+    isPlaying
+      ? "fa-solid fa-volume-high"
+      : "fa-solid fa-volume-xmark";
+
+
+  button.classList.toggle(
+    "music-off",
+    !isPlaying
+  );
+
+
+  button.title =
+    isPlaying
+      ? "Tắt nhạc"
+      : "Bật nhạc";
+
+}
+
+
+/* =========================================================
    EXPORT COLLECTION
 ========================================================= */
+
 
 function exportCollection() {
 

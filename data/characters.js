@@ -29,7 +29,7 @@ const CHARACTER_POOL = [
   {
     id: "VIP3",
     name: "Clever",
-    title: "Song Sát",
+    title: "Nhị Sát",
     rarity: "VIP",
     element: "Astral/Void",
     power: 99999,
@@ -37,6 +37,45 @@ const CHARACTER_POOL = [
     mediaExt: "png",
     mediaUrl: "assets/cards/VIP/VIP3.mp4",
     lore: "Kẻ Có Thể Điều Khiển Trọng Lực Bằng Vệ Tinh"
+  },
+
+  {
+    id: "VIP4",
+    name: "Kirra",
+    title: "OBEY 2",
+    rarity: "VIP",
+    element: "Astral/Void",
+    power: 99999,
+    mediaType: "image",
+    mediaExt: "png",
+    mediaUrl: "assets/cards/VIP/VIP4.mp4",
+    lore: "Mái Tóc 2 Màu Đặc Trưng"
+  },
+
+  {
+    id: "VIP5",
+    name: "Ngài Server",
+    title: "Thủ Lĩnh Tối Cao AI",
+    rarity: "VIP",
+    element: "Astral/Void",
+    power: 99999,
+    mediaType: "image",
+    mediaExt: "png",
+    mediaUrl: "assets/cards/VIP/VIP5.mp4",
+    lore: "Người Điều Khiển Vũ Khí Hạt Nhân Của Toàn Thế Giới!"
+  },
+
+  {
+    id: "VIP6",
+    name: "Suisen",
+    title: "Đại Tướng",
+    rarity: "VIP",
+    element: "Astral/Void",
+    power: 99999,
+    mediaType: "image",
+    mediaExt: "png",
+    mediaUrl: "assets/cards/VIP/VIP6.mp4",
+    lore: "Kẻ Đánh Cắp Tế Bào Của Mẹ Thiên Nhiên"
   },
 
   // ═══════════════════════════════════════
