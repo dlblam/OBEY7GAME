@@ -145,6 +145,101 @@
       }
     }
 
+    /* SSS PREMIUM FRAME — bo góc ôm sát artwork + chỉ viền phụ tinh tế */
+    .frame-SSS {
+      position:relative;
+      border-width:4px!important;
+      border-style:solid;
+      border-color:#f472b6!important;
+      border-radius:1rem!important;
+      box-shadow:
+        0 0 12px rgba(236,72,153,.55),
+        0 0 28px rgba(168,85,247,.38),
+        inset 0 0 0 1px rgba(255,220,247,.16),
+        inset 0 0 12px rgba(236,72,153,.18);
+    }
+
+    /* =========================================================
+       SSS — TIA SÁNG TÍM LƯỚT NHẸ
+       Chỉ thêm visual overlay, không thay đổi JS/thuật toán.
+       ========================================================= */
+    .frame-SSS::before {
+      content:'';
+      position:absolute;
+      inset:-34%;
+      pointer-events:none;
+      z-index:17;
+      background:
+        linear-gradient(
+          112deg,
+          transparent 40%,
+          rgba(168,85,247,0) 44%,
+          rgba(168,85,247,.10) 47%,
+          rgba(216,180,254,.42) 49%,
+          rgba(255,255,255,.78) 50%,
+          rgba(192,132,252,.38) 51%,
+          rgba(168,85,247,.08) 54%,
+          transparent 59%
+        );
+      background-size:220% 100%;
+      background-position:220% 0;
+      mix-blend-mode:screen;
+      filter:blur(1.2px);
+      opacity:0;
+      animation:sss-purple-sweep 7.2s cubic-bezier(.22,.61,.36,1) infinite;
+    }
+
+    @keyframes sss-purple-sweep {
+      0%, 18% {
+        background-position:220% 0;
+        opacity:0;
+      }
+      31% {
+        opacity:.16;
+      }
+      45% {
+        opacity:.42;
+      }
+      53% {
+        background-position:52% 0;
+        opacity:.62;
+      }
+      61% {
+        background-position:-38% 0;
+        opacity:.14;
+      }
+      70%, 100% {
+        background-position:-38% 0;
+        opacity:0;
+      }
+    }
+
+    /* Chỉ phụ SSS: một đường chỉ mảnh, bo góc theo khung chính */
+    .frame-SSS::after {
+      content:'';
+      position:absolute;
+      inset:7px;
+      pointer-events:none;
+      z-index:18;
+      border:1px solid rgba(250,218,246,.30);
+      border-radius:calc(1rem - 7px)!important;
+      background:
+        radial-gradient(circle at 7% 7%,rgba(255,255,255,.62) 0 1px,transparent 2px),
+        radial-gradient(circle at 93% 7%,rgba(255,255,255,.48) 0 1px,transparent 2px),
+        radial-gradient(circle at 7% 93%,rgba(255,255,255,.42) 0 1px,transparent 2px),
+        radial-gradient(circle at 93% 93%,rgba(255,255,255,.58) 0 1px,transparent 2px);
+      box-shadow:
+        inset 0 0 5px rgba(255,255,255,.045),
+        0 0 7px rgba(236,72,153,.08);
+      opacity:.62;
+      animation:sss-ornament-breathe 5.5s ease-in-out infinite;
+    }
+
+    @keyframes sss-ornament-breathe {
+      0%,100% { opacity:.42; filter:brightness(.96); }
+      50% { opacity:.72; filter:brightness(1.08); }
+    }
+
     .card-hover-effect {
       transition:all .3s cubic-bezier(.4,0,.2,1);
     }
@@ -177,6 +272,7 @@
     .frame-VIP,
     .vip-card-shell {
       position:relative;
+      border-radius:1rem!important;
       isolation:isolate;
       border:1px solid rgba(255,246,205,.98)!important;
       background:#08090e;
@@ -192,6 +288,54 @@
       transform-style:preserve-3d;
       transition:transform .18s ease,filter .35s ease,box-shadow .35s ease;
       animation:vip-aura-edge 4.6s ease-in-out infinite;
+    }
+
+    /* VIP PREMIUM EDGE — bo góc sâu, viền phụ nghệ thuật hơn SSS */
+    .frame-VIP {
+      border-width:4px!important;
+      border-style:solid;
+      border-color:#fff2ad!important;
+      border-radius:1rem!important;
+      box-shadow:
+        0 0 10px rgba(255,255,255,.78),
+        0 0 24px rgba(255,220,105,.62),
+        0 0 48px rgba(255,184,55,.32),
+        inset 0 0 0 1px rgba(255,250,214,.30),
+        inset 0 0 0 2px rgba(255,205,75,.10),
+        inset 0 0 18px rgba(255,225,130,.11);
+    }
+
+    /* Chỉ phụ VIP: hai nét vàng siêu mảnh + cảm giác khắc thủ công */
+    .frame-VIP .vip-glass {
+      border-radius:inherit;
+      box-shadow:
+        inset 0 0 0 7px rgba(255,248,205,.045),
+        inset 0 0 0 8px rgba(255,207,79,.16),
+        inset 0 0 0 9px rgba(255,255,255,.035);
+    }
+
+    .frame-VIP .vip-glass::before {
+      content:'';
+      position:absolute;
+      inset:6px;
+      border:1px solid rgba(255,239,170,.26);
+      border-radius:calc(1rem - 6px)!important;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 5% 12%,rgba(255,255,255,.78) 0 1px,transparent 2px),
+        radial-gradient(circle at 95% 12%,rgba(255,244,185,.66) 0 1px,transparent 2px),
+        radial-gradient(circle at 8% 88%,rgba(255,232,150,.54) 0 1px,transparent 2px),
+        radial-gradient(circle at 92% 88%,rgba(255,255,255,.72) 0 1px,transparent 2px);
+      box-shadow:
+        inset 0 0 5px rgba(255,244,190,.06),
+        0 0 8px rgba(255,210,80,.08);
+      opacity:.62;
+      animation:vip-thread-breathe 5.8s ease-in-out infinite;
+    }
+
+    @keyframes vip-thread-breathe {
+      0%,100% { opacity:.38; filter:brightness(.96); }
+      50% { opacity:.78; filter:brightness(1.12); }
     }
 
     /* Lớp sáng ngoài viền — đứng yên, không xoay cầu vồng */
@@ -633,6 +777,9 @@
     }
 
     @media (prefers-reduced-motion:reduce) {
+      .frame-SSS::before,
+      .frame-SSS::after,
+      .frame-VIP .vip-glass::before,
       .frame-VIP,
       .vip-card-shell,
       .frame-VIP::before,
@@ -848,6 +995,459 @@
 @keyframes gift-info-enter{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:translateX(0)}}
 @keyframes gift-card-shine{from{transform:translateX(-80%) rotate(12deg)}to{transform:translateX(80%) rotate(12deg)}}
 @media(max-width:640px){.gift-reward-overlay{padding:10px}.gift-reward-box{width:min(470px,100%);border-radius:20px}.gift-reward-header{padding:24px 42px 10px}.gift-reward-card-detail{grid-template-columns:1fr;gap:15px;padding:8px 18px 18px}.gift-reward-art{width:min(250px,72vw);margin:0 auto}.gift-reward-info{text-align:center}.gift-reward-meta{text-align:left}.gift-reward-lore{text-align:left}.gift-reward-footer{padding:0 18px 20px}}
+
+
+/* =========================================================
+   GACHA SUMMON REVEAL — CARD DROP / FLIP
+   Chỉ dùng transform/opacity để nhẹ web, không particle nặng.
+========================================================= */
+.gacha-reveal-overlay{
+  position:fixed;
+  inset:0;
+  z-index:95;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+  background:
+    radial-gradient(circle at 50% 35%,rgba(99,102,241,.12),transparent 35%),
+    rgba(2,6,23,.92);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transition:opacity .22s ease,visibility .22s ease;
+}
+.gacha-reveal-overlay.show{
+  opacity:1;
+  visibility:visible;
+  pointer-events:auto;
+}
+.gacha-reveal-panel{
+  width:min(1080px,100%);
+  max-height:94vh;
+  overflow:auto;
+  padding:18px;
+  border-radius:24px;
+  border:1px solid rgba(245,158,11,.22);
+  background:
+    linear-gradient(145deg,rgba(15,23,42,.98),rgba(5,8,18,.99));
+  box-shadow:
+    0 30px 100px rgba(0,0,0,.72),
+    0 0 50px rgba(245,158,11,.07),
+    inset 0 0 0 1px rgba(255,255,255,.025);
+  scrollbar-width:thin;
+}
+.gacha-reveal-head{
+  text-align:center;
+  padding:3px 45px 13px;
+}
+.gacha-reveal-kicker{
+  color:#fbbf24;
+  font-size:9px;
+  font-weight:900;
+  letter-spacing:.24em;
+  text-transform:uppercase;
+}
+.gacha-reveal-title{
+  margin-top:5px;
+  color:#f8fafc;
+  font-family:'Cinzel',serif;
+  font-size:clamp(20px,4vw,29px);
+  font-weight:900;
+}
+.gacha-reveal-hint{
+  margin-top:5px;
+  color:#94a3b8;
+  font-size:10px;
+}
+.gacha-reveal-actions{
+  display:flex;
+  justify-content:center;
+  gap:8px;
+  margin:0 0 14px;
+}
+.gacha-reveal-action{
+  min-width:135px;
+  padding:9px 14px;
+  border-radius:10px;
+  border:1px solid rgba(245,158,11,.30);
+  background:rgba(245,158,11,.09);
+  color:#fbbf24;
+  font-size:10px;
+  font-weight:900;
+  transition:transform .18s ease,background .18s ease,border-color .18s ease;
+}
+.gacha-reveal-action:hover{
+  transform:translateY(-1px);
+  background:rgba(245,158,11,.15);
+  border-color:rgba(245,158,11,.55);
+}
+.gacha-reveal-action:disabled{
+  opacity:.45;
+  cursor:not-allowed;
+  transform:none;
+}
+.gacha-reveal-grid{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:13px;
+  align-items:start;
+  justify-items:center;
+}
+.gacha-reveal-grid.single{
+  grid-template-columns:minmax(220px,310px);
+  justify-content:center;
+}
+.gacha-flip-card{
+  width:100%;
+  max-width:190px;
+  aspect-ratio:3 / 4;
+  height:auto;
+  min-height:0;
+  box-sizing:border-box;
+  perspective:1100px;
+  cursor:pointer;
+  opacity:0;
+  transform:translate3d(0,-90vh,0) rotateZ(-4deg) scale(.86);
+  animation:gacha-card-drop .52s cubic-bezier(.22,.8,.24,1) forwards;
+  will-change:transform,opacity;
+}
+.gacha-reveal-grid.single .gacha-flip-card{
+  max-width:300px;
+}
+.gacha-flip-card.is-flipped{
+  cursor:default;
+}
+.gacha-flip-inner{
+  position:relative;
+  width:100%;
+  height:100%;
+  min-height:0;
+  aspect-ratio:3 / 4;
+  box-sizing:border-box;
+  transform-style:preserve-3d;
+  transition:transform .62s cubic-bezier(.2,.78,.2,1);
+}
+.gacha-flip-card.is-flipped .gacha-flip-inner{
+  transform:rotateY(180deg);
+}
+.gacha-face{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  min-height:0;
+  aspect-ratio:3 / 4;
+  overflow:hidden;
+  box-sizing:border-box;
+  border-radius:16px;
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+}
+ .gacha-card-back{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  min-height:0;
+  aspect-ratio:3 / 4;
+  flex:0 0 100%;
+  isolation:isolate;
+  box-sizing:border-box;
+  border:2px solid rgba(148,163,184,.34);
+  border-radius:16px;
+  background:#07111f;
+  box-shadow:0 18px 42px rgba(0,0,0,.55), inset 0 0 0 1px rgba(255,255,255,.045);
+}
+.gacha-card-back.back-vip{
+  border-color:rgba(255,226,128,.96);
+  background:
+    radial-gradient(circle at 50% 25%,rgba(255,246,190,.18),transparent 30%),
+    radial-gradient(circle at 50% 72%,rgba(255,181,28,.10),transparent 38%),
+    linear-gradient(145deg,#17130a 0%,#050506 46%,#211808 100%);
+  box-shadow:
+    0 18px 42px rgba(0,0,0,.62),
+    0 0 10px rgba(255,246,190,.34),
+    0 0 32px rgba(255,190,55,.22),
+    inset 0 0 0 1px rgba(255,244,190,.16);
+}
+.gacha-card-back.back-vip::before{
+  border-color:rgba(255,237,163,.24);
+  background:
+    linear-gradient(120deg,transparent 32%,rgba(255,255,255,.035) 43%,rgba(255,235,156,.20) 50%,rgba(255,255,255,.035) 57%,transparent 68%);
+  background-size:230% 230%;
+  animation:gacha-vip-back-sheen 4.8s ease-in-out infinite;
+}
+.gacha-card-back.back-vip::after{
+  inset:12px;
+  border-color:rgba(255,221,105,.20);
+  background:
+    linear-gradient(45deg,transparent 48%,rgba(255,222,116,.075) 50%,transparent 52%),
+    linear-gradient(-45deg,transparent 48%,rgba(255,222,116,.075) 50%,transparent 52%);
+  background-size:24px 24px;
+}
+.gacha-back-vip-crown{
+  position:absolute;
+  z-index:5;
+  top:8%;
+  left:50%;
+  transform:translateX(-50%);
+  color:#fff1b0;
+  font-size:10px;
+  letter-spacing:.30em;
+  text-transform:uppercase;
+  font-weight:900;
+  text-shadow:0 0 12px rgba(255,210,75,.40);
+}
+.gacha-card-back.back-vip .gacha-back-core{
+  width:46%;
+  border-color:rgba(255,232,145,.64);
+  background:
+    radial-gradient(circle,rgba(88,62,13,.86) 0%,rgba(13,11,7,.92) 56%,rgba(3,3,3,.68) 100%);
+  box-shadow:
+    0 0 0 6px rgba(255,215,85,.055),
+    0 0 0 12px rgba(255,215,85,.025),
+    0 0 34px rgba(255,192,45,.28),
+    inset 0 0 24px rgba(255,231,139,.12);
+}
+.gacha-card-back.back-vip .gacha-back-symbol{
+  color:#fff0ae;
+  font-size:22px;
+  text-shadow:0 0 10px rgba(255,216,87,.55),0 0 24px rgba(255,178,32,.28);
+}
+.gacha-card-back.back-vip .gacha-back-wordmark{
+  color:#fff4c4;
+  text-shadow:0 0 12px rgba(255,215,86,.34);
+}
+.gacha-card-back.back-vip .gacha-back-label{
+  color:#e8bd52;
+  text-shadow:0 0 10px rgba(255,204,75,.32);
+}
+@keyframes gacha-vip-back-sheen{
+  0%,24%{background-position:220% 220%}
+  52%{background-position:50% 50%}
+  78%,100%{background-position:-80% -80%}
+}
+.gacha-card-back.back-blue{
+  border-color:rgba(96,165,250,.58);
+  background:
+    radial-gradient(circle at 50% 32%,rgba(125,211,252,.12),transparent 34%),
+    linear-gradient(145deg,#102a4a 0%,#071522 48%,#091d33 100%);
+  box-shadow:0 14px 34px rgba(0,0,0,.42),0 0 22px rgba(59,130,246,.12),inset 0 0 0 1px rgba(147,197,253,.07);
+}
+.gacha-card-back.back-gold{
+  border-color:rgba(245,205,91,.72);
+  background:
+    radial-gradient(circle at 50% 30%,rgba(255,241,177,.14),transparent 34%),
+    linear-gradient(145deg,#4a3610 0%,#171108 48%,#302208 100%);
+  box-shadow:0 14px 34px rgba(0,0,0,.46),0 0 25px rgba(245,190,55,.18),inset 0 0 0 1px rgba(255,238,170,.09);
+}
+.gacha-card-back::before{
+  content:'';
+  position:absolute;
+  inset:8px;
+  border-radius:11px;
+  border:1px solid rgba(255,255,255,.10);
+  background:
+    linear-gradient(120deg,transparent 34%,rgba(255,255,255,.065) 50%,transparent 66%);
+  background-size:230% 230%;
+  animation:gacha-back-sheen 5.5s ease-in-out infinite;
+  pointer-events:none;
+}
+.gacha-card-back::after{
+  content:'';
+  position:absolute;
+  inset:15px;
+  border-radius:9px;
+  border:1px solid rgba(148,163,184,.11);
+  background:
+    linear-gradient(45deg,transparent 48%,rgba(148,163,184,.045) 50%,transparent 52%),
+    linear-gradient(-45deg,transparent 48%,rgba(148,163,184,.045) 50%,transparent 52%);
+  background-size:22px 22px;
+  mask-image:linear-gradient(to bottom,transparent,black 18%,black 82%,transparent);
+  -webkit-mask-image:linear-gradient(to bottom,transparent,black 18%,black 82%,transparent);
+  pointer-events:none;
+}
+.gacha-card-back.back-gold::after{
+  border-color:rgba(255,224,120,.13);
+  background:
+    linear-gradient(45deg,transparent 48%,rgba(255,224,120,.055) 50%,transparent 52%),
+    linear-gradient(-45deg,transparent 48%,rgba(255,224,120,.055) 50%,transparent 52%);
+  background-size:22px 22px;
+}
+.gacha-back-core{
+  position:relative;
+  z-index:3;
+  width:43%;
+  aspect-ratio:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+  border:1px solid rgba(147,197,253,.30);
+  background:radial-gradient(circle,rgba(15,35,61,.88) 0%,rgba(5,12,22,.74) 66%,rgba(5,12,22,.28) 100%);
+  box-shadow:0 0 0 7px rgba(96,165,250,.035),0 0 26px rgba(59,130,246,.15),inset 0 0 18px rgba(147,197,253,.07);
+}
+.gacha-card-back.back-gold .gacha-back-core{
+  border-color:rgba(255,229,139,.48);
+  background:radial-gradient(circle,rgba(67,47,12,.9) 0%,rgba(19,13,5,.76) 66%,rgba(19,13,5,.28) 100%);
+  box-shadow:0 0 0 7px rgba(255,215,90,.045),0 0 30px rgba(255,199,70,.20),inset 0 0 18px rgba(255,228,135,.08);
+}
+.gacha-back-symbol{
+  position:relative;
+  top:auto;
+  left:auto;
+  transform:none;
+  width:42px;
+  height:42px;
+  border:0;
+  background:transparent;
+  box-shadow:none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:18px;
+  color:#bfdbfe;
+}
+.gacha-card-back.back-gold .gacha-back-symbol{color:#ffe9a3;text-shadow:0 0 14px rgba(255,214,91,.48)}
+.gacha-back-wordmark{
+  position:absolute;
+  z-index:4;
+  left:50%;
+  top:73%;
+  transform:translateX(-50%);
+  font-family:'Cinzel',serif;
+  font-size:clamp(13px,2.5vw,22px);
+  font-weight:900;
+  letter-spacing:.22em;
+  color:#dbeafe;
+  white-space:nowrap;
+  text-shadow:0 2px 10px rgba(0,0,0,.45);
+}
+.gacha-card-back.back-gold .gacha-back-wordmark{color:#fff0ad;text-shadow:0 0 13px rgba(255,210,70,.25)}
+.gacha-back-label{
+  position:absolute;
+  z-index:4;
+  left:50%;
+  bottom:6%;
+  transform:translateX(-50%);
+  font-family:system-ui,sans-serif;
+  font-size:7px;
+  font-weight:800;
+  letter-spacing:.30em;
+  color:#7dd3fc;
+  white-space:nowrap;
+  opacity:.78;
+}
+.gacha-card-back.back-gold .gacha-back-label{color:#f7d774;text-shadow:0 0 8px rgba(255,211,70,.35)}
+
+.gacha-card-front{
+  transform:rotateY(180deg);
+  width:100%;
+  height:100%;
+  min-height:0;
+  aspect-ratio:3 / 4;
+  background:#020617;
+  border:2px solid rgba(148,163,184,.28);
+  box-shadow:0 18px 42px rgba(0,0,0,.55);
+}
+.gacha-card-front .gacha-front-media{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.gacha-front-shade{
+  position:absolute;
+  inset:0;
+  background:linear-gradient(to top,rgba(0,0,0,.94),rgba(0,0,0,.08) 55%,rgba(0,0,0,.12));
+  pointer-events:none;
+}
+.gacha-front-rarity{
+  position:absolute;
+  z-index:3;
+  top:9px;
+  left:9px;
+  padding:4px 7px;
+  border-radius:7px;
+  font-family:'Cinzel',serif;
+  font-size:8px;
+  font-weight:900;
+  color:#fff;
+  background:rgba(2,6,23,.68);
+  backdrop-filter:blur(6px);
+}
+.gacha-front-info{
+  position:absolute;
+  z-index:3;
+  left:10px;
+  right:10px;
+  bottom:9px;
+}
+.gacha-front-name{
+  color:#f8fafc;
+  font-family:'Cinzel',serif;
+  font-size:12px;
+  font-weight:900;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.gacha-front-title{
+  margin-top:2px;
+  color:#cbd5e1;
+  font-size:8px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.gacha-rarity-VIP .gacha-card-front{border-color:rgba(255,239,171,.95);box-shadow:0 0 10px rgba(255,255,255,.8),0 0 34px rgba(255,195,55,.55)}
+.gacha-rarity-SSS .gacha-card-front{border-color:rgba(236,72,153,.85);box-shadow:0 0 15px rgba(236,72,153,.55)}
+.gacha-rarity-SS .gacha-card-front{border-color:rgba(139,92,246,.78);box-shadow:0 0 13px rgba(139,92,246,.45)}
+.gacha-rarity-S .gacha-card-front{border-color:rgba(59,130,246,.68);box-shadow:0 0 11px rgba(59,130,246,.38)}
+
+.gacha-reveal-status{
+  min-height:18px;
+  margin-top:12px;
+  text-align:center;
+  color:#64748b;
+  font-size:9px;
+}
+@keyframes gacha-card-drop{
+  0%{opacity:0;transform:translate3d(0,-42vh,0) rotateZ(-2deg) scale(.94)}
+  72%{opacity:1;transform:translate3d(0,5px,0) rotateZ(.4deg) scale(1.008)}
+  100%{opacity:1;transform:translate3d(0,0,0) rotateZ(0) scale(1)}
+}
+@keyframes gacha-back-sheen{
+  0%,28%{background-position:220% 220%}
+  55%{background-position:50% 50%}
+  82%,100%{background-position:-80% -80%}
+}
+@media(max-width:900px){
+  .gacha-reveal-grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+  .gacha-flip-card{max-width:155px}
+}
+@media(max-width:640px){
+  .gacha-reveal-overlay{padding:8px}
+  .gacha-reveal-panel{padding:12px;border-radius:18px}
+  .gacha-reveal-head{padding:4px 28px 10px}
+  .gacha-reveal-actions{margin-bottom:10px}
+  .gacha-reveal-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  .gacha-reveal-grid.single{grid-template-columns:minmax(190px,260px)}
+  .gacha-flip-card{max-width:165px}
+  .gacha-reveal-grid.single .gacha-flip-card{max-width:260px}
+}
+@media(prefers-reduced-motion:reduce){
+  .gacha-reveal-overlay,.gacha-flip-inner{transition:none}
+  .gacha-flip-card{animation:none;opacity:1;transform:none}
+  .gacha-card-back::before{animation:none}
+}
 
 </style>
 </head>
@@ -1185,6 +1785,37 @@
     <!-- =====================================================
          KẾT QUẢ GACHA
     ====================================================== -->
+
+
+    <!-- =====================================================
+         GACHA REVEAL
+         Thẻ rơi xuống -> úp -> người chơi tự lật
+         Chỉ sau khi lật hết mới commit kết quả/lưu dữ liệu.
+    ====================================================== -->
+    <div id="gacha-reveal-overlay" class="gacha-reveal-overlay" aria-hidden="true">
+      <div class="gacha-reveal-panel">
+        <div class="gacha-reveal-head">
+          <div class="gacha-reveal-kicker">OBEY 7 • SUMMON</div>
+          <h3 id="gacha-reveal-title" class="gacha-reveal-title">Các thẻ đã xuất hiện</h3>
+          <p id="gacha-reveal-hint" class="gacha-reveal-hint">
+            Chạm từng lá để tự lật hoặc chọn “Lật tất cả”. Mặt úp chỉ hé lộ một phần bí mật — VIP có dấu ấn riêng.
+          </p>
+        </div>
+
+        <div class="gacha-reveal-actions">
+          <button id="gacha-reveal-all-btn" type="button" class="gacha-reveal-action" onclick="flipAllGachaCards()">
+            <i class="fa-solid fa-layer-group mr-1"></i>
+            Lật tất cả
+          </button>
+        </div>
+
+        <div id="gacha-reveal-grid" class="gacha-reveal-grid"></div>
+
+        <div id="gacha-reveal-status" class="gacha-reveal-status">
+          0 / 0 lá đã lật
+        </div>
+      </div>
+    </div>
 
     <div id="summon-result-container" class="w-full hidden">
 
@@ -1841,6 +2472,7 @@ const STORAGE_GIFT = "obey7_gacha_gift_spins_v1";
 const STORAGE_REDEEMED = "obey7_gacha_redeemed_codes_v1";
 const STORAGE_PROGRESS = "obey7_gacha_progress_v1";
 const STORAGE_MUSIC = "obey7_gacha_music_v1";
+const STORAGE_PENDING_GACHA = "obey7_gacha_pending_v2";
 
 
 /* =========================================================
@@ -1961,6 +2593,10 @@ window.addEventListener("DOMContentLoaded", () => {
   renderCollection();
 
   initMusic();
+
+  // Không còn cơ chế pending/reveal persistence: kết quả đã được lưu
+  // ngay khi mặt úp xuất hiện. F5 chỉ tải lại trạng thái đã lưu.
+  localStorage.removeItem(STORAGE_PENDING_GACHA);
 
 });
 
@@ -2690,230 +3326,613 @@ function redeemGiftCode() {
 
 function performPull(amount) {
 
-  checkDailyReset();
+  // Đang có kết quả chờ mở thì tuyệt đối không cho tạo batch mới.
+  if (gachaRevealState) {
+    return;
+  }
 
+  checkDailyReset();
 
   const availableSpins =
     Number(userState.daily.count || 0) +
     Number(userState.giftSpins || 0);
 
-
   if (availableSpins < amount) {
-
     showToast(
       `Hết lượt! Bạn chỉ còn ${availableSpins} lượt.`,
       "error"
     );
-
     return;
-
   }
-
 
   /*
-    Trừ lượt gacha.
-    Ưu tiên dùng 10 lượt miễn phí trong ngày trước,
-    sau đó mới dùng lượt quà tặng.
+    QUAN TRỌNG NHẤT:
+    Random chỉ chạy 1 lần. Kết quả được tạo và khóa ngay lập tức.
+    Sau đó mới hiện mặt úp. F5 không thể roll lại batch khác.
   */
-
-  let remainingToUse = amount;
-
-
-  const dailyUsed =
-    Math.min(
-      userState.daily.count,
-      remainingToUse
-    );
-
-  userState.daily.count -= dailyUsed;
-
-  remainingToUse -= dailyUsed;
-
-
-  if (remainingToUse > 0) {
-
-    userState.giftSpins -= remainingToUse;
-
-  }
-
-
-  saveUserData();
-
-  updateDailyUI();
-
-
   const batch = [];
 
-
-  /*
-    QUAN TRỌNG:
-
-    Batch vẫn tạo từng thẻ bình thường.
-
-    Vì vậy:
-    - Gacha có thể ra cùng một nhân vật.
-    - 10 lần gacha hoàn toàn có thể có 2, 3,
-      hoặc nhiều thẻ giống nhau.
-
-    Nhưng khi đưa vào collection,
-    chúng ta sẽ kiểm tra ID.
-  */
-
   for (let i = 0; i < amount; i++) {
-
     const rarity = rollRarity();
-
     const base = rollChar(rarity);
 
-
     const item = {
-
       ...base,
-
       instanceId:
         "char_" +
         Date.now() +
         "_" +
-        Math.random()
-          .toString(36)
-          .slice(2, 7),
-
-      pulledAt:
-        new Date().toLocaleTimeString()
-
+        Math.random().toString(36).slice(2, 7),
+      pulledAt: new Date().toLocaleTimeString()
     };
 
-
-    /*
-      Thẻ này luôn được đưa vào batch
-      để hiển thị kết quả Gacha.
-
-      Vì vậy thẻ trùng vẫn xuất hiện
-      trong màn hình kết quả.
-    */
-
+    // Mặt úp chỉ có 2 loại. S là vùng giao nhau nên có thể xanh hoặc vàng.
+    item.backType = getGachaBackType(item);
     batch.push(item);
+  }
 
+  const dailyUsed = Math.min(
+    Number(userState.daily.count || 0),
+    amount
+  );
+  const giftUsed = amount - dailyUsed;
 
-    /*
-      CHỈ LƯU VÀO TÚI NẾU CHƯA CÓ ID.
+  // TRỪ LƯỢT NGAY KHI KẾT QUẢ ĐÃ ĐƯỢC RANDOM.
+  // Vì vậy F5 không thể quay lại trạng thái trước khi trừ lượt.
+  userState.daily.count = Math.max(
+    0,
+    Number(userState.daily.count || 0) - dailyUsed
+  );
 
-      Ví dụ:
+  userState.giftSpins = Math.max(
+    0,
+    Number(userState.giftSpins || 0) - giftUsed
+  );
 
-      Túi có #601
-      Gacha ra #601
+  gachaRevealState = {
+    id: (crypto.randomUUID ? crypto.randomUUID() : "gacha_" + Date.now() + "_" + Math.random()),
+    amount,
+    batch,
+    dailyUsed,
+    giftUsed,
+    flipped: new Array(amount).fill(false),
+    committed: false
+  };
 
-      => Không thêm.
-
-      Túi chưa có #602
-      Gacha ra #602
-
-      => Thêm.
-    */
-
+  // =====================================================
+  // CHỐT KẾT QUẢ NGAY LẬP TỨC
+  // =====================================================
+  // Mặt úp chỉ là phần trình diễn. Toàn bộ thẻ, lượt Gacha
+  // và tiến trình đã được lưu trước khi animation bắt đầu.
+  for (const item of batch) {
     const alreadyOwned = userState.collection.some(
       c => String(c.id) === String(item.id)
     );
-
-
-    if (!alreadyOwned) {
-
-      userState.collection.unshift(item);
-
-    }
-
+    if (!alreadyOwned) userState.collection.unshift(item);
   }
 
-
-  /*
-    Bảo hiểm lần cuối:
-    nếu somehow có duplicate thì vẫn lọc.
-  */
-
-  userState.collection = getUniqueCollection(
-    userState.collection
-  );
-
-
-  /*
-    LEVEL:
-    Chỉ số lượt Gacha thật mới được cộng vào đây.
-    Lượt nhận từ vòng quay may mắn sẽ được cộng vào giftSpins
-    nhưng khi đem đi Gacha vẫn được tính là lượt Gacha thật.
-    Chính vòng quay may mắn KHÔNG tự cộng Level.
-  */
-
+  userState.collection = getUniqueCollection(userState.collection);
   userState.progress.totalPulls += amount;
 
-  const levelUps =
-    syncLevelRewards();
-
-
+  const levelUps = syncLevelRewards();
   saveUserData();
-
   updateDailyUI();
-
   updateLevelUI();
-
   updateBadge();
-
   renderCollection();
 
+  // Xóa dữ liệu pending cũ của phiên bản trước (nếu có).
+  localStorage.removeItem(STORAGE_PENDING_GACHA);
+
+  openGachaReveal(batch);
 
   if (levelUps > 0) {
-
-    showToast(
+    setTimeout(() => showToast(
       `✦ LEVEL UP! Bạn lên Level ${userState.progress.level} và nhận ${levelUps} vé vòng quay!`,
       "success"
-    );
+    ), 350);
+  }
+}
 
+
+/* =========================================================
+   GACHA REVEAL STATE
+========================================================= */
+
+let gachaRevealState = null;
+
+
+/* =========================================================
+   PENDING GACHA - CHỐNG F5 REROLL
+========================================================= */
+
+function getGachaBackType(char) {
+  const rarity = String(char?.rarity || "D").toUpperCase();
+
+  // D-A: xanh.
+  if (["D", "C", "B", "A"].includes(rarity)) {
+    return "blue";
   }
 
-
-  /*
-    Hiển thị kết quả Gacha.
-
-    Lưu ý:
-    batch vẫn chứa duplicate.
-    Vì vậy người dùng vẫn thấy thẻ trùng khi quay.
-  */
-
-  if (amount === 1) {
-
-    displaySingle(batch[0]);
-
-  } else {
-
-    displayMulti(batch);
-
+  // VIP có mặt úp riêng, cao cấp hơn vàng.
+  if (rarity === "VIP") {
+    return "vip";
   }
 
-  if(batch.some(isVIP) && amount>1) showToast("✦ Bạn vừa nhận được một thẻ VIP! ✦","success");
+  // SS-SSS: vàng kim.
+  if (["SS", "SSS"].includes(rarity)) {
+    return "gold";
+  }
 
+  // S là vùng giao nhau: có thể xanh hoặc vàng.
+  return Math.random() < 0.5 ? "blue" : "gold";
+}
 
-  /*
-    Kiểm tra số thẻ mới nhận được.
-  */
+function savePendingGacha() {
+  if (!gachaRevealState || gachaRevealState.committed) return;
 
-  const uniqueNewCards = batch.filter(
-    (char, index, arr) =>
-      arr.findIndex(
-        x => String(x.id) === String(char.id)
-      ) === index
-  ).filter(char => {
-
-    return userState.collection.some(
-      c => String(c.id) === String(char.id)
+  try {
+    localStorage.setItem(
+      STORAGE_PENDING_GACHA,
+      JSON.stringify({
+        id: gachaRevealState.id,
+        amount: gachaRevealState.amount,
+        batch: gachaRevealState.batch,
+        dailyUsed: gachaRevealState.dailyUsed,
+        giftUsed: gachaRevealState.giftUsed,
+        flipped: gachaRevealState.flipped
+      })
     );
+  } catch (e) {
+    console.error("Không thể lưu Gacha đang chờ:", e);
+  }
+}
 
-  }).length;
+function loadPendingGacha() {
+  try {
+    const raw = localStorage.getItem(STORAGE_PENDING_GACHA);
+    if (!raw) return null;
 
+    const pending = JSON.parse(raw);
+
+    if (
+      !pending ||
+      !Array.isArray(pending.batch) ||
+      !pending.batch.length ||
+      !Array.isArray(pending.flipped) ||
+      pending.flipped.length !== pending.batch.length
+    ) {
+      localStorage.removeItem(STORAGE_PENDING_GACHA);
+      return null;
+    }
+
+    return pending;
+  } catch (e) {
+    console.error("Không thể đọc Gacha đang chờ:", e);
+    return null;
+  }
+}
+
+function clearPendingGacha() {
+  localStorage.removeItem(STORAGE_PENDING_GACHA);
+}
+
+function resumePendingGacha() {
+  if (gachaRevealState) return;
+
+  const pending = loadPendingGacha();
+  if (!pending) return;
+
+  gachaRevealState = {
+    ...pending,
+    amount: Number(pending.amount) || pending.batch.length,
+    dailyUsed: Number(pending.dailyUsed) || 0,
+    giftUsed: Number(pending.giftUsed) || 0,
+    flipped: pending.flipped.map(Boolean),
+    committed: false
+  };
+
+  openGachaReveal(gachaRevealState.batch);
 
   showToast(
-    `Đã gacha ${amount} thẻ! Túi chỉ lưu nhân vật không trùng.`,
+    "Đã khôi phục kết quả Gacha đang chờ — không quay lại từ đầu.",
     "success"
   );
 
+  if (gachaRevealState.flipped.every(Boolean)) {
+    setTimeout(() => {
+      commitGachaReveal();
+    }, 700);
+  }
+}
+
+
+function rarityIcon(rarity) {
+
+  const icons = {
+    VIP: "fa-crown",
+    SSS: "fa-star",
+    SS: "fa-gem",
+    S: "fa-bolt",
+    A: "fa-shield-halved",
+    B: "fa-diamond",
+    C: "fa-circle",
+    D: "fa-circle-dot"
+  };
+
+  return icons[String(rarity).toUpperCase()] || "fa-circle";
+}
+
+
+function openGachaReveal(batch) {
+
+  const overlay =
+    document.getElementById("gacha-reveal-overlay");
+
+  const grid =
+    document.getElementById("gacha-reveal-grid");
+
+  const title =
+    document.getElementById("gacha-reveal-title");
+
+  const hint =
+    document.getElementById("gacha-reveal-hint");
+
+  const status =
+    document.getElementById("gacha-reveal-status");
+
+  const allButton =
+    document.getElementById("gacha-reveal-all-btn");
+
+  if (!overlay || !grid) {
+    return;
+  }
+
+  grid.innerHTML = "";
+
+  grid.classList.toggle(
+    "single",
+    batch.length === 1
+  );
+
+  if (title) {
+    title.textContent =
+      batch.length === 1
+        ? "Một lá đã xuất hiện"
+        : `${batch.length} lá đã xuất hiện`;
+  }
+
+  if (hint) {
+    hint.textContent =
+      batch.length === 1
+        ? "Chạm vào lá bài để lật và khám phá nhân vật."
+        : "Chạm từng lá để tự lật hoặc chọn “Lật tất cả”.";
+  }
+
+  if (allButton) {
+    allButton.disabled = false;
+  }
+
+  batch.forEach((char, index) => {
+
+    const card =
+      document.createElement("div");
+
+    card.className =
+      `gacha-flip-card gacha-rarity-${String(char.rarity).toUpperCase()}`;
+
+    card.style.animationDelay =
+      `${Math.min(index * 55, 450)}ms`;
+
+    card.dataset.index = String(index);
+
+    const backType = ["blue","gold","vip"].includes(char.backType) ? char.backType : "blue";
+    const backIcon = backType === "vip" ? "fa-crown" : (backType === "gold" ? "fa-gem" : "fa-sparkles");
+    const backLabel = backType === "vip" ? "OBEY 7 • PRIVATE ARCHIVE" : (backType === "gold" ? "GOLDEN ARCHIVE" : "ASTRAL ARCHIVE");
+
+    card.innerHTML = `
+      <div class="gacha-flip-inner">
+
+        <div class="gacha-face gacha-card-back back-${backType}">
+          ${backType === "vip" ? `<div class="gacha-back-vip-crown">VIP • EXCLUSIVE</div>` : ""}
+          <div class="gacha-back-core">
+            <div class="gacha-back-symbol">
+              <i class="fa-solid ${backIcon}"></i>
+            </div>
+          </div>
+
+          <div class="gacha-back-wordmark">OBEY 7</div>
+          <div class="gacha-back-label">${backLabel}</div>
+        </div>
+
+        <div class="gacha-face gacha-card-front"></div>
+
+      </div>
+    `;
+
+    card.addEventListener(
+      "click",
+      () => flipGachaCard(index)
+    );
+
+    grid.appendChild(card);
+
+    // F5 giữa chừng: dựng lại đúng những lá đã lật trước đó.
+    if (gachaRevealState?.flipped?.[index]) {
+      buildGachaFront(card, char);
+      card.classList.add("is-flipped");
+    }
+
+  });
+
+  updateGachaRevealStatus();
+
+  overlay.classList.remove("hidden");
+
+  requestAnimationFrame(() => {
+
+    requestAnimationFrame(() => {
+
+      overlay.classList.add("show");
+      overlay.setAttribute("aria-hidden", "false");
+
+    });
+
+  });
+
+  document.body.classList.add("overflow-hidden");
+}
+
+
+function buildGachaFront(card, char) {
+
+  const front =
+    card.querySelector(".gacha-card-front");
+
+  if (!front) {
+    return;
+  }
+
+  /*
+    Media chỉ được tạo lúc lá thực sự lật.
+    Cách này tránh việc 10 video cùng preload khi
+    người chơi mới nhìn mặt sau.
+  */
+  front.innerHTML = `
+    ${renderMedia(char, "gacha-front-media")}
+
+    <div class="gacha-front-shade"></div>
+
+    <div class="gacha-front-rarity ${getBadgeClass(char.rarity)}">
+      ${char.rarity}
+    </div>
+
+    <div class="gacha-front-info">
+      <div class="gacha-front-name">${char.name || "Unknown"}</div>
+      <div class="gacha-front-title">${char.title || ""}</div>
+    </div>
+  `;
+
+  if (isVIP(char)) {
+    vipCardEnhance(front, char);
+  }
+
+  /*
+    Khi front được tạo lại, vipCardEnhance có thể thêm
+    overlay vào front nhưng không thay đổi kích thước media.
+  */
+}
+
+
+function flipGachaCard(index) {
+
+  const state = gachaRevealState;
+
+  if (!state || state.committed) {
+    return;
+  }
+
+  if (
+    index < 0 ||
+    index >= state.batch.length ||
+    state.flipped[index]
+  ) {
+    return;
+  }
+
+  const grid =
+    document.getElementById("gacha-reveal-grid");
+
+  const card =
+    grid?.children?.[index];
+
+  if (!card) {
+    return;
+  }
+
+  state.flipped[index] = true;
+
+  buildGachaFront(
+    card,
+    state.batch[index]
+  );
+
+  card.classList.add("is-flipped");
+
+  updateGachaRevealStatus();
+
+  if (
+    state.flipped.every(Boolean)
+  ) {
+
+    const allButton =
+      document.getElementById("gacha-reveal-all-btn");
+
+    if (allButton) {
+      allButton.disabled = true;
+    }
+
+    /*
+      Cho animation lật hoàn tất rồi mới commit.
+    */
+    setTimeout(
+      commitGachaReveal,
+      680
+    );
+
+  }
+}
+
+
+function flipAllGachaCards() {
+
+  const state = gachaRevealState;
+
+  if (!state || state.committed) {
+    return;
+  }
+
+  const button =
+    document.getElementById("gacha-reveal-all-btn");
+
+  if (button) {
+    button.disabled = true;
+  }
+
+  const remaining = [];
+
+  state.flipped.forEach(
+    (flipped, index) => {
+
+      if (!flipped) {
+        remaining.push(index);
+      }
+
+    }
+  );
+
+  remaining.forEach(
+    (index, order) => {
+
+      setTimeout(
+        () => flipGachaCard(index),
+        order * 85
+      );
+
+    }
+  );
+
+  if (!remaining.length) {
+    commitGachaReveal();
+  }
+}
+
+
+function updateGachaRevealStatus() {
+
+  const state = gachaRevealState;
+
+  const status =
+    document.getElementById(
+      "gacha-reveal-status"
+    );
+
+  if (!state || !status) {
+    return;
+  }
+
+  const flipped =
+    state.flipped.filter(Boolean).length;
+
+  if (flipped === state.amount) {
+
+    status.textContent =
+      "Kết quả đã được lưu — lật chỉ là hiệu ứng khám phá.";
+
+    status.className =
+      "gacha-reveal-status text-amber-300";
+
+  } else {
+
+    status.textContent =
+      `${flipped} / ${state.amount} lá đã lật • Kết quả đã được lưu`;
+
+    status.className =
+      "gacha-reveal-status";
+
+  }
+}
+
+
+function closeGachaReveal() {
+
+  const overlay =
+    document.getElementById(
+      "gacha-reveal-overlay"
+    );
+
+  if (!overlay) {
+    return;
+  }
+
+  overlay.classList.remove("show");
+  overlay.setAttribute("aria-hidden", "true");
+
+  setTimeout(() => {
+
+    if (!overlay.classList.contains("show")) {
+      overlay.classList.add("hidden");
+    }
+
+  }, 230);
+
+  document.body.classList.remove("overflow-hidden");
+}
+
+
+function commitGachaReveal() {
+
+  const state = gachaRevealState;
+
+  if (!state || state.committed) {
+    return;
+  }
+
+  if (!state.flipped.every(Boolean)) {
+    return;
+  }
+
+  // Dữ liệu đã được lưu từ lúc batch vừa xuất hiện.
+  // Hàm này chỉ hoàn tất phần trình diễn, KHÔNG lưu/trừ/commit lần 2.
+  state.committed = true;
+
+  const batch = state.batch;
+
+  if (batch.some(isVIP) && state.amount > 1) {
+    showToast(
+      "✦ Bạn vừa nhận được một thẻ VIP! ✦",
+      "success"
+    );
+  }
+
+  setTimeout(() => {
+    closeGachaReveal();
+
+    setTimeout(() => {
+      if (state.amount === 1) {
+        displaySingle(batch[0]);
+      } else {
+        displayMulti(batch);
+      }
+
+      showToast(
+        `Đã gacha ${state.amount} thẻ! Túi đã lưu kết quả ngay khi thẻ xuất hiện.`,
+        "success"
+      );
+
+      gachaRevealState = null;
+    }, 260);
+  }, 260);
 }
 
 

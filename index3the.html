@@ -145,46 +145,6 @@
       }
     }
 
-    /* SSS PREMIUM FRAME — bo góc ôm sát artwork + chỉ viền phụ tinh tế */
-    .frame-SSS {
-      position:relative;
-      border-width:4px!important;
-      border-style:solid;
-      border-color:#f472b6!important;
-      border-radius:1rem!important;
-      box-shadow:
-        0 0 12px rgba(236,72,153,.55),
-        0 0 28px rgba(168,85,247,.38),
-        inset 0 0 0 1px rgba(255,220,247,.16),
-        inset 0 0 12px rgba(236,72,153,.18);
-    }
-
-    /* Chỉ phụ SSS: một đường chỉ mảnh, bo góc theo khung chính */
-    .frame-SSS::after {
-      content:'';
-      position:absolute;
-      inset:7px;
-      pointer-events:none;
-      z-index:18;
-      border:1px solid rgba(250,218,246,.30);
-      border-radius:calc(1rem - 7px)!important;
-      background:
-        radial-gradient(circle at 7% 7%,rgba(255,255,255,.62) 0 1px,transparent 2px),
-        radial-gradient(circle at 93% 7%,rgba(255,255,255,.48) 0 1px,transparent 2px),
-        radial-gradient(circle at 7% 93%,rgba(255,255,255,.42) 0 1px,transparent 2px),
-        radial-gradient(circle at 93% 93%,rgba(255,255,255,.58) 0 1px,transparent 2px);
-      box-shadow:
-        inset 0 0 5px rgba(255,255,255,.045),
-        0 0 7px rgba(236,72,153,.08);
-      opacity:.62;
-      animation:sss-ornament-breathe 5.5s ease-in-out infinite;
-    }
-
-    @keyframes sss-ornament-breathe {
-      0%,100% { opacity:.42; filter:brightness(.96); }
-      50% { opacity:.72; filter:brightness(1.08); }
-    }
-
     .card-hover-effect {
       transition:all .3s cubic-bezier(.4,0,.2,1);
     }
@@ -217,7 +177,6 @@
     .frame-VIP,
     .vip-card-shell {
       position:relative;
-      border-radius:1rem!important;
       isolation:isolate;
       border:1px solid rgba(255,246,205,.98)!important;
       background:#08090e;
@@ -233,54 +192,6 @@
       transform-style:preserve-3d;
       transition:transform .18s ease,filter .35s ease,box-shadow .35s ease;
       animation:vip-aura-edge 4.6s ease-in-out infinite;
-    }
-
-    /* VIP PREMIUM EDGE — bo góc sâu, viền phụ nghệ thuật hơn SSS */
-    .frame-VIP {
-      border-width:4px!important;
-      border-style:solid;
-      border-color:#fff2ad!important;
-      border-radius:1rem!important;
-      box-shadow:
-        0 0 10px rgba(255,255,255,.78),
-        0 0 24px rgba(255,220,105,.62),
-        0 0 48px rgba(255,184,55,.32),
-        inset 0 0 0 1px rgba(255,250,214,.30),
-        inset 0 0 0 2px rgba(255,205,75,.10),
-        inset 0 0 18px rgba(255,225,130,.11);
-    }
-
-    /* Chỉ phụ VIP: hai nét vàng siêu mảnh + cảm giác khắc thủ công */
-    .frame-VIP .vip-glass {
-      border-radius:inherit;
-      box-shadow:
-        inset 0 0 0 7px rgba(255,248,205,.045),
-        inset 0 0 0 8px rgba(255,207,79,.16),
-        inset 0 0 0 9px rgba(255,255,255,.035);
-    }
-
-    .frame-VIP .vip-glass::before {
-      content:'';
-      position:absolute;
-      inset:6px;
-      border:1px solid rgba(255,239,170,.26);
-      border-radius:calc(1rem - 6px)!important;
-      pointer-events:none;
-      background:
-        radial-gradient(circle at 5% 12%,rgba(255,255,255,.78) 0 1px,transparent 2px),
-        radial-gradient(circle at 95% 12%,rgba(255,244,185,.66) 0 1px,transparent 2px),
-        radial-gradient(circle at 8% 88%,rgba(255,232,150,.54) 0 1px,transparent 2px),
-        radial-gradient(circle at 92% 88%,rgba(255,255,255,.72) 0 1px,transparent 2px);
-      box-shadow:
-        inset 0 0 5px rgba(255,244,190,.06),
-        0 0 8px rgba(255,210,80,.08);
-      opacity:.62;
-      animation:vip-thread-breathe 5.8s ease-in-out infinite;
-    }
-
-    @keyframes vip-thread-breathe {
-      0%,100% { opacity:.38; filter:brightness(.96); }
-      50% { opacity:.78; filter:brightness(1.12); }
     }
 
     /* Lớp sáng ngoài viền — đứng yên, không xoay cầu vồng */
@@ -722,8 +633,6 @@
     }
 
     @media (prefers-reduced-motion:reduce) {
-      .frame-SSS::after,
-      .frame-VIP .vip-glass::before,
       .frame-VIP,
       .vip-card-shell,
       .frame-VIP::before,
@@ -1356,6 +1265,140 @@
 .gacha-rarity-SS .gacha-card-front{border-color:rgba(139,92,246,.78);box-shadow:0 0 13px rgba(139,92,246,.45)}
 .gacha-rarity-S .gacha-card-front{border-color:rgba(59,130,246,.68);box-shadow:0 0 11px rgba(59,130,246,.38)}
 
+/* =========================================================
+   SUMMON HALL — 3 THẺ BÍ ẨN XOAY NHẸ
+========================================================= */
+.summon-orbit-wrap{
+  position:relative;
+  width:min(620px,92vw);
+  height:238px;
+  margin:2px auto 2px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  perspective:900px;
+  isolation:isolate;
+}
+.summon-orbit-wrap::before{
+  content:'';
+  position:absolute;
+  width:330px;
+  height:150px;
+  border-radius:50%;
+  border:1px solid rgba(148,163,184,.08);
+  box-shadow:0 0 45px rgba(99,102,241,.08),inset 0 0 30px rgba(148,163,184,.025);
+  transform:rotateX(62deg);
+  pointer-events:none;
+}
+.summon-orbit-wrap::after{
+  content:'';
+  position:absolute;
+  width:170px;
+  height:170px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(245,158,11,.08),transparent 68%);
+  filter:blur(4px);
+  pointer-events:none;
+}
+.summon-orbit-card{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:116px;
+  aspect-ratio:3/4;
+  margin:-58px 0 0 -58px;
+  transform-style:preserve-3d;
+  border-radius:15px;
+  animation:summon-orbit-float 7.5s ease-in-out infinite;
+  will-change:transform;
+}
+.summon-orbit-card:nth-child(1){animation-delay:-0.2s;--sx:-145px;--sy:12px;--sz:.88;--rz:-9deg;z-index:2}
+.summon-orbit-card:nth-child(2){animation-delay:-2.7s;--sx:0px;--sy:-20px;--sz:1;--rz:0deg;z-index:4}
+.summon-orbit-card:nth-child(3){animation-delay:-5.2s;--sx:145px;--sy:12px;--sz:.88;--rz:9deg;z-index:2}
+.summon-orbit-face{
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+  border-radius:15px;
+  box-sizing:border-box;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+}
+.summon-orbit-face::before{
+  content:'';
+  position:absolute;
+  inset:7px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,.10);
+  background:linear-gradient(120deg,transparent 32%,rgba(255,255,255,.10) 50%,transparent 68%);
+  background-size:220% 220%;
+  animation:gacha-back-sheen 5.5s ease-in-out infinite;
+}
+.summon-orbit-face::after{
+  content:'?';
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  font-family:'Cinzel',serif;
+  font-size:38px;
+  line-height:1;
+  font-weight:900;
+  opacity:.92;
+}
+.summon-orbit-blue{
+  border:2px solid rgba(96,165,250,.62);
+  background:radial-gradient(circle at 50% 30%,rgba(125,211,252,.13),transparent 35%),linear-gradient(145deg,#102a4a,#071522 50%,#091d33);
+  box-shadow:0 18px 38px rgba(0,0,0,.40),0 0 24px rgba(59,130,246,.12),inset 0 0 0 1px rgba(147,197,253,.08);
+  color:#bfdbfe;
+}
+.summon-orbit-gold{
+  border:2px solid rgba(245,205,91,.78);
+  background:radial-gradient(circle at 50% 30%,rgba(255,241,177,.14),transparent 35%),linear-gradient(145deg,#4a3610,#171108 50%,#302208);
+  box-shadow:0 20px 42px rgba(0,0,0,.48),0 0 27px rgba(245,190,55,.18),inset 0 0 0 1px rgba(255,238,170,.10);
+  color:#ffe9a3;
+}
+.summon-orbit-vip{
+  border:2px solid rgba(255,226,128,.96);
+  background:radial-gradient(circle at 50% 25%,rgba(255,246,190,.18),transparent 30%),linear-gradient(145deg,#17130a,#050506 48%,#211808);
+  box-shadow:0 20px 46px rgba(0,0,0,.58),0 0 12px rgba(255,246,190,.34),0 0 34px rgba(255,190,55,.22),inset 0 0 0 1px rgba(255,244,190,.16);
+  color:#fff0ae;
+}
+.summon-orbit-vip::before{border-color:rgba(255,237,163,.22)}
+.summon-orbit-vip::after{text-shadow:0 0 12px rgba(255,216,87,.48),0 0 26px rgba(255,178,32,.24)}
+.summon-orbit-caption{
+  position:absolute;
+  left:50%;
+  bottom:4px;
+  transform:translateX(-50%);
+  color:#64748b;
+  font-size:8px;
+  font-weight:800;
+  letter-spacing:.24em;
+  text-transform:uppercase;
+  white-space:nowrap;
+}
+@keyframes summon-orbit-float{
+  0%{transform:translate3d(calc(var(--sx)*.92),calc(var(--sy) + 2px),0) rotateZ(var(--rz)) scale(var(--sz)) rotateY(-4deg)}
+  25%{transform:translate3d(calc(var(--sx)*1.01),calc(var(--sy) - 7px),18px) rotateZ(calc(var(--rz) + 2deg)) scale(var(--sz)) rotateY(5deg)}
+  50%{transform:translate3d(calc(var(--sx)*1.08),calc(var(--sy) + 1px),0) rotateZ(var(--rz)) scale(var(--sz)) rotateY(-4deg)}
+  75%{transform:translate3d(calc(var(--sx)*1.01),calc(var(--sy) + 7px),-16px) rotateZ(calc(var(--rz) - 2deg)) scale(var(--sz)) rotateY(4deg)}
+  100%{transform:translate3d(calc(var(--sx)*.92),calc(var(--sy) + 2px),0) rotateZ(var(--rz)) scale(var(--sz)) rotateY(-4deg)}
+}
+@media(max-width:640px){
+  .summon-orbit-wrap{height:205px}
+  .summon-orbit-card{width:94px;margin:-47px 0 0 -47px}
+  .summon-orbit-card:nth-child(1){--sx:-105px}
+  .summon-orbit-card:nth-child(3){--sx:105px}
+  .summon-orbit-face::after{font-size:31px}
+}
+@media(prefers-reduced-motion:reduce){
+  .summon-orbit-card,.summon-orbit-face::before,.gacha-card-back::before,.gacha-card-back.back-vip::before{animation:none!important}
+}
+
 .gacha-reveal-status{
   min-height:18px;
   margin-top:12px;
@@ -1542,6 +1585,19 @@
 
 
   <div class="flex flex-col items-center justify-center py-6 space-y-8">
+
+    <div class="summon-orbit-wrap" aria-hidden="true">
+      <div class="summon-orbit-card">
+        <div class="summon-orbit-face summon-orbit-blue"></div>
+      </div>
+      <div class="summon-orbit-card">
+        <div class="summon-orbit-face summon-orbit-vip"></div>
+      </div>
+      <div class="summon-orbit-card">
+        <div class="summon-orbit-face summon-orbit-gold"></div>
+      </div>
+      <div class="summon-orbit-caption">CHOOSE YOUR FATE • ?</div>
+    </div>
 
     <div class="flex flex-wrap items-center justify-center gap-4 w-full max-w-xl">
 
