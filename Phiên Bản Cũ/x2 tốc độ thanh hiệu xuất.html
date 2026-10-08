@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OBEY 7 — Chiến Trường</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&family=Cinzel:wght@500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root{
+      --bg:#070910;--panel:#0d111d;--panel2:#111827;--line:#273149;
+      --gold:#f59e0b;--muted:#94a3b8;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; min-height:100vh; color:#e5e7eb;
+      font-family:'Be Vietnam Pro',sans-serif;
+      background:
+        radial-gradient(circle at 50% -10%,rgba(124,58,237,.18),transparent 35%),
+        radial-gradient(circle at 0 100%,rgba(245,158,11,.08),transparent 30%),
+        var(--bg);
+    }
+    .font-cinzel{font-family:'Be Vietnam Pro','Cinzel',sans-serif}
+    .glass{background:rgba(13,17,29,.82);border:1px solid rgba(148,163,184,.14);box-shadow:0 18px 55px rgba(0,0,0,.35),inset 0 1px rgba(255,255,255,.025);backdrop-filter:blur(14px)}
+    .btn{transition:.2s ease;cursor:pointer}.btn:hover{transform:translateY(-2px)}.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+    .rank-card{position:relative;overflow:hidden;border-radius:18px;border:1px solid rgba(255,255,255,.18);box-shadow:0 16px 40px rgba(0,0,0,.28),inset 0 0 22px rgba(255,255,255,.05)}
+    .rank-card:before,.rank-card:after{content:"";position:absolute;pointer-events:none}
+    .rank-card:before{inset:7px;border:1px solid rgba(255,255,255,.23);border-radius:13px}
+    .rank-card:after{width:160%;height:1px;left:-30%;top:25%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);transform:rotate(-27deg);opacity:.55}
+    .rank-new{background:linear-gradient(145deg,#14532d,#166534 45%,#052e16);border-color:#4ade80}
+    .rank-warrior{background:linear-gradient(145deg,#0c4a6e,#1d4ed8 48%,#172554);border-color:#60a5fa}
+    .rank-knight{background:linear-gradient(145deg,#713f12,#ca8a04 48%,#422006);border-color:#facc15}
+    .rank-general{background:linear-gradient(145deg,#581c87,#7e22ce 48%,#2e1065);border-color:#c084fc}
+    .rank-obey{background:linear-gradient(145deg,#450a0a,#b91c1c 48%,#1f0707);border-color:#ef4444;box-shadow:0 0 28px rgba(239,68,68,.24),inset 0 0 28px rgba(239,68,68,.1)}
+    .rep-card{width:104px;height:142px;border-radius:12px;overflow:hidden;position:relative;border:1px solid rgba(148,163,184,.35);background:#020617;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+    .rep-card.empty{border:1px dashed rgba(251,191,36,.45);background:linear-gradient(145deg,#111827,#020617);cursor:pointer}
+    .rep-card.empty:hover{box-shadow:0 0 26px rgba(251,191,36,.28);border-color:rgba(251,191,36,.8)}
+    .rep-card .media{width:100%;height:100%;object-fit:cover}
+    .card-choice{border:1px solid rgba(51,65,85,.9);transition:.18s;box-shadow:0 10px 30px rgba(0,0,0,.22)}
+    .card-choice:hover{transform:translateY(-3px);border-color:rgba(168,85,247,.65);box-shadow:0 0 25px rgba(168,85,247,.18),0 14px 35px rgba(0,0,0,.3)}
+    .card-choice.selected{border-color:#facc15;box-shadow:0 0 0 2px rgba(250,204,21,.38),0 0 30px rgba(250,204,21,.28);transform:translateY(-4px)}
+    .enemy-card{border-color:rgba(244,63,94,.28)}
+    .round-card{transition:.25s;position:relative}
+    .round-card.active{box-shadow:0 0 0 2px rgba(251,191,36,.35),0 0 34px rgba(251,191,36,.16)}
+    .round-card.winner{transform:translateY(-8px) scale(1.03);z-index:5;box-shadow:0 0 0 2px rgba(74,222,128,.55),0 0 36px rgba(74,222,128,.24)}
+    .round-card.loser{opacity:.48;filter:saturate(.65);transform:scale(.96)}
+    .battle-card-in-left{animation:cardInLeft .65s cubic-bezier(.2,.8,.2,1) both}
+    .battle-card-in-right{animation:cardInRight .65s cubic-bezier(.2,.8,.2,1) both}
+    .rank-spin-wrap{width:132px;height:172px;margin:0 auto}
+    .rank-spin-face .rank-card{width:100%;height:100%;padding:16px;animation:rankEdgeGlow 2.2s ease-in-out infinite}
+    .rank-spin-face .rank-mini{height:88px}
+    .rank-spin-face .rank-title{font-size:1.05rem;font-weight:900;text-align:center}
+    .rank-spin-face .rank-stars{display:flex;justify-content:center;gap:2px;margin-top:12px}
+    .rank-spin-face .rank-stars i{font-size:11px;color:#facc15}
+    .rank-spin-face .rank-tier{font-size:8px;text-align:center;color:rgba(255,255,255,.65);margin-top:6px;letter-spacing:.18em}
+    .timing-wrap{display:flex;flex-direction:column;align-items:center;gap:10px}
+    .timing-track{width:86px;height:300px;position:relative;border-radius:22px;border:2px solid rgba(148,163,184,.25);background:linear-gradient(90deg,rgba(15,23,42,.96),rgba(2,6,23,.98));box-shadow:inset 0 0 25px rgba(0,0,0,.55),0 0 24px rgba(139,92,246,.08);overflow:hidden}
+    .timing-zone{position:absolute;left:7px;right:7px;border-radius:12px;background:linear-gradient(180deg,rgba(34,197,94,.18),rgba(74,222,128,.38),rgba(34,197,94,.18));border:1px solid rgba(74,222,128,.75);box-shadow:0 0 22px rgba(34,197,94,.2);z-index:1}
+    .timing-breakthrough{position:absolute;left:11px;right:11px;border-radius:9px;background:linear-gradient(180deg,rgba(250,204,21,.72),rgba(245,158,11,.98),rgba(250,204,21,.72));border:1px solid rgba(254,240,138,.95);box-shadow:0 0 18px rgba(250,204,21,.62),inset 0 0 10px rgba(255,255,255,.18);z-index:2}
+    .timing-track:after{content:"";position:absolute;left:7px;right:7px;top:50%;height:1px;background:rgba(255,255,255,.1);z-index:2}
+    .timing-line{position:absolute;left:5px;right:5px;height:8px;border-radius:99px;background:linear-gradient(90deg,#f59e0b,#fff,#f59e0b);box-shadow:0 0 18px rgba(251,191,36,.8),0 0 3px #fff;z-index:3;transform:translateY(-50%)}
+    .timing-track.running .timing-line{filter:brightness(1.15)}
+    .timing-track.perfect .timing-line{background:linear-gradient(90deg,#22c55e,#ecfdf5,#22c55e);box-shadow:0 0 24px rgba(74,222,128,.95),0 0 5px #fff}
+    .timing-track.zero .timing-line{background:linear-gradient(90deg,#ef4444,#fff,#ef4444);box-shadow:0 0 24px rgba(239,68,68,.8)}
+    .timing-zone-label{font-size:9px;font-weight:900;letter-spacing:.14em;color:#86efac;text-transform:uppercase}
+    .timing-breakthrough-label{font-size:8px;font-weight:900;letter-spacing:.10em;color:#fde68a;text-transform:uppercase}
+    .timing-value{font-family:'Be Vietnam Pro',sans-serif;font-size:1.15rem;font-weight:900}
+    .battle-accuracy{font-size:.78rem;font-weight:800;letter-spacing:.04em}
+    .battle-accuracy-effect{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) scale(.72);z-index:80;pointer-events:none;opacity:0;text-align:center;padding:18px 26px;border-radius:22px;background:rgba(2,6,23,.9);border:2px solid rgba(148,163,184,.3);box-shadow:0 0 55px rgba(0,0,0,.55),inset 0 0 30px rgba(255,255,255,.04);backdrop-filter:blur(14px)}
+    .battle-accuracy-effect.show{animation:accuracyBurst 1.15s cubic-bezier(.16,1,.3,1) both}
+    .battle-accuracy-effect.perfect{border-color:#4ade80;box-shadow:0 0 70px rgba(34,197,94,.38),inset 0 0 30px rgba(34,197,94,.08)}
+    .battle-accuracy-effect.zero{border-color:#fb7185;box-shadow:0 0 70px rgba(244,63,94,.32),inset 0 0 30px rgba(244,63,94,.08)}
+    .battle-accuracy-effect .effect-title{font-family:'Be Vietnam Pro',sans-serif;font-size:clamp(1.5rem,5vw,3rem);font-weight:900;letter-spacing:.04em}
+    .battle-accuracy-effect .effect-sub{font-size:.72rem;color:#94a3b8;margin-top:5px;letter-spacing:.18em;text-transform:uppercase}
+    @keyframes accuracyBurst{0%{opacity:0;transform:translate(-50%,-50%) scale(.72)}18%{opacity:1;transform:translate(-50%,-50%) scale(1.08)}72%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(1.03)}}
+    .battle-card-in-left,.battle-card-in-right{will-change:transform,opacity}
+    @keyframes cardInLeft{0%{opacity:0;transform:translateX(-80px) translateY(24px) rotate(-6deg) scale(.82)}70%{opacity:1;transform:translateX(8px) translateY(-4px) rotate(1deg) scale(1.03)}100%{opacity:1;transform:none}}
+    @keyframes cardInRight{0%{opacity:0;transform:translateX(80px) translateY(24px) rotate(6deg) scale(.82)}70%{opacity:1;transform:translateX(-8px) translateY(-4px) rotate(-1deg) scale(1.03)}100%{opacity:1;transform:none}}
+    .round-lane{min-height:330px;display:grid;grid-template-columns:minmax(0,1fr) 150px minmax(0,1fr);align-items:center;gap:18px}
+    .round-lane>.round-card:first-child{justify-self:end;z-index:2}.round-lane>.round-card:last-child{justify-self:start;z-index:2}
+    .combo{font-family:Cinzel,serif;font-weight:900;font-size:1.25rem}
+    .leaderboard-row{transition:.2s}.leaderboard-row:hover{transform:translateX(3px);background:rgba(255,255,255,.04)}
+    .leaderboard-scroll{height:188px;overflow-y:auto;padding-right:5px;scrollbar-width:thin;scrollbar-color:rgba(148,163,184,.45) rgba(15,23,42,.65)}
+    .leaderboard-scroll::-webkit-scrollbar{width:7px}
+    .leaderboard-scroll::-webkit-scrollbar-track{background:rgba(15,23,42,.65);border-radius:999px}
+    .leaderboard-scroll::-webkit-scrollbar-thumb{background:rgba(148,163,184,.45);border-radius:999px}
+    .leaderboard-personal{border-color:rgba(250,204,21,.55)!important;background:linear-gradient(90deg,rgba(250,204,21,.10),rgba(245,158,11,.04));box-shadow:0 0 24px rgba(250,204,21,.08)}
+    .top-1{border-color:#facc15!important;box-shadow:0 0 24px rgba(250,204,21,.18)}.top-2{border-color:#cbd5e1!important}.top-3{border-color:#d97706!important}
+
+    @media(max-width:700px){.round-lane{grid-template-columns:1fr;gap:12px;min-height:0}.round-vs{order:2}.round-card{max-width:240px;width:100%;margin:auto!important}.timing-track{width:72px;height:250px}.rank-spin-wrap{width:116px;height:152px}.rep-card{width:92px;height:126px}}
+    .obey-word{font-family:Georgia,serif;font-style:italic;letter-spacing:.16em;text-shadow:0 0 8px rgba(255,255,255,.55),0 0 18px rgba(239,68,68,.55)}
+    .star{color:#334155;text-shadow:0 0 4px rgba(0,0,0,.7)} .star.on{color:#facc15;text-shadow:0 0 8px rgba(250,204,21,.75)}
+    .card-choice{transition:.2s;border:1px solid rgba(148,163,184,.14)}.card-choice:hover{transform:translateY(-5px);border-color:rgba(245,158,11,.5)}
+    .card-choice.selected{border-color:#f59e0b;box-shadow:0 0 0 2px rgba(245,158,11,.28),0 14px 34px rgba(245,158,11,.12);transform:translateY(-5px)}
+    
+    .media{width:100%;height:100%;object-fit:cover}
+    .empty{border:1px dashed #334155}
+    .modal{background:rgba(2,6,23,.8);backdrop-filter:blur(10px)}
+    .rank-mini{height:78px;display:flex;align-items:center;justify-content:center}
+    .scanline{background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent);height:1px}
+    @keyframes pulseGlow{50%{box-shadow:0 0 35px rgba(245,158,11,.22),inset 0 0 30px rgba(245,158,11,.05)}}
+    @keyframes rankEdgeGlow{0%,100%{box-shadow:0 0 10px rgba(255,255,255,.16),0 0 24px rgba(245,158,11,.12),inset 0 0 22px rgba(255,255,255,.05)}50%{box-shadow:0 0 18px rgba(255,255,255,.38),0 0 42px rgba(245,158,11,.34),inset 0 0 30px rgba(245,158,11,.09)}}
+    .match-opponent-card{width:108px;height:142px;position:relative;overflow:hidden;border-radius:18px;border:1px solid rgba(244,63,94,.45);box-shadow:0 0 24px rgba(244,63,94,.16);background:rgba(2,6,23,.72)}
+    .match-opponent-card img,.match-opponent-card video{width:100%;height:100%;object-fit:cover}
+    .match-opponent-card .scan{position:absolute;inset:0;background:linear-gradient(180deg,transparent 20%,rgba(244,63,94,.18) 50%,transparent 80%);animation:scanOpponent 1.1s linear infinite;pointer-events:none}
+    @keyframes scanOpponent{from{transform:translateY(-100%)}to{transform:translateY(100%)}}
+    .selection-timer{font-family:'Be Vietnam Pro',sans-serif;min-width:92px;text-align:center}
+    .selection-timer.danger{color:#fb7185!important;animation:pulseGlow .65s infinite}
+    .timing-timeout{font-size:10px;color:#fb7185;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+    .match-pulse{animation:pulseGlow 1.8s infinite}
+    @media(max-width:700px){.hide-sm{display:none}.grid-ranks{grid-template-columns:repeat(2,1fr)}}
+  </style>
+</head>
+<body>
+
+<!-- NHẬP TÊN -->
+<section id="name-screen" class="min-h-screen grid place-items-center p-5">
+  <div class="glass w-full max-w-xl rounded-3xl p-7 md:p-10 text-center">
+    <div class="text-amber-400 text-xs font-black tracking-[.35em] uppercase">OBEY 7</div>
+    <h1 class="font-cinzel text-4xl md:text-6xl font-black mt-3">CHIẾN TRƯỜNG</h1>
+    <p class="text-slate-400 text-sm mt-3">Nhập tên nhân vật để bước vào sảnh chiến đấu.</p>
+    <div class="scanline my-7"></div>
+    <label class="block text-left text-xs font-bold text-slate-400 mb-2">TÊN NHÂN VẬT</label>
+    <input id="player-name-input" maxlength="24" autocomplete="off"
+      class="w-full rounded-2xl bg-slate-950/80 border border-slate-700 px-5 py-4 outline-none focus:border-amber-400 text-slate-100"
+      placeholder="Ví dụ: Lâm Bá Đăng">
+    <button onclick="enterLobby()" class="btn mt-5 w-full rounded-2xl py-4 bg-gradient-to-r from-amber-500 to-orange-600 text-slate-950 font-black">
+      <i class="fa-solid fa-door-open mr-2"></i> VÀO SẢNH
+    </button>
+    <p id="name-error" class="text-rose-400 text-xs mt-3 hidden"></p>
+  </div>
+</section>
+
+<!-- SẢNH -->
+<main id="lobby-screen" class="hidden min-h-screen p-4 md:p-8">
+  <div class="max-w-6xl mx-auto">
+    <header class="flex flex-wrap items-center justify-between gap-4 mb-5">
+      <div>
+        <div class="text-amber-400 text-[10px] font-black tracking-[.3em] uppercase">OBEY 7 / BATTLEFIELD</div>
+        <h1 class="font-cinzel text-3xl md:text-4xl font-black mt-1">Sảnh Chờ</h1>
+      </div>
+      <div class="flex gap-2">
+        <button onclick="showRankModal()" class="btn px-4 py-2 rounded-xl bg-slate-900 border border-slate-700 text-sm font-bold">
+          <i class="fa-solid fa-circle-question mr-2 text-amber-400"></i>Hệ thống Rank
+        </button>
+
+      </div>
+    </header>
+
+    <section class="grid lg:grid-cols-[1.15fr_.85fr] gap-5">
+      <div class="glass rounded-3xl p-5 md:p-7">
+        <div class="flex flex-wrap items-center gap-5">
+          <button id="representative-card" onclick="openRepresentativePicker()" class="rep-card empty shrink-0" title="Chọn thẻ đại diện">
+            <span class="absolute inset-0 grid place-items-center text-center p-2 z-10">
+              <i class="fa-solid fa-plus text-amber-300 text-xl"></i>
+              <span class="text-[9px] font-black text-slate-400 uppercase tracking-wider">Thẻ đại diện</span>
+            </span>
+          </button>
+          <div class="min-w-0 flex-1">
+            <div class="text-xs text-slate-500 uppercase tracking-widest">Nhân vật</div>
+            <div id="player-name" class="font-cinzel text-3xl md:text-4xl font-black text-white break-words">—</div>
+            <div class="flex flex-wrap items-center gap-2 mt-3">
+              <span id="rank-name" class="px-3 py-1 rounded-lg bg-emerald-500/10 border border-emerald-400/30 text-emerald-300 text-xs font-black">TÂN BINH</span>
+              <span class="px-3 py-1 rounded-lg bg-slate-900 border border-slate-700 text-xs text-slate-300">Mùa 01</span>
+            </div>
+            <div id="stars" class="mt-4 flex gap-1 text-2xl" aria-label="rank stars"></div>
+            <div id="rank-progress-text" class="text-xs text-slate-500 mt-1">0 / 7 sao</div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-7">
+          <div class="rounded-2xl bg-slate-950/65 border border-slate-800 p-4">
+            <div class="text-[10px] text-slate-500 uppercase">Tổng Power</div>
+            <div id="total-power" class="font-cinzel text-xl font-black text-amber-300 mt-1">0</div>
+            <div class="text-[10px] text-slate-600 mt-1">Toàn bộ thẻ sở hữu</div>
+          </div>
+          <div class="rounded-2xl bg-slate-950/65 border border-slate-800 p-4">
+            <div class="text-[10px] text-slate-500 uppercase">Level</div>
+            <div id="player-level" class="font-cinzel text-xl font-black text-violet-300 mt-1">0</div>
+            <div id="level-detail" class="text-[10px] text-slate-600 mt-1">0 lượt Gacha</div>
+          </div>
+          <div class="rounded-2xl bg-slate-950/65 border border-slate-800 p-4">
+            <div class="text-[10px] text-slate-500 uppercase">Bộ thẻ</div>
+            <div id="card-count" class="font-cinzel text-xl font-black text-emerald-300 mt-1">0</div>
+            <div class="text-[10px] text-slate-600 mt-1">Thẻ độc nhất</div>
+          </div>
+        </div>
+        <div class="mt-5 rounded-2xl border border-slate-800 bg-slate-950/45 p-4">
+          <div class="flex items-center justify-between gap-3">
+            <div><div class="text-xs font-bold text-slate-300">Bảng xếp hạng Rank</div><div id="leaderboard-preview-status" class="text-[10px] text-slate-500 mt-1">Đang tự động tải...</div></div>
+            <button onclick="openLeaderboard()" class="btn px-4 py-2 rounded-xl bg-amber-500/15 border border-amber-400/30 text-amber-300 text-xs font-black"><i class="fa-solid fa-ranking-star mr-2"></i>XEM BẢNG XẾP HẠNG</button>
+          </div>
+          <div id="leaderboard-preview" class="leaderboard-scroll mt-4"></div>
+          <div id="leaderboard-preview-personal" class="mt-2"></div>
+        </div>
+      </div>
+
+      <div class="glass rounded-3xl p-5 md:p-7 flex flex-col justify-between">
+        <div>
+          <div class="text-[10px] text-amber-400 font-black tracking-[.25em] uppercase">RANK SYSTEM</div>
+          <h2 class="font-cinzel text-2xl font-black mt-2">Con đường chiến đấu</h2>
+          <p class="text-sm text-slate-400 mt-2 leading-relaxed">
+            Tiến trình Rank được cập nhật theo kết quả chiến đấu.
+            Bậc tối thượng duy trì tiến trình riêng.
+          </p>
+          <div class="mt-5 p-4 rounded-2xl bg-slate-950/60 border border-slate-800 text-sm">
+            <div class="flex justify-between"><span class="text-slate-500">Rank hiện tại</span><b id="rank-short">TÂN BINH</b></div>
+            <div class="flex justify-between mt-2"><span class="text-slate-500">Sao</span><b id="rank-stars-small">0 / 7</b></div>
+          </div>
+        </div>
+        <div class="mt-7 rounded-2xl border border-slate-800 bg-slate-950/45 p-4">
+          <div class="text-[9px] text-slate-500 uppercase tracking-[.2em] text-center mb-3">Rank hiện tại</div>
+          <div id="match-rank-card" class="rank-spin-wrap" aria-label="Rank hiện tại"></div>
+          <button onclick="openMatchmaking()" class="btn match-pulse mt-5 w-full rounded-2xl py-4 bg-gradient-to-r from-violet-600 to-indigo-600 font-black text-lg flex items-center justify-center gap-3">
+            <span><i class="fa-solid fa-crosshairs mr-2"></i>GHÉP TRẬN</span>
+          </button>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<!-- GHÉP TRẬN -->
+<section id="match-screen" class="hidden min-h-screen p-4 md:p-8">
+  <div class="max-w-7xl mx-auto">
+    <header class="flex flex-wrap items-center justify-between gap-3 mb-5">
+      <div>
+        <div class="text-violet-300 text-[10px] font-black tracking-[.3em] uppercase">ĐÃ SẴN SÀNG • CHỌN THẺ</div>
+        <h1 class="font-cinzel text-3xl font-black">Chọn đội hình 3 thẻ</h1>
+        <p class="text-xs text-slate-500 mt-1">Chọn đủ 3 thẻ, sau đó ấn <b class="text-amber-300">XÁC NHẬN & BẮT ĐẦU TRẬN</b> để vào trận.</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <div id="selection-timer" class="selection-timer font-cinzel text-2xl font-black text-amber-300">30.0s</div>
+        <button onclick="backToLobby()" class="btn px-4 py-2 rounded-xl bg-slate-900 border border-slate-700 text-sm">← Về sảnh</button>
+      </div>
+    </header>
+
+    <div class="glass rounded-3xl p-4 md:p-6">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <div class="text-xs text-slate-500">ĐỘI HÌNH</div>
+          <div id="team-summary" class="font-cinzel text-xl font-black">0 / 3 thẻ</div>
+        </div>
+        <div class="text-right">
+          <div class="text-xs text-slate-500">Tổng lực chiến</div>
+          <div id="team-power" class="font-cinzel text-xl font-black text-amber-300">0</div>
+        </div>
+      </div>
+      <div id="selected-team" class="grid grid-cols-3 gap-3 mt-4"></div>
+    </div>
+
+    <div class="mt-5 flex items-end justify-between">
+      <div>
+        <h2 class="font-cinzel text-2xl font-black">Túi Thẻ</h2>
+        <p class="text-xs text-slate-500">Danh sách thẻ khả dụng trong bộ sưu tập.</p>
+      </div>
+      <span id="owned-label" class="text-xs text-slate-500"></span>
+    </div>
+    <div id="collection-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-4 mt-4"></div>
+
+    <div class="sticky bottom-4 mt-6 flex justify-center pointer-events-none">
+      <button id="start-battle-btn" onclick="startBattle()" disabled class="btn pointer-events-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-600 text-slate-950 font-black shadow-2xl">
+        <i class="fa-solid fa-swords mr-2"></i> XÁC NHẬN & BẮT ĐẦU TRẬN
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- BATTLE -->
+<section id="battle-screen" class="hidden min-h-screen p-4 md:p-8">
+  <div class="max-w-6xl mx-auto">
+    <div class="glass rounded-3xl p-5 md:p-8">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div><div class="text-rose-400 text-[10px] font-black tracking-[.3em] uppercase">BATTLEFIELD • BO3</div><h1 class="font-cinzel text-3xl md:text-5xl font-black mt-2">TRẬN ĐẤU</h1></div>
+        <div class="text-right"><div class="text-xs text-slate-500">Điểm</div><div class="font-cinzel text-3xl font-black"><span id="player-score" class="text-emerald-300">0</span><span class="text-slate-600 mx-2">—</span><span id="enemy-score" class="text-rose-300">0</span></div></div>
+      </div>
+      <div class="grid md:grid-cols-[1fr_auto_1fr] gap-4 items-center mt-6">
+        <div class="rounded-2xl bg-slate-950/60 border border-violet-500/20 p-4"><div id="battle-player-rank" class="text-[10px] text-violet-300 font-black">TÂN BINH</div><div id="battle-player-name" class="font-cinzel text-xl font-black mt-1">—</div><div id="battle-player-power" class="text-amber-300 font-bold mt-2">0 Power</div></div>
+        <div class="font-cinzel text-2xl font-black text-rose-400">VS</div>
+        <div class="rounded-2xl bg-slate-950/60 border border-rose-500/20 p-4 text-right"><div class="text-[10px] text-rose-300 font-black">ĐỐI THỦ</div><div id="enemy-name" class="font-cinzel text-xl font-black mt-1">—</div><div id="enemy-power" class="text-rose-300 font-bold mt-2">0 Power</div></div>
+      </div>
+      <div id="battle-status" class="mt-5 text-center text-slate-400">Đang tìm đối thủ...</div>
+      <div id="battle-accuracy-effect" class="battle-accuracy-effect" aria-live="polite"><div id="battle-accuracy-title" class="effect-title"></div><div id="battle-accuracy-sub" class="effect-sub"></div></div>
+      <div id="battle-lanes" class="mt-6"></div>
+      <div id="battle-result" class="hidden mt-6"></div>
+      <div class="mt-6 flex flex-wrap justify-center gap-3">
+        <button id="battle-next" onclick="playNextRound()" class="btn px-8 py-4 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 font-black"><i class="fa-solid fa-bolt mr-2"></i> BẮT ĐẦU CẶP 1</button>
+        <button onclick="backToLobby()" class="btn px-7 py-4 rounded-2xl bg-slate-900 border border-slate-700 font-bold">VỀ SẢNH</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- MATCHMAKING SEARCH / READY -->
+<div id="matchmaking-modal" class="modal fixed inset-0 z-[70] hidden items-center justify-center p-4">
+  <div class="glass rounded-3xl w-full max-w-md p-6 md:p-8 text-center">
+    <div class="text-violet-300 text-[10px] font-black tracking-[.28em] uppercase">MATCHMAKING</div>
+    <h2 id="matchmaking-title" class="font-cinzel text-3xl font-black mt-2">ĐANG TÌM ĐỐI THỦ</h2>
+    <div id="matchmaking-sub" class="text-sm text-slate-400 mt-2">Đang quét chiến trường...</div>
+    <div class="mt-6 flex flex-col items-center">
+      <div id="matchmaking-opponent" class="match-opponent-card">
+        <div class="absolute inset-0 grid place-items-center text-slate-600 z-10"><i class="fa-solid fa-user-secret text-3xl"></i></div>
+        <div class="scan"></div>
+      </div>
+      <div id="matchmaking-opponent-name" class="font-cinzel text-xl font-black mt-3 text-white">Đang quét...</div>
+      <div id="matchmaking-opponent-rank" class="text-[10px] text-rose-300 font-black mt-1">ĐỐI THỦ NGẪU NHIÊN</div>
+    </div>
+    <div id="matchmaking-countdown" class="font-cinzel text-4xl font-black text-amber-300 mt-5">…</div>
+    <button id="matchmaking-ready" onclick="confirmMatchReady()" class="btn hidden mt-5 w-full rounded-2xl py-4 bg-gradient-to-r from-emerald-500 to-green-400 text-slate-950 font-black">
+      <i class="fa-solid fa-check mr-2"></i> SẴN SÀNG
+    </button>
+    <button id="matchmaking-cancel" onclick="cancelMatchmaking()" class="btn mt-3 w-full rounded-2xl py-3 bg-slate-900 border border-slate-700 text-slate-300 font-bold">
+      HỦY GHÉP TRẬN
+    </button>
+  </div>
+</div>
+
+<!-- REPRESENTATIVE CARD PICKER -->
+<div id="rep-modal" class="modal fixed inset-0 z-50 hidden items-center justify-center p-4">
+  <div class="glass rounded-3xl w-full max-w-5xl max-h-[92vh] overflow-auto p-5 md:p-7">
+    <div class="flex justify-between items-center gap-3">
+      <div><div class="text-amber-400 text-[10px] font-black tracking-[.25em]">THẺ ĐẠI DIỆN</div><h2 class="font-cinzel text-3xl font-black mt-1">Chọn thẻ trong túi</h2><p class="text-xs text-slate-500 mt-2">Thẻ được lưu cố định trên trình duyệt này.</p></div>
+      <button onclick="hideRepresentativePicker()" class="btn w-10 h-10 rounded-xl bg-slate-900 border border-slate-700">×</button>
+    </div>
+    <div id="rep-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-4 mt-6"></div>
+  </div>
+</div>
+
+<!-- RANK MODAL -->
+<div id="rank-modal" class="modal fixed inset-0 z-50 hidden items-center justify-center p-4">
+  <div class="glass rounded-3xl w-full max-w-4xl max-h-[92vh] overflow-auto p-5 md:p-7">
+    <div class="flex justify-between items-center">
+      <div>
+        <div class="text-amber-400 text-[10px] font-black tracking-[.25em]">HỆ THỐNG RANK</div>
+        <h2 class="font-cinzel text-3xl font-black mt-1">Toàn bộ cấp bậc</h2>
+      </div>
+      <button onclick="hideRankModal()" class="btn w-10 h-10 rounded-xl bg-slate-900 border border-slate-700">×</button>
+    </div>
+    <p class="text-xs text-slate-500 mt-3">Tiến trình được xác lập qua hệ thống sao của từng bậc.</p>
+    <div id="rank-list" class="grid grid-ranks grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mt-6"></div>
+  </div>
+</div>
+
+
+<!-- LEADERBOARD MODAL -->
+<div id="leaderboard-modal" class="modal fixed inset-0 z-50 hidden items-center justify-center p-4">
+  <div class="glass rounded-3xl w-full max-w-3xl max-h-[92vh] overflow-auto p-5 md:p-7">
+    <div class="flex justify-between items-center gap-3">
+      <div><div class="text-amber-400 text-[10px] font-black tracking-[.25em]">RANKING ONLINE</div><h2 class="font-cinzel text-3xl font-black mt-1">Bảng Xếp Hạng</h2><p class="text-xs text-slate-500 mt-2">Hệ thống thành tích trực tuyến</p></div>
+      <button onclick="hideLeaderboard()" class="btn w-10 h-10 rounded-xl bg-slate-900 border border-slate-700">×</button>
+    </div>
+    <div id="leaderboard-status" class="text-xs text-slate-500 mt-4"></div>
+    <div id="leaderboard-list" class="leaderboard-scroll mt-4"></div>
+    <div id="leaderboard-personal" class="mt-2"></div>
+  </div>
+</div>
+
+<!-- MUSIC -->
+<button id="music-toggle" onclick="toggleMusic(event)" title="Bật/tắt nhạc"
+  class="fixed left-4 bottom-4 z-40 w-11 h-11 rounded-full bg-slate-900/90 border border-violet-500/30 text-violet-300 shadow-xl">
+  <i id="music-icon" class="fa-solid fa-volume-high"></i>
+</button>
+
+<script src="data/characters.js"></script>
+<script>
+const STORAGE_COL = "obey7_gacha_collection_v1";
+const STORAGE_PROGRESS = "obey7_gacha_progress_v1";
+const STORAGE_NAME = "obey7_battle_character_name_v1";
+const STORAGE_RANK = "obey7_battle_rank_v1";
+const STORAGE_MUSIC = "obey7_battle_music_v1";
+const STORAGE_REP = "obey7_battle_representative_v1";
+const STORAGE_BATTLE_ACTIVE = "obey7_battle_active_v1";
+// Dán URL Web App Google Apps Script của bảng Rank vào đây.
+// Ví dụ: https://script.google.com/macros/s/XXXX/exec
+const RANKING_API_URL = "";
+
+/* =========================================================
+   CHỈNH POWER ĐỐI THỦ THEO RANK
+   ---------------------------------------------------------
+   Bạn chỉ cần sửa min / max ở đây.
+   Mỗi trận, Power ĐỘI 3 THẺ của đối thủ sẽ ngẫu nhiên
+   trong khoảng của Rank hiện tại.
+========================================================= */
+const OPPONENT_POWER_RANGES = {
+  newbie:  {min: 1000, max: 5000},
+  warrior: {min: 4000, max: 12000},
+  knight:  {min: 10000, max: 25000},
+  general: {min: 22000, max: 50000},
+  obey:    {min: 45000, max: 100000}
+};
+
+const RANKS = [
+  {key:"newbie",name:"TÂN BINH",short:"TÂN BINH",cls:"rank-new",color:"emerald"},
+  {key:"warrior",name:"CHIẾN BINH",short:"CHIẾN BINH",cls:"rank-warrior",color:"blue"},
+  {key:"knight",name:"KỴ SĨ",short:"KỴ SĨ",cls:"rank-knight",color:"yellow"},
+  {key:"general",name:"CHIẾN TƯỚNG",short:"CHIẾN TƯỚNG",cls:"rank-general",color:"violet"},
+  {key:"obey",name:"OBEY",short:"OBEY",cls:"rank-obey",color:"red"}
+];
+
+let collection = [];
+let progress = {totalPulls:0,level:0,tickets:0};
+let playerName = "";
+let rankState = {index:0,stars:0};
+let selectedIds = [];
+let battle = null;
+let music = null;
+let lobbyMusic = null;
+let battleMusic = null;
+let musicStarted = false;
+let currentMusicMode = null;
+let matchmaking = {active:false,timer:null,searchTimer:null,readyTimer:null,readyDeadline:0};
+let leaderboardCache = [];
+
+function safeParse(key, fallback){
+  try{const x=JSON.parse(localStorage.getItem(key)); return x ?? fallback}catch(e){return fallback}
+}
+function uniqueCollection(arr){
+  const map = new Map();
+  (Array.isArray(arr)?arr:[]).forEach(c=>{
+    if(!c || c.id==null) return;
+    const id=String(c.id);
+    if(!map.has(id)) map.set(id,{...c,power:Number(c.power)||0});
+    else map.get(id).power += Number(c.power)||0;
+  });
+  return [...map.values()];
+}
+function fmt(n){return Number(n||0).toLocaleString("vi-VN")}
+function getCharById(id){
+  return collection.find(c=>String(c.id)===String(id)) ||
+         (typeof CHARACTER_POOL!=="undefined" ? CHARACTER_POOL.find(c=>String(c.id)===String(id)) : null);
+}
+function renderMedia(c){
+  if(!c) return "";
+  const type=String(c.mediaType||"").toLowerCase(), ext=String(c.mediaExt||"").toLowerCase().replace(".","");
+  const url=String(c.mediaUrl||"");
+  const videoExts=["mp4","webm","ogg","ogv","mov","m4v"];
+  const isVideo=type==="video"||videoExts.includes(type)||videoExts.includes(ext)||videoExts.includes((url.split("?")[0].split(".").pop()||"").toLowerCase());
+  if(isVideo) return `<video src="${url}" autoplay loop muted playsinline class="media"></video>`;
+  return `<img src="${url}" alt="${esc(c.name||"Character")}" class="media" draggable="false" onerror="this.style.display='none';this.parentElement.classList.add('bg-slate-800')">`;
+}
+function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+
+function loadData(){
+  collection=uniqueCollection(safeParse(STORAGE_COL,[]));
+  const p=safeParse(STORAGE_PROGRESS,{});
+  progress={
+    totalPulls:Math.max(0,Number(p.totalPulls)||0),
+    level:Math.max(0,Number(p.level)||0),
+    tickets:Math.max(0,Number(p.tickets)||0)
+  };
+  playerName=localStorage.getItem(STORAGE_NAME)||"";
+  const r=safeParse(STORAGE_RANK,{});
+  rankState={
+    index:Math.max(0,Math.min(RANKS.length-1,Number(r.index)||0)),
+    stars:Math.max(0,Number(r.stars)||0)
+  };
+  if(playerName) document.getElementById("player-name-input").value=playerName;
+}
+function saveRank(){localStorage.setItem(STORAGE_RANK,JSON.stringify(rankState))}
+function totalPower(){return collection.reduce((s,c)=>s+(Number(c.power)||0),0)}
+function currentRank(){return RANKS[rankState.index]}
+
+function enterLobby(){
+  const input=document.getElementById("player-name-input");
+  const name=input.value.trim();
+  const err=document.getElementById("name-error");
+  if(!name){err.textContent="Hãy nhập tên nhân vật.";err.classList.remove("hidden");input.focus();return}
+  err.classList.add("hidden");
+  playerName=name;
+  localStorage.setItem(STORAGE_NAME,name);
+  showOnly("lobby-screen");
+  playLobbyMusic();
+  refreshLobby();
+  syncLeaderboard();
+}
+function leaveLobby(){ playLobbyMusic(); refreshLobby(); showOnly("lobby-screen"); }
+function showOnly(id){
+  ["name-screen","lobby-screen","match-screen","battle-screen"].forEach(x=>document.getElementById(x).classList.add("hidden"));
+  document.getElementById(id).classList.remove("hidden");
+}
+function representativeCard(){
+  const id=localStorage.getItem(STORAGE_REP);
+  return id ? getCharById(id) : null;
+}
+function openRepresentativePicker(){
+  if(!collection.length){alert("Bạn chưa có thẻ trong túi.");return;}
+  const grid=document.getElementById("rep-grid");
+  const current=localStorage.getItem(STORAGE_REP);
+  const sorted=[...collection].sort((a,b)=>(Number(b.power)||0)-(Number(a.power)||0));
+  grid.innerHTML=sorted.map(c=>{
+    const active=String(c.id)===String(current);
+    return `<button onclick="setRepresentative('${esc(String(c.id))}')" class="card-choice ${active?'selected':''} relative text-left rounded-2xl overflow-hidden bg-slate-950">
+      <div class="aspect-[3/4] relative bg-slate-900">${renderMedia(c)}<span class="absolute top-2 left-2 px-2 py-1 rounded-md bg-black/75 text-[9px] font-black">${esc(c.rarity||'D')}</span></div>
+      <div class="p-3"><div class="font-cinzel text-xs font-black text-amber-200 truncate">${esc(c.name||'Unknown')}</div><div class="text-[10px] text-slate-300 mt-2">${fmt(c.power)} Power</div></div>
+    </button>`;
+  }).join('');
+  document.getElementById('rep-modal').classList.remove('hidden');document.getElementById('rep-modal').classList.add('flex');
+}
+function hideRepresentativePicker(){document.getElementById('rep-modal').classList.add('hidden');document.getElementById('rep-modal').classList.remove('flex')}
+function setRepresentative(id){localStorage.setItem(STORAGE_REP,String(id));hideRepresentativePicker();refreshLobby()}
+function renderRepresentative(){
+  const el=document.getElementById('representative-card'); if(!el)return;
+  const c=representativeCard();
+  if(!c){el.className='rep-card empty shrink-0';el.innerHTML='<span class="absolute inset-0 grid place-items-center text-center p-2 z-10"><i class="fa-solid fa-plus text-amber-300 text-xl"></i><span class="text-[9px] font-black text-slate-400 uppercase tracking-wider">Thẻ đại diện</span></span>';return;}
+  el.className='rep-card shrink-0';el.innerHTML=`${renderMedia(c)}<span class="absolute bottom-0 left-0 right-0 bg-black/75 p-1.5 text-[8px] font-black text-center truncate">${esc(c.name||'')}</span>`;
+}
+function renderMatchRankCard(){
+  const el=document.getElementById("match-rank-card");
+  if(!el)return;
+  const r=currentRank();
+  const face=()=>`<div class="rank-card ${r.cls}">
+    <div class="rank-mini relative z-10">
+      <div class="text-center">
+        <div class="rank-title ${r.key==="obey"?"obey-word":""}">${r.key==="obey"?"OBEY":esc(r.name)}</div>
+        <div class="rank-tier">RANK ${rankState.index+1}</div>
+      </div>
+    </div>
+    <div class="relative z-10 mt-2 text-center">
+      <div class="text-[8px] text-white/60 uppercase">Tiến trình</div>
+      <div class="rank-stars">${Array.from({length:7},(_,i)=>`<i class="fa-solid fa-star ${i<Math.min(7,rankState.stars)?"":"opacity-25"}"></i>`).join("")}</div>
+      <div class="text-[9px] text-white/70 mt-2">${rankState.index===RANKS.length-1?`${rankState.stars} sao`:`${rankState.stars} / 7 sao`}</div>
+    </div>
+  </div>`;
+  el.innerHTML=`<div class="rank-spin-face">${face()}</div>`;
+}
+function refreshLobby(){
+  const r=currentRank();
+  document.getElementById("player-name").textContent=playerName;
+  document.getElementById("rank-name").textContent=r.name;
+  document.getElementById("rank-short").textContent=r.short;
+  document.getElementById("rank-stars-small").textContent=`${rankState.stars} / 7`;
+  document.getElementById("total-power").textContent=fmt(totalPower());
+  document.getElementById("player-level").textContent=fmt(progress.level);
+  document.getElementById("level-detail").textContent=`${fmt(progress.totalPulls)} lượt Gacha`;
+  document.getElementById("card-count").textContent=fmt(collection.length);
+  document.getElementById("rank-progress-text").textContent=`${rankState.stars} / 7 sao`;
+  renderRepresentative();
+  renderStars(document.getElementById("stars"),rankState.stars);
+  renderMatchRankCard();
+}
+function renderStars(el,n){
+  const visible=Math.min(7,Math.max(0,Number(n)||0));
+  el.innerHTML=Array.from({length:7},(_,i)=>`<i class="fa-solid fa-star star ${i<visible?"on":""}"></i>`).join("");
+}
+function showRankModal(){
+  const list=document.getElementById("rank-list");
+  list.innerHTML=RANKS.map((r,i)=>`
+    <div class="rank-card ${r.cls} p-4 ${i===rankState.index?"ring-2 ring-white/60":""}">
+      <div class="rank-mini relative z-10">
+        <div class="text-center">
+          <div class="font-cinzel text-xl font-black ${r.key==="obey"?"obey-word":""}">${r.key==="obey"?"OBEY":r.name}</div>
+          <div class="text-[9px] uppercase tracking-[.2em] text-white/60 mt-1">RANK ${i+1}</div>
+        </div>
+      </div>
+      <div class="relative z-10 mt-3 text-center">
+        <div class="text-[9px] text-white/60 uppercase">Đại diện thẻ</div>
+        <div class="mt-2 h-8 rounded-lg border-2 border-white/35 bg-white/10"></div>
+        <div class="flex justify-center gap-0.5 mt-3">${Array.from({length:7},()=>'<i class="fa-solid fa-star text-yellow-300 text-xs"></i>').join("")}</div>
+        <div class="text-[10px] text-white/65 mt-2">Tiến trình thăng hạng</div>
+      </div>
+    </div>`).join("");
+  document.getElementById("rank-modal").classList.remove("hidden");
+  document.getElementById("rank-modal").classList.add("flex");
+}
+function hideRankModal(){document.getElementById("rank-modal").classList.add("hidden");document.getElementById("rank-modal").classList.remove("flex")}
+
+function opponentPreviewPool(){
+  const pool=(typeof CHARACTER_POOL!=='undefined'&&Array.isArray(CHARACTER_POOL)?CHARACTER_POOL:collection).filter(Boolean);
+  return pool.length?pool:[];
+}
+function randomOpponentName(){
+  const names=['Kẻ Lang Thang','Chiến Binh Bóng Tối','Đấu Sĩ Ẩn Danh','OBEY Challenger','Hắc Kiếm Sĩ','Chiến Tướng Vô Danh','Bóng Ma Chiến Trường','Thợ Săn Sao','Cuồng Chiến Giả','Vệ Binh Hoàng Hôn'];
+  return names[randInt(0,names.length-1)];
+}
+function renderSearchingOpponent(card, opponentName){
+  const box=document.getElementById('matchmaking-opponent');
+  const name=document.getElementById('matchmaking-opponent-name');
+  const rank=document.getElementById('matchmaking-opponent-rank');
+  if(!box||!name||!rank)return;
+  const c=card||{};
+  box.innerHTML=(c.mediaUrl?renderMedia(c):'<div class="absolute inset-0 grid place-items-center text-slate-600"><i class="fa-solid fa-user-secret text-3xl"></i></div>')+'<div class="scan"></div>';
+  name.textContent=opponentName||'Đang quét...';
+  rank.textContent=c.rankName||'ĐỐI THỦ NGẪU NHIÊN';
+}
+function openMatchmaking(){
+  if(collection.length<3){
+    alert("Bạn cần sở hữu ít nhất 3 thẻ để lập đội hình.");
+    return;
+  }
+  selectedIds=[];
+  playLobbyMusic();
+  showOnly("lobby-screen");
+  startMatchmakingSearch();
+}
+function closeMatchmakingModal(){
+  const modal=document.getElementById('matchmaking-modal');
+  if(modal){modal.classList.add('hidden');modal.classList.remove('flex');}
+}
+function clearMatchmakingTimers(){
+  if(matchmaking.timer)clearTimeout(matchmaking.timer);
+  if(matchmaking.searchTimer)clearInterval(matchmaking.searchTimer);
+  if(matchmaking.readyTimer)clearTimeout(matchmaking.readyTimer);
+  matchmaking.timer=null;matchmaking.searchTimer=null;matchmaking.readyTimer=null;
+}
+function startMatchmakingSearch(){
+  clearMatchmakingTimers();
+  matchmaking={active:true,timer:null,searchTimer:null,readyTimer:null,readyDeadline:0,opponent:null,opponentName:''};
+  const modal=document.getElementById('matchmaking-modal');
+  const title=document.getElementById('matchmaking-title');
+  const sub=document.getElementById('matchmaking-sub');
+  const countdown=document.getElementById('matchmaking-countdown');
+  const ready=document.getElementById('matchmaking-ready');
+  const cancel=document.getElementById('matchmaking-cancel');
+  modal.classList.remove('hidden');modal.classList.add('flex');
+  title.textContent='ĐANG TÌM ĐỐI THỦ';
+  sub.textContent='Avatar thẻ đang được quét ngẫu nhiên...';
+  countdown.textContent='…';
+  ready.classList.add('hidden');
+  cancel.textContent='HỦY GHÉP TRẬN';
+  const pool=opponentPreviewPool();
+  const searchMs=randInt(1600,3200);
+  let lastIndex=-1;
+  matchmaking.searchTimer=setInterval(()=>{
+    if(!matchmaking.active)return;
+    if(pool.length){
+      let idx=randInt(0,pool.length-1);
+      if(pool.length>1&&idx===lastIndex)idx=(idx+1)%pool.length;
+      lastIndex=idx;
+      renderSearchingOpponent(pool[idx],randomOpponentName());
+    }
+  },170);
+  matchmaking.timer=setTimeout(()=>{
+    if(!matchmaking.active)return;
+    clearMatchmakingTimers();
+    const idx=pool.length?randInt(0,pool.length-1):0;
+    matchmaking.opponent=pool[idx]||{};
+    matchmaking.opponentName=randomOpponentName();
+    renderSearchingOpponent(matchmaking.opponent,matchmaking.opponentName);
+    beginReadyCheck();
+  },searchMs);
+}
+function beginReadyCheck(){
+  const title=document.getElementById('matchmaking-title');
+  const sub=document.getElementById('matchmaking-sub');
+  const countdown=document.getElementById('matchmaking-countdown');
+  const ready=document.getElementById('matchmaking-ready');
+  const cancel=document.getElementById('matchmaking-cancel');
+  title.textContent='ĐÃ TÌM THẤY ĐỐI THỦ';
+  sub.textContent='Đối thủ đã sẵn sàng. Bạn có 9 giây để xác nhận.';
+  ready.classList.remove('hidden');
+  cancel.textContent='HỦY GHÉP TRẬN';
+  matchmaking.readyDeadline=Date.now()+9000;
+  const tick=()=>{
+    if(!matchmaking.active)return;
+    const left=Math.max(0,matchmaking.readyDeadline-Date.now());
+    countdown.textContent=(left/1000).toFixed(1)+'s';
+    if(left<=0){
+      clearMatchmakingTimers();
+      matchmaking.active=false;
+      closeMatchmakingModal();
+      playLobbyMusic();
+      alert('Bạn đã không sẵn sàng trong 9 giây. Ghép trận đã bị hủy.');
+      return;
+    }
+    matchmaking.readyTimer=setTimeout(tick,100);
+  };
+  tick();
+}
+function confirmMatchReady(){
+  if(!matchmaking.active)return;
+  clearMatchmakingTimers();
+  matchmaking.active=false;
+  closeMatchmakingModal();
+  selectedIds=[];
+  localStorage.setItem(STORAGE_BATTLE_ACTIVE,'1');
+  showOnly('match-screen');
+  playBattleMusic();
+  renderCollection();
+  renderSelectedTeam();
+  startCardSelectionTimer();
+}
+function cancelMatchmaking(){
+  clearMatchmakingTimers();
+  matchmaking.active=false;
+  closeMatchmakingModal();
+  playLobbyMusic();
+}
+function startCardSelectionTimer(){
+  if(window.cardSelectionTimer)clearInterval(window.cardSelectionTimer);
+  const el=document.getElementById('selection-timer');
+  const deadline=Date.now()+30000;
+  window.cardSelectionDeadline=deadline;
+  const tick=()=>{
+    const left=Math.max(0,deadline-Date.now());
+    if(el){el.textContent=(left/1000).toFixed(1)+'s';el.classList.toggle('danger',left<=3000);}
+    if(left<=0){
+      clearInterval(window.cardSelectionTimer);window.cardSelectionTimer=null;
+      if(document.getElementById('match-screen') && !document.getElementById('match-screen').classList.contains('hidden')) autoLoseCardSelection();
+    }
+  };
+  tick();
+  window.cardSelectionTimer=setInterval(tick,100);
+}
+function stopCardSelectionTimer(){
+  if(window.cardSelectionTimer)clearInterval(window.cardSelectionTimer);
+  window.cardSelectionTimer=null;
+}
+function autoLoseCardSelection(){
+  stopCardSelectionTimer();
+  if(!document.getElementById('match-screen') || document.getElementById('match-screen').classList.contains('hidden'))return;
+  const oldIndex=rankState.index;
+  rankState.stars=Math.max(0,rankState.stars-1);
+  saveRank();
+  const r=currentRank();
+  alert(`HẾT THỜI GIAN CHỌN THẺ. Bạn bị xử thua và mất 1 sao.`);
+  showOnly('lobby-screen');
+  loadData();
+  refreshLobby();
+  syncLeaderboard();
+  playLobbyMusic();
+}
+function surrenderCardSelection(reason='manual'){
+  const screen=document.getElementById('match-screen');
+  if(!screen || screen.classList.contains('hidden'))return false;
+  stopCardSelectionTimer();
+  localStorage.removeItem(STORAGE_BATTLE_ACTIVE);
+  rankState.stars=Math.max(0,rankState.stars-1);
+  saveRank();
+  playLobbyMusic();
+  clearMatchmakingTimers();
+  matchmaking.active=false;
+  closeMatchmakingModal();
+  selectedIds=[];
+  loadData();
+  refreshLobby();
+  syncLeaderboard();
+  showOnly('lobby-screen');
+  if(reason==='manual') alert('BẠN ĐÃ RỜI MÀN HÌNH CHỌN THẺ. Tính là đầu hàng và mất 1 sao.');
+  else alert('BẠN ĐÃ RELOAD / RỜI TRANG KHI ĐANG CHỌN THẺ. Tính là đầu hàng và mất 1 sao.');
+  return true;
+}
+function surrenderBattle(reason='manual'){
+  if(!battle || battle.finished)return false;
+  if(battle.timingRaf)cancelAnimationFrame(battle.timingRaf);
+  battle.timingRunning=false;
+  battle.finished=true;
+  localStorage.removeItem(STORAGE_BATTLE_ACTIVE);
+  rankState.stars=Math.max(0,rankState.stars-1);
+  saveRank();
+  stopCardSelectionTimer();
+  playLobbyMusic();
+  clearMatchmakingTimers();
+  matchmaking.active=false;
+  closeMatchmakingModal();
+  loadData();
+  refreshLobby();
+  syncLeaderboard();
+  showOnly('lobby-screen');
+  if(reason==='manual') alert('BẠN ĐÃ ĐẦU HÀNG. Mất 1 sao.');
+  else if(reason==='reload') alert('BẠN ĐÃ RỜI TRẬN / RELOAD TRONG TRẬN. Tính là đầu hàng và mất 1 sao.');
+  return true;
+}
+function recoverAbandonedBattle(){
+  if(localStorage.getItem(STORAGE_BATTLE_ACTIVE)!=='1')return false;
+  localStorage.removeItem(STORAGE_BATTLE_ACTIVE);
+  rankState.stars=Math.max(0,rankState.stars-1);
+  saveRank();
+  stopBattleMusic();
+  refreshLobby();
+  syncLeaderboard();
+  alert('BẠN ĐÃ RELOAD / RỜI TRANG KHI ĐANG CHỌN THẺ HOẶC ĐANG ĐẤU. Tính là đầu hàng và mất 1 sao.');
+  return true;
+}
+function backToLobby(){
+  const matchScreen=document.getElementById('match-screen');
+  if(matchScreen && !matchScreen.classList.contains('hidden') && !battle){
+    surrenderCardSelection('manual');
+    return;
+  }
+  if(battle && !battle.finished){
+    surrenderBattle('manual');
+    return;
+  }
+  stopCardSelectionTimer();
+  playLobbyMusic();
+  clearMatchmakingTimers();
+  matchmaking.active=false;
+  closeMatchmakingModal();
+  showOnly("lobby-screen");
+  loadData();
+  refreshLobby();
+  syncLeaderboard();
+}
+function renderCollection(){
+  const grid=document.getElementById("collection-grid");
+  document.getElementById("owned-label").textContent=`${collection.length} thẻ sở hữu`;
+  if(!collection.length){
+    grid.innerHTML=`<div class="empty rounded-2xl p-10 text-center text-slate-500 col-span-full">Chưa có thẻ nào trong Túi Thẻ.</div>`;
+    return;
+  }
+  const sortedCollection=[...collection].sort((a,b)=>(Number(b.power)||0)-(Number(a.power)||0));
+  grid.innerHTML=sortedCollection.map(c=>{
+    const selected=selectedIds.includes(String(c.id));
+    return `<button type="button" onclick="toggleCard('${esc(String(c.id))}')" class="card-choice ${selected?"selected":""} relative text-left rounded-2xl overflow-hidden bg-slate-950 ${selected?"":"border-slate-800"}">
+      <div class="aspect-[3/4] relative bg-slate-900">${renderMedia(c)}
+        <span class="absolute top-2 left-2 px-2 py-1 rounded-md bg-black/70 text-[9px] font-black">${esc(c.rarity||"D")}</span>
+        <span class="absolute top-2 right-2 px-2 py-1 rounded-md bg-black/70 text-[9px] font-mono">#${esc(c.id)}</span>
+      </div>
+      <div class="p-3">
+        <div class="font-cinzel text-xs font-black text-amber-200 truncate">${esc(c.name||"Unknown")}</div>
+        <div class="text-[9px] text-slate-500 truncate mt-1">${esc(c.title||"")}</div>
+        <div class="text-[10px] text-slate-300 mt-2"><i class="fa-solid fa-bolt text-amber-400 mr-1"></i>${fmt(c.power)} Power</div>
+      </div>
+    </button>`
+  }).join("");
+}
+function toggleCard(id){
+  id=String(id);
+  const i=selectedIds.indexOf(id);
+  if(i>=0) selectedIds.splice(i,1);
+  else if(selectedIds.length<3) selectedIds.push(id);
+  else return;
+  renderCollection();renderSelectedTeam();
+  if(selectedIds.length===3){
+    document.getElementById('selection-timer').classList.remove('danger');
+  }
+}
+function renderSelectedTeam(){
+  const box=document.getElementById("selected-team");
+  const cards=selectedIds.map(getCharById).filter(Boolean);
+  document.getElementById("team-summary").textContent=`${cards.length} / 3 thẻ`;
+  document.getElementById("team-power").textContent=fmt(cards.reduce((s,c)=>s+(Number(c.power)||0),0));
+  document.getElementById("start-battle-btn").disabled=cards.length!==3;
+  box.innerHTML=[0,1,2].map(i=>{
+    const c=cards[i];
+    return c?`<div class="relative overflow-hidden rounded-2xl border border-amber-500/30 bg-slate-950">
+      <div class="aspect-[3/4]">${renderMedia(c)}</div>
+      <div class="p-2 text-center"><div class="text-[10px] font-bold truncate">${esc(c.name)}</div><div class="text-[9px] text-amber-300">${fmt(c.power)} Power</div></div>
+    </div>`:`<div class="rounded-2xl empty min-h-40 grid place-items-center text-slate-600 text-xs">SLOT ${i+1}</div>`;
+  }).join("");
+}
+function opponentRange(){
+  const cfg=OPPONENT_POWER_RANGES[currentRank().key] || {min:1,max:1};
+  const min=Math.max(1,Number(cfg.min)||1), max=Math.max(min,Number(cfg.max)||min);
+  return {min,max};
+}
+function randInt(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+function randomOpponentTeam(targetPower){
+  const pool=(typeof CHARACTER_POOL!=='undefined'&&Array.isArray(CHARACTER_POOL)?CHARACTER_POOL:collection).filter(Boolean);
+  const shuffled=[...pool].sort(()=>Math.random()-.5);
+  const base=shuffled.slice(0,Math.min(3,shuffled.length));
+  while(base.length<3 && collection.length) base.push(collection[randInt(0,collection.length-1)]);
+  const weights=base.map(c=>Math.max(1,Number(c.power)||1));
+  const total=weights.reduce((a,b)=>a+b,0);
+  let remain=targetPower;
+  return base.map((c,i)=>{
+    const share=i===2?remain:Math.max(1,Math.round(targetPower*(weights[i]/total)));
+    remain-=share;
+    return {...c,battlePower:share};
+  });
+}
+function startBattle(){
+  if(selectedIds.length!==3)return;
+  if(!document.getElementById('match-screen') || document.getElementById('match-screen').classList.contains('hidden'))return;
+  stopCardSelectionTimer();
+  localStorage.setItem(STORAGE_BATTLE_ACTIVE,'1');
+  const playerTeam=selectedIds.map(getCharById).filter(Boolean).map(c=>({...c,battlePower:Number(c.power)||0}));
+  const range=opponentRange();
+  const enemyTarget=randInt(range.min,range.max);
+  const enemyTeam=randomOpponentTeam(enemyTarget);
+  battle={playerTeam,enemyTeam,playerScore:0,enemyScore:0,round:0,finished:false,revealed:false,rolled:false,lastWinner:null,timingRunning:false,timingPos:.02,timingDir:1,timingDeadline:0,timingZoneTop:.5,timingZoneHeight:.12,timingBreakthroughHeight:.028,playerAccuracy:null,enemyAccuracy:null,timingRaf:null};
+  document.getElementById('battle-player-rank').textContent=currentRank().name;
+  document.getElementById('battle-player-name').textContent=playerName;
+  document.getElementById('battle-player-power').textContent=fmt(playerTeam.reduce((s,c)=>s+c.battlePower,0))+' Power';
+  document.getElementById('enemy-name').textContent=matchmaking.opponentName||randomOpponentName();
+  document.getElementById('enemy-power').textContent=fmt(enemyTeam.reduce((s,c)=>s+c.battlePower,0))+' Power';
+  document.getElementById('battle-status').textContent='Hai đối thủ đã thấy tên nhau. Trận BO3 bắt đầu.';
+  document.getElementById('battle-result').classList.add('hidden');
+  document.getElementById('player-score').textContent='0';document.getElementById('enemy-score').textContent='0';
+  document.getElementById('battle-next').disabled=false;document.getElementById('battle-next').onclick=playNextRound;document.getElementById('battle-next').textContent='⚔ BẮT ĐẦU CẶP 1';
+  renderBattleLanes();
+  showOnly('battle-screen');
+}
+function timingSpeedForPower(power){
+  const p=Math.max(1,Number(power)||1);
+  return Math.min(620,170+Math.sqrt(p)*2.6);
+}
+function timingAccuracy(pos){
+  const top=Math.max(.05,Math.min(.83,Number(battle?.timingZoneTop)||.5));
+  const height=Math.max(.06,Math.min(.20,Number(battle?.timingZoneHeight)||.12));
+  const bottom=Math.min(.95,top+height);
+  const breakthroughHeight=Math.max(.018,Math.min(.045,Number(battle?.timingBreakthroughHeight)||.028));
+  const breakthroughTop=top+(height-breakthroughHeight)/2;
+  const breakthroughBottom=breakthroughTop+breakthroughHeight;
+  if(pos>=breakthroughTop&&pos<=breakthroughBottom)return 10;
+  if(pos>=top&&pos<=bottom)return 1;
+  const center=(top+bottom)/2;
+  const distance=pos<center?top-pos:pos-bottom;
+  const maxDistance=Math.max(.05,Math.max(center-top,bottom-center)*3.2);
+  return Math.max(0,1-distance/maxDistance);
+}
+function timingLabel(acc){
+  if(acc>=.999)return 'SỨC MẠNH TỐI ĐA';
+  if(acc<=.001)return 'KIỆT SỨC';
+  return `HIỆU SUẤT ${Math.round(acc*100)}%`;
+}
+function startTiming(){
+  if(!battle||battle.finished||!battle.revealed||battle.timingRunning)return;
+  battle.timingRunning=true;
+  battle.timingPos=.02;
+  battle.timingDir=1;
+  battle.timingDeadline=performance.now()+4000;
+  battle.timingLast=performance.now();
+  battle.timingRaf=requestAnimationFrame(timingFrame);
+  document.getElementById('battle-next').textContent='DỪNG THANH';
+  document.getElementById('battle-next').onclick=stopTiming;
+  renderBattleLanes();
+}
+function timingFrame(now){
+  if(!battle||battle.finished||!battle.timingRunning)return;
+  if(now>=battle.timingDeadline){
+    battle.timingRunning=false;
+    if(battle.timingRaf)cancelAnimationFrame(battle.timingRaf);
+    battle.playerAccuracy=0;
+    showAccuracyEffect(0);
+    resolveTimingResult();
+    return;
+  }
+  const dt=Math.min(.04,(now-(battle.timingLast||now))/1000);
+  battle.timingLast=now;
+  const speed=timingSpeedForPower(battle.playerTeam[battle.round].battlePower);
+  battle.timingPos += battle.timingDir*speed*dt/150;
+  if(battle.timingPos>=.98){battle.timingPos=.98;battle.timingDir=-1}
+  if(battle.timingPos<=.02){battle.timingPos=.02;battle.timingDir=1}
+  const line=document.getElementById('timing-line');
+  if(line)line.style.top=`${battle.timingPos*100}%`;
+  battle.timingRaf=requestAnimationFrame(timingFrame);
+}
+function showAccuracyEffect(acc){
+  const box=document.getElementById('battle-accuracy-effect');
+  const title=document.getElementById('battle-accuracy-title');
+  const sub=document.getElementById('battle-accuracy-sub');
+  if(!box||!title||!sub)return;
+  box.classList.remove('show','perfect','zero');
+  void box.offsetWidth;
+  if(acc>=10){title.textContent='BỘC PHÁ TIỀM NĂNG';sub.textContent='Power ×10 · Đòn đánh bùng nổ';box.classList.add('perfect')}
+  else if(acc>=.999){title.textContent='SỨC MẠNH TỐI ĐA';sub.textContent='Độ chính xác hoàn hảo';box.classList.add('perfect')}
+  else if(acc<=.001){title.textContent='KIỆT SỨC';sub.textContent='Lực chiến suy giảm';box.classList.add('zero')}
+  else{title.textContent=`HIỆU SUẤT ${Math.round(acc*100)}%`;sub.textContent='Kết quả thao tác lực chiến'}
+  box.classList.add('show');
+}
+function stopTiming(){
+  if(!battle||battle.finished||!battle.timingRunning)return;
+  battle.timingRunning=false;
+  battle.timingDeadline=0;
+  if(battle.timingRaf)cancelAnimationFrame(battle.timingRaf);
+  battle.playerAccuracy=timingAccuracy(battle.timingPos);
+  showAccuracyEffect(battle.playerAccuracy);
+  resolveTimingResult();
+}
+function resolveTimingResult(){
+  if(!battle||battle.finished||battle.rolled)return;
+  const i=battle.round,pc=battle.playerTeam[i],ec=battle.enemyTeam[i];
+  battle.enemyAccuracy=.58+Math.random()*.34;
+  battle.playerCombo=Math.round((Number(pc.battlePower)||0)*battle.playerAccuracy);
+  battle.enemyCombo=Math.round((Number(ec.battlePower)||0)*battle.enemyAccuracy);
+  battle.rolled=true;
+  battle.lastWinner=battle.playerCombo>=battle.enemyCombo;
+  if(battle.playerCombo===battle.enemyCombo){
+    battle.enemyCombo=Math.max(0,battle.enemyCombo-1);
+    battle.lastWinner=true;
+  }
+  if(battle.playerCombo>battle.enemyCombo)battle.playerScore++;else battle.enemyScore++;
+  document.getElementById('player-score').textContent=battle.playerScore;
+  document.getElementById('enemy-score').textContent=battle.enemyScore;
+  renderBattleLanes();
+  const winnerName=battle.playerCombo>battle.enemyCombo?playerName:document.getElementById('enemy-name').textContent;
+  document.getElementById('battle-status').textContent=`Cặp ${i+1}: ${winnerName} chiếm ưu thế với ${fmt(Math.max(battle.playerCombo,battle.enemyCombo))} DAMAGE.`;
+  if(battle.playerScore>=2||battle.enemyScore>=2||battle.round>=2){finishBattle();return}
+  battle.round++;battle.revealed=false;battle.rolled=false;battle.lastWinner=null;battle.timingPos=.5;battle.timingDeadline=0;
+  const btn=document.getElementById('battle-next');btn.disabled=false;btn.onclick=playNextRound;btn.textContent=`⚔ BẮT ĐẦU CẶP ${battle.round+1}`;
+}
+function renderBattleLanes(){
+  const lanes=document.getElementById('battle-lanes');
+  if(!battle)return;
+  const i=battle.round;
+  if(i>=3){lanes.innerHTML='';return}
+  const pc=battle.playerTeam[i],ec=battle.enemyTeam[i];
+  const revealed=battle.revealed,rolled=battle.rolled;
+  const pwin=battle.lastWinner===true,ewin=battle.lastWinner===false;
+  const pos=Number.isFinite(battle.timingPos)?battle.timingPos:.5;
+  const pacc=Number.isFinite(battle.playerAccuracy)?battle.playerAccuracy:null;
+  const enemyAcc=Number.isFinite(battle.enemyAccuracy)?battle.enemyAccuracy:null;
+  lanes.innerHTML=`<div class="round-lane py-4">
+    <div class="round-card battle-card-in-left ${pwin?'winner':ewin?'loser':''} rounded-2xl overflow-hidden bg-slate-950 border border-violet-500/20">
+      <div class="aspect-[3/4] max-h-80">${renderMedia(pc)}</div>
+      <div class="p-4 text-center"><div class="text-[10px] text-violet-300 font-black">${i+1}. ${esc(pc.name||'')}</div>
+      ${revealed?`<div class="font-cinzel text-lg font-black text-amber-300 mt-2">${fmt(pc.battlePower)} Power</div>`:`<div class="text-xs text-slate-600 mt-2">CHỈ SỐ ĐANG ẨN</div>`}
+      ${rolled?`<div class="mt-3"><div class="battle-accuracy text-emerald-300">${timingLabel(pacc)}</div><div class="combo text-amber-300 mt-1">${fmt(battle.playerCombo)} DAMAGE</div></div>`:''}</div>
+    </div>
+    <div class="round-vs text-center">
+      <div class="text-[10px] text-slate-600 font-black">CẶP ${i+1} / BO3</div>
+      ${revealed&&!rolled?`<div class="timing-wrap mt-3">
+        <div class="timing-zone-label">VÙNG XANH · HIỆU SUẤT</div>
+        <div id="timing-track" class="timing-track ${battle.timingRunning?'running':''}">
+          <div class="timing-zone" style="top:${(battle.timingZoneTop||.5)*100}%;height:${(battle.timingZoneHeight||.12)*100}%"></div>
+          <div class="timing-breakthrough" style="top:${((battle.timingZoneTop||.5)+((battle.timingZoneHeight||.12)-(battle.timingBreakthroughHeight||.028))/2)*100}%;height:${(battle.timingBreakthroughHeight||.028)*100}%"></div>
+          <div id="timing-line" class="timing-line" style="top:${pos*100}%"></div>
+        </div>
+        <div class="timing-breakthrough-label">BỘC PHÁ TIỀM NĂNG · POWER ×10</div>
+        <div class="text-[9px] text-slate-500 text-center">Tốc độ theo Power thẻ</div>
+      </div>`:`<div class="font-cinzel text-2xl font-black text-rose-400 mt-1">VS</div>`}
+      ${rolled?`<div class="mt-3 text-xs font-bold ${battle.playerCombo>battle.enemyCombo?'text-emerald-300':'text-rose-300'}">${battle.playerCombo>battle.enemyCombo?'BẠN THẮNG':'ĐỐI THỦ THẮNG'}</div>`:''}
+    </div>
+    <div class="round-card battle-card-in-right ${ewin?'winner':pwin?'loser':''} rounded-2xl overflow-hidden bg-slate-950 border border-rose-500/20">
+      <div class="aspect-[3/4] max-h-80">${renderMedia(ec)}</div>
+      <div class="p-4 text-center"><div class="text-[10px] text-rose-300 font-black">${i+1}. ${esc(ec.name||'')}</div>
+      ${revealed?`<div class="font-cinzel text-lg font-black text-rose-300 mt-2">${fmt(ec.battlePower)} Power</div>`:`<div class="text-xs text-slate-600 mt-2">CHỈ SỐ ĐANG ẨN</div>`}
+      ${rolled?`<div class="mt-3"><div class="battle-accuracy text-rose-300">HIỆU SUẤT ${Math.round(enemyAcc*100)}%</div><div class="combo text-rose-300 mt-1">${fmt(battle.enemyCombo)} DAMAGE</div></div>`:''}</div>
+    </div>
+  </div>`;
+}
+function revealCurrentPair(){
+  if(!battle||battle.finished||battle.revealed)return;
+  battle.revealed=true;battle.timingRunning=false;battle.timingPos=.02;battle.timingDeadline=0;
+  battle.timingZoneHeight=randInt(8,13)/100;
+  battle.timingBreakthroughHeight=randInt(2,4)/100;
+  battle.timingZoneTop=randInt(8,Math.max(8,Math.floor((.88-battle.timingZoneHeight)*100)))/100;
+  battle.playerAccuracy=null;battle.enemyAccuracy=null;
+  document.getElementById('battle-status').textContent=`Cặp ${battle.round+1}: chuẩn bị thao tác lực chiến.`;
+  const btn=document.getElementById('battle-next');btn.disabled=false;btn.textContent='BẮT ĐẦU ĐO LỰC';btn.onclick=startTiming;
+  renderBattleLanes();
+}
+function playNextRound(){
+  if(!battle||battle.finished)return;
+  revealCurrentPair();
+}
+function finishBattle(){
+  localStorage.removeItem(STORAGE_BATTLE_ACTIVE);
+  if(battle?.timingRaf)cancelAnimationFrame(battle.timingRaf);
+  if(battle)battle.timingRunning=false;
+  battle.finished=true;
+  const win=battle.playerScore>=2;
+  const oldIndex=rankState.index,oldStars=rankState.stars;
+  if(win){
+    if(rankState.index<RANKS.length-1){
+      rankState.stars++;
+      if(rankState.stars>=7){rankState.stars=0;rankState.index++;}
+    }else{
+      rankState.stars++;
+    }
+  }else rankState.stars=Math.max(0,rankState.stars-1);
+  saveRank();
+  const r=currentRank();
+  const promoted=rankState.index>oldIndex;
+  const text=win?(promoted?`THĂNG HẠNG — ${r.name}!`:'CHIẾN THẮNG'):'THẤT BẠI';
+  document.getElementById('battle-result').innerHTML=`<div class="rounded-2xl p-5 ${win?'bg-emerald-500/10 border border-emerald-400/30':'bg-rose-500/10 border border-rose-400/30'}"><div class="font-cinzel text-2xl font-black ${win?'text-emerald-300':'text-rose-300'}">${text}</div><div class="text-sm text-slate-300 mt-2">Kết quả BO3: ${battle.playerScore} — ${battle.enemyScore}</div><div class="text-xs text-slate-400 mt-2">Rank hiện tại: <b class="text-white">${r.name}</b> · ${rankState.stars}${rankState.index===RANKS.length-1?' sao':' / 7 sao'}</div></div>`;
+  document.getElementById('battle-result').classList.remove('hidden');
+  document.getElementById('battle-next').disabled=true;
+  document.getElementById('battle-next').textContent='TRẬN ĐÃ KẾT THÚC';document.getElementById('battle-next').onclick=function(){};
+  document.getElementById('battle-status').textContent=win?'Bạn đã giành 2 điểm trước đối thủ.':'Đối thủ đã giành 2 điểm.';
+}
+
+function rankPoints(){return rankState.index*7+rankState.stars;}
+function hideLeaderboard(){document.getElementById('leaderboard-modal').classList.add('hidden');document.getElementById('leaderboard-modal').classList.remove('flex')}
+function rankLabelFromPoints(points){
+  const p=Math.max(0,Number(points)||0);
+  const idx=Math.min(RANKS.length-1,Math.floor(p/7));
+  const stars=Math.max(0,p-idx*7);
+  return `${RANKS[idx].name} · ${idx===RANKS.length-1?stars:stars+" / 7 sao"}`;
+}
+function leaderboardRowHtml(r, position, personal=false){
+  const pts=Number(r?.points)||0;
+  return `<div class="leaderboard-row ${personal?'leaderboard-personal':''} rounded-2xl border border-slate-800 bg-slate-950/55 p-3 flex items-center gap-3">
+    <div class="w-12 text-center">
+      <div class="font-cinzel text-lg font-black ${position===1?'text-yellow-300':position===2?'text-slate-200':position===3?'text-amber-600':'text-amber-300'}">#${position}</div>
+      ${personal?'<div class="text-[7px] text-yellow-300 font-black uppercase">Bạn</div>':''}
+    </div>
+    <div class="flex-1 min-w-0"><div class="font-bold text-sm truncate">${esc(r?.name||'Ẩn danh')}</div><div class="text-[9px] text-slate-500 mt-1">${esc(r?.rank||rankLabelFromPoints(pts))}</div></div>
+    <div class="text-right"><div class="font-cinzel font-black text-amber-300 text-sm">${fmt(pts)}</div><div class="text-[8px] text-slate-600">điểm</div></div>
+  </div>`;
+}
+function renderLeaderboardRows(rows,targetId='leaderboard-list'){
+  const list=document.getElementById(targetId);
+  if(!list)return;
+  const personalId=targetId==='leaderboard-list'?'leaderboard-personal':'leaderboard-preview-personal';
+  const personalBox=document.getElementById(personalId);
+  const sorted=[...(rows||[])].sort((a,b)=>(Number(b?.points)||0)-(Number(a?.points)||0)||String(a?.name||'').localeCompare(String(b?.name||''),'vi'));
+  list.innerHTML=sorted.slice(0,100).map((r,i)=>leaderboardRowHtml(r,i+1,false)).join('') ||
+    '<div class="text-center text-slate-600 py-5 text-xs">Bảng xếp hạng chưa có dữ liệu.</div>';
+  if(personalBox){
+    let personalIndex=sorted.findIndex(r=>String(r?.name||'').trim()===String(playerName||'').trim());
+    let personal=personalIndex>=0?sorted[personalIndex]:{name:playerName||'Bạn',points:rankPoints(),rank:currentRank().name,stars:rankState.stars};
+    let position=personalIndex>=0?personalIndex+1:(sorted.length+1);
+    personalBox.innerHTML=`<div class="text-[8px] text-slate-500 uppercase tracking-[.2em] mb-1">HẠNG CÁ NHÂN</div>${leaderboardRowHtml(personal,position,true)}`;
+  }
+}
+async function syncLeaderboard(){
+  const previewStatus=document.getElementById('leaderboard-preview-status');
+  if(!RANKING_API_URL){
+    if(previewStatus)previewStatus.textContent='Chưa cấu hình hệ thống xếp hạng trực tuyến.';
+    return;
+  }
+  try{
+    if(playerName){
+      await fetch(RANKING_API_URL,{method:'POST',mode:'cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({name:playerName,points:rankPoints(),rank:currentRank().name,stars:rankState.stars})});
+    }
+    const res=await fetch(RANKING_API_URL,{method:'GET',mode:'cors'});
+    const data=await res.json();
+    const rows=Array.isArray(data)?data:(Array.isArray(data.players)?data.players:[]);
+    rows.sort((a,b)=>(Number(b.points)||0)-(Number(a.points)||0)||String(a.name||'').localeCompare(String(b.name||''),'vi'));
+    leaderboardCache=rows;
+    renderLeaderboardRows(rows,'leaderboard-preview');
+    renderLeaderboardRows(rows,'leaderboard-list');
+    if(previewStatus)previewStatus.textContent=`Đã tự động cập nhật ${rows.length} người chơi.`;
+    const status=document.getElementById('leaderboard-status');
+    if(status)status.textContent='Dữ liệu xếp hạng đã được tự động cập nhật.';
+  }catch(err){
+    if(previewStatus)previewStatus.textContent='Không thể tải bảng xếp hạng lúc này.';
+    const status=document.getElementById('leaderboard-status');
+    if(status)status.innerHTML='<span class="text-rose-300">Hệ thống xếp hạng hiện không khả dụng.</span>';
+  }
+}
+async function openLeaderboard(){
+  const modal=document.getElementById('leaderboard-modal');modal.classList.remove('hidden');modal.classList.add('flex');
+  const status=document.getElementById('leaderboard-status');
+  if(status)status.textContent=leaderboardCache.length?'Đang hiển thị dữ liệu đã tự động tải.':'Đang tải dữ liệu...';
+  renderLeaderboardRows(leaderboardCache,'leaderboard-list');
+  await syncLeaderboard();
+}
+
+/* ADMIN: chỉ chạy thủ công trong Console khi cần đặt lại Rank trên trình duyệt hiện tại. */
+function ADMIN_RESET_LOCAL_RANK(){
+  rankState={index:0,stars:0};
+  saveRank();
+  refreshLobby();
+  return "Rank đã đặt lại trên thiết bị hiện tại.";
+}
+
+function initMusic(){
+  try{
+    if(!lobbyMusic){
+      lobbyMusic=new Audio("assets/audio/Obey7.mp3");
+      lobbyMusic.loop=true;
+      lobbyMusic.volume=.30;
+    }
+    if(!battleMusic){
+      battleMusic=new Audio("assets/audio/ChienTruong.mp3");
+      battleMusic.loop=true;
+      battleMusic.volume=.35;
+    }
+    music=currentMusicMode==="battle"?battleMusic:lobbyMusic;
+    updateMusicUI(!!(music&&!music.paused));
+  }catch(e){}
+}
+function playMusic(mode){
+  const saved=localStorage.getItem(STORAGE_MUSIC);
+  if(saved==="off")return;
+  if(!lobbyMusic||!battleMusic)initMusic();
+  const next=mode==="battle"?battleMusic:lobbyMusic;
+  if(!next)return;
+  [lobbyMusic,battleMusic].forEach(a=>{if(a&&a!==next){a.pause();a.currentTime=0;}});
+  music=next;
+  currentMusicMode=mode;
+  music.play().then(()=>{musicStarted=true;updateMusicUI(true)}).catch(()=>{});
+}
+function playLobbyMusic(){playMusic("lobby")}
+function playBattleMusic(){playMusic("battle")}
+function stopAllMusic(){
+  [lobbyMusic,battleMusic].forEach(a=>{if(a){a.pause();a.currentTime=0;}});
+  musicStarted=false;
+  updateMusicUI(false);
+}
+function stopBattleMusic(){stopAllMusic()}
+function toggleMusic(e){
+  if(e)e.stopPropagation();
+  if(!lobbyMusic||!battleMusic)initMusic();
+  const active=music&&!music.paused;
+  if(active){
+    stopAllMusic();
+    localStorage.setItem(STORAGE_MUSIC,"off");
+  }else{
+    localStorage.setItem(STORAGE_MUSIC,"on");
+    playMusic(currentMusicMode||"lobby");
+  }
+}
+function updateMusicUI(on){
+  const icon=document.getElementById("music-icon");
+  if(icon)icon.className=on?"fa-solid fa-volume-high":"fa-solid fa-volume-xmark";
+}
+
+function markBattleForExit(){
+  const battleScreen=document.getElementById('battle-screen');
+  const matchScreen=document.getElementById('match-screen');
+  const inBattle=!!(battle && !battle.finished && battleScreen && !battleScreen.classList.contains('hidden'));
+  const selecting=!!(matchScreen && !matchScreen.classList.contains('hidden') && !battle);
+  if(inBattle || selecting) localStorage.setItem(STORAGE_BATTLE_ACTIVE,'1');
+}
+window.addEventListener('beforeunload',markBattleForExit);
+window.addEventListener('pagehide',markBattleForExit);
+
+window.addEventListener("DOMContentLoaded",()=>{
+  loadData();
+  const recovered=recoverAbandonedBattle();
+  document.getElementById("player-name-input").addEventListener("keydown",e=>{if(e.key==="Enter")enterLobby()});
+  if(recovered){
+    showOnly("lobby-screen");
+    playLobbyMusic();
+    refreshLobby();
+  } else if(playerName){
+    showOnly("lobby-screen");
+    playLobbyMusic();
+    refreshLobby();
+    syncLeaderboard();
+  } else showOnly("name-screen");
+});
+window.addEventListener("storage",()=>{
+  loadData();
+  if(!document.getElementById("lobby-screen").classList.contains("hidden"))refreshLobby();
+  if(!document.getElementById("match-screen").classList.contains("hidden")){renderCollection();renderSelectedTeam()}
+});
+</script>
+</body>
+</html>

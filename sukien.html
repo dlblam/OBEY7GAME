@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>OBEY 7 - Sự Kiện Flappy Bird</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config={darkMode:'class',theme:{extend:{colors:{gacha:{dark:'#0a0b10',card:'#121420',border:'#2a2f45',gold:'#f59e0b'}}}}};
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#070912;color:#e2e8f0;font-family:'Be Vietnam Pro',sans-serif;overflow-x:hidden}
+button{font-family:inherit}
+.event-bg{position:fixed;inset:0;z-index:-2;background:radial-gradient(circle at 50% 0%,rgba(245,158,11,.10),transparent 34%),radial-gradient(circle at 10% 80%,rgba(59,130,246,.08),transparent 28%),#070912}
+.event-bg:after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:34px 34px;mask-image:linear-gradient(to bottom,black,transparent)}
+.glass{background:rgba(12,16,29,.82);border:1px solid rgba(148,163,184,.14);box-shadow:0 20px 60px rgba(0,0,0,.32);backdrop-filter:blur(16px)}
+.progress-track{height:18px;border-radius:999px;background:#111827;border:1px solid #273244;overflow:hidden;box-shadow:inset 0 2px 7px rgba(0,0,0,.5)}
+.progress-fill{height:100%;width:0%;border-radius:inherit;background:linear-gradient(90deg,#f59e0b,#fbbf24,#fde68a);box-shadow:0 0 20px rgba(245,158,11,.38);transition:width .45s ease}
+.milestone{position:absolute;top:50%;transform:translate(-50%,-50%);width:24px;height:24px;border-radius:50%;border:2px solid #475569;background:#0f172a;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:900;z-index:3;transition:.25s}
+.milestone.done{border-color:#fbbf24;background:#92400e;color:#fde68a;box-shadow:0 0 13px rgba(251,191,36,.55)}
+.milestone.claimed{border-color:#22c55e;background:#14532d;color:#bbf7d0}
+.reward-card{border:1px solid rgba(148,163,184,.14);background:rgba(15,23,42,.76);border-radius:15px;padding:12px;min-height:112px;transition:.2s}
+.reward-card.done{border-color:rgba(245,158,11,.4);background:rgba(120,53,15,.18)}
+.reward-card.claimed{border-color:rgba(34,197,94,.4);background:rgba(20,83,45,.18)}
+#gameCanvas{display:block;width:100%;height:auto;aspect-ratio:900/520;border-radius:20px;border:1px solid rgba(148,163,184,.16);background:#8ed6ff;touch-action:none;cursor:pointer;box-shadow:0 25px 70px rgba(0,0,0,.42)}
+.cost-pill{background:rgba(127,29,29,.25);border:1px solid rgba(248,113,113,.25);color:#fca5a5}
+.info-pill{background:rgba(15,23,42,.72);border:1px solid rgba(148,163,184,.15)}
+.btn-main{background:linear-gradient(135deg,#f59e0b,#fbbf24);color:#1c1917;box-shadow:0 12px 32px rgba(245,158,11,.2)}
+.btn-main:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.btn-main:disabled{opacity:.45;cursor:not-allowed;filter:none;transform:none}
+.event-card-frame{position:relative;aspect-ratio:3/4;overflow:hidden;border-radius:18px;background:#020617;border:2px solid rgba(245,158,11,.45);box-shadow:0 0 30px rgba(245,158,11,.13)}
+.event-card-frame img,.event-card-frame video{width:100%;height:100%;object-fit:cover;display:block}
+
+.card-back{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden;background:radial-gradient(circle at 50% 35%,rgba(245,158,11,.24),transparent 30%),linear-gradient(145deg,#171a2a,#080b15 58%,#111827);border:1px solid rgba(245,158,11,.28)}
+.card-back:before{content:"";position:absolute;inset:9px;border:1px solid rgba(251,191,36,.22);border-radius:14px;background:repeating-linear-gradient(45deg,transparent 0 8px,rgba(255,255,255,.018) 8px 9px);}
+.card-back:after{content:"";position:absolute;width:82px;height:82px;border-radius:24px;transform:rotate(45deg);border:1px solid rgba(251,191,36,.25);box-shadow:0 0 35px rgba(245,158,11,.12),inset 0 0 20px rgba(245,158,11,.08)}
+.card-back-core{position:relative;z-index:2;width:58px;height:58px;border-radius:18px;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,#f59e0b,#92400e);border:2px solid #fde68a;box-shadow:0 8px 25px rgba(0,0,0,.35),0 0 22px rgba(245,158,11,.24);font-size:25px;color:#fff7ed}
+.card-back-label{position:absolute;z-index:2;bottom:12px;left:0;right:0;text-align:center;font-size:8px;font-weight:900;letter-spacing:.22em;color:#fcd34d}
+.card-face{position:absolute;inset:0;background:linear-gradient(160deg,#101827,#080b13);display:flex;flex-direction:column;border:1px solid rgba(251,191,36,.24)}
+.card-face-media{height:78px;overflow:hidden;background:#020617;border-bottom:1px solid rgba(148,163,184,.14)}
+.card-face-media img,.card-face-media video{width:100%;height:100%;object-fit:cover;display:block}
+.card-face-info{padding:8px 9px;min-width:0;text-align:center}
+.card-rarity{font-size:8px;font-weight:900;letter-spacing:.12em;color:#fcd34d}
+.card-name{font-size:10px;font-weight:900;line-height:1.25;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#f8fafc}
+.card-type{font-size:7px;font-weight:800;color:#94a3b8;margin-top:4px;letter-spacing:.08em}
+.event-card-overlay{position:absolute;inset:auto 0 0;padding:45px 13px 13px;background:linear-gradient(transparent,rgba(0,0,0,.88))}
+.notice{position:fixed;inset:0;background:rgba(2,6,23,.78);backdrop-filter:blur(9px);display:none;align-items:center;justify-content:center;padding:18px;z-index:50}
+.notice.show{display:flex}
+.notice-box{width:min(520px,100%);padding:25px;border-radius:24px;background:#0b1020;border:1px solid rgba(245,158,11,.25);box-shadow:0 30px 90px rgba(0,0,0,.65);text-align:center;transition:background .35s ease,border-color .35s ease,box-shadow .35s ease}.notice-box.event-notice{background:linear-gradient(145deg,#7a4b00 0%,#b77905 42%,#6b4100 100%);border:1px solid rgba(255,232,150,.95);box-shadow:0 0 18px rgba(251,191,36,.28),0 0 55px rgba(251,191,36,.16),0 30px 90px rgba(0,0,0,.65)}.notice-card{width:150px;aspect-ratio:3/4;margin:0 auto 16px;border-radius:18px;overflow:hidden;border:1px solid rgba(148,163,184,.22);background:#020617;box-shadow:0 18px 45px rgba(0,0,0,.45);transition:box-shadow .35s ease,border-color .35s ease}.notice-card img,.notice-card video{width:100%;height:100%;object-fit:cover;display:block}.notice-card.event-reward{border:2px solid rgba(251,191,36,.95);box-shadow:0 0 10px rgba(251,191,36,.32),0 0 28px rgba(251,191,36,.18),0 18px 45px rgba(0,0,0,.5);animation:eventCardGlow 2.8s ease-in-out infinite}.notice-card.event-reward:after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:16px;box-shadow:inset 0 0 18px rgba(251,191,36,.16)}@keyframes eventCardGlow{0%,100%{box-shadow:0 0 8px rgba(251,191,36,.25),0 0 22px rgba(251,191,36,.13),0 18px 45px rgba(0,0,0,.5)}50%{box-shadow:0 0 14px rgba(251,191,36,.48),0 0 34px rgba(251,191,36,.22),0 18px 45px rgba(0,0,0,.5)}}
+@media(max-width:700px){.milestone{width:20px;height:20px;font-size:8px}.progress-track{height:14px}.reward-card{min-height:100px}}
+</style>
+</head>
+<body>
+<div class="event-bg"></div>
+
+<main class="max-w-6xl mx-auto px-4 py-5 md:py-8">
+  <header class="flex flex-col lg:flex-row lg:items-end justify-between gap-4 mb-6">
+    <div>
+      <div class="text-[10px] tracking-[.28em] text-amber-400 font-black uppercase">OBEY 7 • EVENT</div>
+      <h1 class="text-3xl md:text-5xl font-black tracking-tight mt-1">FLAPPY BIRD</h1>
+      <p class="text-sm text-slate-400 mt-2">Chơi Flappy → tích điểm → nhận vé lật tại từng mốc → dùng vé để mở thẻ.</p>
+    </div>
+    <a href="index.html" class="self-start lg:self-auto px-4 py-2.5 rounded-xl info-pill text-sm font-bold hover:border-amber-400/30 transition">← Về sảnh chính</a>
+  </header>
+
+  <section class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
+    <div class="glass rounded-2xl p-4"><div class="text-[10px] uppercase tracking-widest text-slate-500">Lượt Gacha</div><div id="gachaCount" class="text-2xl font-black text-amber-300 mt-1">0</div></div>
+    <div class="glass rounded-2xl p-4"><div class="text-[10px] uppercase tracking-widest text-slate-500">Túi thẻ</div><div id="collectionCount" class="text-2xl font-black text-slate-100 mt-1">0</div></div>
+    <div class="glass rounded-2xl p-4"><div class="text-[10px] uppercase tracking-widest text-slate-500">Điểm sự kiện</div><div id="scoreCount" class="text-2xl font-black text-amber-300 mt-1">0 / 200</div></div>
+    <div class="glass rounded-2xl p-4"><div class="text-[10px] uppercase tracking-widest text-slate-500">Lượt kế tiếp</div><div id="nextCost" class="text-2xl font-black text-rose-300 mt-1">1</div></div>
+  </section>
+
+  <section class="glass rounded-3xl p-4 md:p-6 mb-5">
+    <div class="flex items-center justify-between gap-3 mb-3">
+      <div><div class="text-xs text-slate-500 uppercase tracking-widest font-bold">Tiến trình sự kiện</div><div class="text-lg font-black mt-1" id="progressText">0 / 200</div></div>
+      <div id="eventCardMini" class="text-right text-xs text-slate-400">Thẻ sự kiện: đang tải...</div>
+    </div>
+    <div class="relative pt-14 pb-2">
+      <div id="milestones"></div>
+      <div class="progress-track"><div id="progressFill" class="progress-fill"></div></div>
+    </div>
+    <div class="flex justify-between mt-3 text-[10px] text-slate-500"><span>0</span><span>200 • THẺ SỰ KIỆN</span></div>
+  </section>
+
+  <section class="grid lg:grid-cols-[1.45fr_.75fr] gap-5">
+    <div class="glass rounded-3xl p-3 md:p-5">
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-3 px-1">
+        <div>
+          <div class="text-xs text-slate-500 uppercase tracking-widest font-bold">Trận chơi</div>
+          <div class="text-xl font-black">Bay qua ống, ghi điểm</div>
+        </div>
+        <div class="px-3 py-2 rounded-xl cost-pill text-xs font-black">TỐN <span id="costLabel">1</span> LƯỢT GACHA</div>
+      </div>
+      <div class="relative">
+        <canvas id="gameCanvas" width="900" height="520"></canvas>
+        <div id="gameOverlay" class="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <div id="startPanel" class="pointer-events-auto text-center bg-slate-950/75 border border-white/10 backdrop-blur-md rounded-2xl p-5 mx-4">
+            <div class="text-amber-300 text-2xl font-black">Sẵn sàng?</div>
+            <div class="text-sm text-slate-300 mt-1">Lượt này tốn <b id="startCost">1</b> lượt Gacha.</div>
+            <button id="startBtn" class="btn-main mt-4 px-6 py-3 rounded-xl font-black">CHƠI NGAY</button>
+          </div>
+          <div id="resultPanel" class="hidden pointer-events-auto text-center bg-slate-950/85 border border-amber-400/20 backdrop-blur-md rounded-2xl p-5 mx-4">
+            <div class="text-xs uppercase tracking-widest text-slate-500">Kết quả</div>
+            <div id="resultScore" class="text-5xl font-black text-amber-300 mt-1">0</div>
+            <div id="resultGain" class="text-sm text-emerald-300 font-bold mt-1">+0 điểm sự kiện</div>
+            <button id="againBtn" class="btn-main mt-4 px-6 py-3 rounded-xl font-black">CHƠI TIẾP</button>
+          </div>
+        </div>
+      </div>
+      <div class="flex items-center justify-between gap-3 mt-3 px-1 text-xs text-slate-500"><span>Click / chạm / Space để bay</span><span>Điểm: <b id="liveScore" class="text-white">0</b></span></div>
+    </div>
+
+    <aside class="glass rounded-3xl p-4 md:p-5">
+      <div class="text-xs text-slate-500 uppercase tracking-widest font-bold">Thẻ sự kiện</div>
+      <div id="eventCardBox" class="event-card-frame mt-3"><div class="absolute inset-0 flex items-center justify-center text-slate-500 text-sm">Đang tải...</div></div>
+      <div class="mt-3 flex items-center justify-between gap-3"><div><div id="eventCardName" class="font-black">—</div><div id="eventCardRarity" class="text-[10px] text-amber-400 font-black mt-1">—</div></div><div id="earlyStatus" class="text-[10px] text-slate-500 text-right">Mốc cuối: chắc chắn nhận</div></div>
+      <div class="mt-5 p-4 rounded-2xl bg-slate-950/60 border border-slate-800/70"><div class="text-xs font-black text-slate-300">CƠ CHẾ LƯỢT CHƠI</div><div class="text-xs text-slate-500 leading-6 mt-2">1 → 2 → 4 → 8 → 16 → 32 → 64. Từ lượt tiếp theo trở đi luôn giữ mức <b class="text-rose-300">64</b>.</div></div>
+    </aside>
+  </section>
+
+  <section class="glass rounded-3xl p-4 md:p-6 mt-5">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-3 mb-4">
+      <div><div class="text-xs text-slate-500 uppercase tracking-widest font-bold">10 vé lật thẻ</div><h2 class="text-xl font-black">Bàn thẻ sự kiện</h2></div>
+      <div class="flex items-center gap-2 flex-wrap">
+        <div class="px-3 py-2 rounded-xl info-pill text-xs font-black">VÉ CÒN <span id="flipTicketCount" class="text-amber-300">0</span> / 10</div>
+      </div>
+    </div>
+    <p class="text-xs text-slate-500 leading-6 mb-4">Đủ mỗi mốc 20 điểm, bạn phải <b class="text-amber-300">bấm hộp quà trên thanh tiến trình</b> để nhận 1 vé lật. Sau đó xuống bàn bên dưới dùng đúng 1 vé để mở 1 lá. Bàn chỉ có đúng 10 thẻ trong suốt sự kiện: <b class="text-slate-300">9 thẻ B–SS ngẫu nhiên + 1 thẻ sự kiện</b>. Vị trí thẻ sự kiện được <b class="text-amber-300">xáo ngẫu nhiên trong cả 10 ô</b>, không ưu tiên cuối. Chơi Flappy và lật thẻ là <b class="text-slate-300">2 chế độ hoàn toàn tách biệt</b>.</p>
+    <div id="eventCardGrid" class="grid grid-cols-2 sm:grid-cols-5 lg:grid-cols-10 gap-2.5"></div>
+  </section>
+</main>
+
+<div id="notice" class="notice"><div class="notice-box"><div id="noticeCard" class="notice-card hidden"></div><div id="noticeIcon" class="hidden"></div><div id="noticeTitle" class="text-xl font-black">Thông báo</div><div id="noticeText" class="text-sm text-slate-400 mt-2 leading-6"></div><button onclick="closeNotice()" class="mt-5 px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 font-bold text-sm">ĐÓNG</button></div></div>
+
+<script src="data/characters.js"></script>
+<script>
+/* =========================================================
+   OBEY 7 — EVENT CONFIG
+   ---------------------------------------------------------
+   Giữ chung tài nguyên với index.html.
+   Nếu index.html đang đặt OBEY7_EVENT_CARD_ID thành một ID cụ thể,
+   hãy đặt cùng ID tại EVENT_CARD_ID bên dưới.
+========================================================= */
+const STORAGE_COL = "obey7_gacha_collection_v1";
+const STORAGE_GIFT = "obey7_gacha_gift_spins_v1";
+const STORAGE_DAILY = "obey7_gacha_daily_v1";
+const EVENT_STORAGE = "obey7_event_flappy_v1";
+const EVENT_CARD_ID = "007";
+const MAX_PROGRESS = 200;
+const COSTS = [1,2,4,8,16,32,64];
+
+/*
+  CƠ CHẾ BÀN 10 THẺ
+  - 10 mốc: 20/40/.../200 điểm -> mỗi mốc cấp 1 vé lật.
+  - Bàn được tạo 1 lần cho cả sự kiện: đúng 10 lá.
+  - 9 lá thường có bậc A-D ngẫu nhiên.
+  - 1 lá là thẻ sự kiện.
+  - Trọng số vị trí thẻ sự kiện tăng mạnh về cuối nhưng vẫn có thể ra sớm.
+*/
+const MILESTONE_POINTS = Array.from({length:10},(_,i)=>(i+1)*20);
+const EVENT_POS_WEIGHTS = null;
+const NORMAL_RARITIES = ["SS","S","A","B"];
+let eventState={progress:0,plays:0,flipTickets:0,claimedMilestones:[],flipped:[],board:[],boardReady:false};
+let gachaCount=0;
+let dailyCount=10;
+let dailyDate=new Date().toDateString();
+let collection=[];
+let eventCard=null;
+
+function uniqueCards(arr){
+  const map=new Map();
+  (Array.isArray(arr)?arr:[]).forEach(c=>{if(c&&c.id!==undefined)map.set(String(c.id),c)});
+  return [...map.values()];
+}
+function getEventCard(){
+  if(typeof CHARACTER_POOL==="undefined"||!Array.isArray(CHARACTER_POOL))return null;
+  if(EVENT_CARD_ID){const exact=CHARACTER_POOL.find(c=>String(c.id)===String(EVENT_CARD_ID));if(exact)return exact;}
+  return CHARACTER_POOL[0]||null;
+}
+function renderMedia(char){
+  const type=String(char?.mediaType||"").toLowerCase().trim();
+  const ext=String(char?.mediaExt||"").toLowerCase().replace(/^\./,"").trim();
+  const url=String(char?.mediaUrl||"");
+  const urlExt=(url.split("?")[0].split("#")[0].split(".").pop()||"").toLowerCase();
+  const vids=new Set(["mp4","webm","ogg","ogv","mov","m4v"]);
+  if(type==="video"||vids.has(type)||vids.has(ext)||vids.has(urlExt))return `<video src="${char.mediaUrl}" autoplay loop muted playsinline preload="metadata"></video>`;
+  return `<img src="${char.mediaUrl}" alt="${char.name||"Event Card"}" draggable="false" onerror="this.style.display='none'">`;
+}
+function weightedEventPosition(){
+  // Thẻ sự kiện nằm ngẫu nhiên ở bất kỳ 1 trong 10 vị trí, xác suất ngang nhau.
+  return Math.floor(Math.random()*10);
+}
+function randomNormalCard(usedIds=[]){
+  const pool=(typeof CHARACTER_POOL!=="undefined"&&Array.isArray(CHARACTER_POOL))?CHARACTER_POOL:[];
+  let candidates=pool.filter(c=>NORMAL_RARITIES.includes(String(c?.rarity||"").toUpperCase())&&!usedIds.includes(String(c.id)));
+  if(!candidates.length)candidates=pool.filter(c=>NORMAL_RARITIES.includes(String(c?.rarity||"").toUpperCase()));
+  if(candidates.length){
+    const card={...candidates[Math.floor(Math.random()*candidates.length)]};
+    return {kind:"normal",rarity:String(card.rarity).toUpperCase(),card,revealed:false};
+  }
+  const rarity=NORMAL_RARITIES[Math.floor(Math.random()*NORMAL_RARITIES.length)];
+  return {kind:"normal",rarity,card:null,revealed:false};
+}
+function createEventBoard(){
+  const eventIndex=weightedEventPosition();
+  const board=[];
+  const usedIds=[];
+  for(let i=0;i<10;i++){
+    if(i===eventIndex)board.push({kind:"event",rarity:"EVENT",card:null,revealed:false});
+    else{
+      const normal=randomNormalCard(usedIds);
+      if(normal.card?.id!==undefined)usedIds.push(String(normal.card.id));
+      board.push(normal);
+    }
+  }
+  return board;
+}
+function ensureBoard(){
+  const validBoard=Array.isArray(eventState.board)&&eventState.board.length===10&&eventState.board.filter(c=>c?.kind==='event').length===1&&eventState.board.every(c=>c?.kind==='event'||(c?.kind==='normal'&&NORMAL_RARITIES.includes(String(c?.rarity||'').toUpperCase())));
+  if(!validBoard){
+    eventState.board=createEventBoard();
+    eventState.boardReady=true;
+    eventState.flipped=[];
+  }
+  if(!Array.isArray(eventState.flipped))eventState.flipped=[];
+  eventState.flipped=eventState.flipped.filter(n=>Number.isInteger(n)&&n>=0&&n<10);
+  eventState.board.forEach((c,i)=>{c.revealed=eventState.flipped.includes(i);});
+  eventState.claimedMilestones=[...new Set((eventState.claimedMilestones||[]).filter(n=>Number.isInteger(n)&&n>=0&&n<10))].sort((a,b)=>a-b);
+  eventState.flipTickets=Math.min(10,Math.max(0,Number(eventState.flipTickets)||0));
+}
+function load(){
+  try{
+    collection=uniqueCards(JSON.parse(localStorage.getItem(STORAGE_COL)||"[]"));
+    gachaCount=Math.max(0,Number(localStorage.getItem(STORAGE_GIFT)||0));
+    const daily=JSON.parse(localStorage.getItem(STORAGE_DAILY)||"null");
+    if(daily&&typeof daily==="object") { dailyDate=String(daily.date||dailyDate); dailyCount=Math.max(0,Number(daily.count)||0); }
+    const today=new Date().toDateString();
+    if(dailyDate!==today){dailyDate=today;dailyCount=10;}
+    const raw=JSON.parse(localStorage.getItem(EVENT_STORAGE)||"null");
+    if(raw&&typeof raw==="object"){
+      eventState.progress=Math.min(MAX_PROGRESS,Math.max(0,Number(raw.progress)||0));
+      eventState.plays=Math.max(0,Number(raw.plays)||0);
+      eventState.flipTickets=Math.min(10,Math.max(0,Number(raw.flipTickets)||0));
+      eventState.claimedMilestones=Array.isArray(raw.claimedMilestones)?raw.claimedMilestones.filter(n=>Number.isInteger(n)&&n>=0&&n<10):[];
+      eventState.flipped=Array.isArray(raw.flipped)?raw.flipped.filter(n=>Number.isInteger(n)) : [];
+      eventState.board=Array.isArray(raw.board)?raw.board:[];
+      eventState.boardReady=!!raw.boardReady;
+    }
+    ensureBoard();
+  }catch(e){console.error("EVENT LOAD",e);ensureBoard();}
+}
+function save(){
+  try{
+    localStorage.setItem(STORAGE_GIFT,String(Math.max(0,gachaCount)));
+    localStorage.setItem(STORAGE_DAILY,JSON.stringify({date:dailyDate,count:Math.max(0,dailyCount)}));
+    localStorage.setItem(EVENT_STORAGE,JSON.stringify(eventState));
+    localStorage.setItem(STORAGE_COL,JSON.stringify(collection));
+  }catch(e){console.error("EVENT SAVE",e)}
+}
+function currentCost(){return COSTS[Math.min(eventState.plays,COSTS.length-1)]}
+function updateStats(){
+  document.getElementById('gachaCount').textContent=(dailyCount+gachaCount).toLocaleString();
+  document.getElementById('collectionCount').textContent=collection.length.toLocaleString();
+  document.getElementById('scoreCount').textContent=`${eventState.progress} / ${MAX_PROGRESS}`;
+  document.getElementById('progressText').textContent=`${eventState.progress} / ${MAX_PROGRESS}`;
+  document.getElementById('nextCost').textContent=currentCost();
+  document.getElementById('costLabel').textContent=currentCost();
+  document.getElementById('startCost').textContent=currentCost();
+  document.getElementById('progressFill').style.width=`${eventState.progress/MAX_PROGRESS*100}%`;
+  document.getElementById('flipTicketCount').textContent=eventState.flipTickets;
+}
+function renderMilestones(){
+  const bar=document.getElementById('milestones');
+  bar.innerHTML='';
+  MILESTONE_POINTS.forEach((at,i)=>{
+    const earned=eventState.progress>=at;
+    const claimed=eventState.claimedMilestones.includes(i);
+    const d=document.createElement('div');
+    d.className='absolute top-0 -translate-x-1/2';
+    d.style.left=`${at/MAX_PROGRESS*100}%`;
+    const btn=document.createElement('button');
+    btn.type='button';
+    btn.title=claimed?'Đã nhận vé lật':earned?'Bấm để nhận 1 vé lật':`Cần ${at} điểm`;
+    btn.className=`w-9 h-9 rounded-xl border flex items-center justify-center text-base font-black transition ${claimed?'border-emerald-400/60 bg-emerald-950 text-emerald-300':earned?'border-amber-300 bg-amber-500/20 text-amber-200 hover:scale-110 hover:bg-amber-500/30 cursor-pointer':'border-slate-700 bg-slate-900 text-slate-600 cursor-not-allowed'}`;
+    btn.textContent=claimed?'✓':'🎁';
+    btn.disabled=!earned||claimed;
+    if(earned&&!claimed)btn.onclick=()=>claimMilestone(i);
+    const label=document.createElement('div');
+    label.className=`text-[8px] font-black text-center mt-1 whitespace-nowrap ${claimed?'text-emerald-400':earned?'text-amber-300':'text-slate-600'}`;
+    label.textContent=`${at} điểm`;
+    d.appendChild(btn);d.appendChild(label);bar.appendChild(d);
+  });
+}
+function claimMilestone(index){
+  const at=MILESTONE_POINTS[index];
+  if(!Number.isInteger(index)||index<0||index>=10)return;
+  if(eventState.progress<at||eventState.claimedMilestones.includes(index))return;
+  eventState.claimedMilestones.push(index);
+  eventState.claimedMilestones=[...new Set(eventState.claimedMilestones)].sort((a,b)=>a-b);
+  eventState.flipTickets=Math.min(10,eventState.flipTickets+1);
+  save();updateStats();renderMilestones();renderCardGrid();
+  showNotice('🎁 Nhận vé lật',`Mốc ${at} điểm đã mở. Bạn nhận được 1 vé lật thẻ.`, '🎟️');
+}
+
+function renderCardGrid(){
+  const grid=document.getElementById('eventCardGrid');
+  if(!grid)return;
+  grid.innerHTML='';
+  eventState.board.forEach((card,i)=>{
+    const revealed=!!card.revealed;
+    const el=document.createElement('div');
+    el.className='relative aspect-[3/4] rounded-2xl border overflow-hidden shadow-lg '+(revealed?'border-amber-400/40 bg-slate-950':'border-slate-700 bg-slate-950');
+    if(revealed){
+      const isEvent=card.kind==='event';
+      const shown=isEvent ? eventCard : card.card;
+      if(shown){
+        el.innerHTML=`<div class="card-face">
+          <div class="card-face-media">${renderMedia(shown)}</div>
+          <div class="card-face-info">
+            <div class="card-rarity">${isEvent?'THẺ SỰ KIỆN':'HẠNG '+(card.rarity||shown.rarity||'B')}</div>
+            <div class="card-name" title="${shown.name||''}">${shown.name||'THẺ '+card.rarity}</div>
+            <div class="card-type">ĐÃ NHẬN • LÁ ${i+1}</div>
+          </div>
+        </div>`;
+      }else{
+        el.innerHTML=`<div class="card-face items-center justify-center text-center p-3">
+          <div class="text-4xl">${isEvent?'👑':'🎴'}</div>
+          <div class="card-rarity mt-3">${isEvent?'THẺ SỰ KIỆN':'HẠNG '+card.rarity}</div>
+          <div class="card-type">ĐÃ NHẬN • LÁ ${i+1}</div>
+        </div>`;
+      }
+      if(isEvent)el.onclick=()=>showNotice('Chúc mừng!',`Bạn đã nhận được thẻ ${eventCard?.name||'sự kiện'}!`,null,eventCard);
+    }else{
+      const canFlip=eventState.flipTickets>0;
+      el.innerHTML=`<button type="button" ${canFlip?'':'disabled'} aria-label="Lật lá ${i+1}" class="absolute inset-0 w-full h-full ${canFlip?'cursor-pointer hover:brightness-110':'cursor-not-allowed opacity-55'}">
+        <div class="card-back">
+          <div class="card-back-core">✦</div>
+          <div class="card-back-label">OBEY 7 • CARD</div>
+        </div>
+      </button>`;
+      if(canFlip)el.querySelector('button').onclick=()=>flipCard(i);
+    }
+    grid.appendChild(el);
+  });
+}
+function processRewards(){
+  save();updateStats();renderMilestones();renderCardGrid();renderEventCard();
+}
+function addCardToCollection(card){
+  if(!card||card.id===undefined)return;
+  const id=String(card.id);
+  const incoming={...card};
+  const power=Number(incoming.power)||0;
+  const found=collection.find(c=>String(c.id)===id);
+  if(found){
+    found.power=(Number(found.power)||0)+power;
+  }else{
+    incoming.power=power;
+    incoming.instanceId=incoming.instanceId||(`event_${Date.now()}_${Math.random().toString(36).slice(2,8)}`);
+    incoming.pulledAt=incoming.pulledAt||new Date().toLocaleTimeString();
+    collection.unshift(incoming);
+  }
+  collection=uniqueCards(collection);
+}
+
+function flipCard(index){
+  if(eventState.flipTickets<=0||eventState.flipped.includes(index)||!eventState.board[index])return;
+  eventState.flipTickets--;
+  eventState.flipped.push(index);
+  const card=eventState.board[index];card.revealed=true;
+  if(card.kind==='event'){
+    addCardToCollection(eventCard);
+    save();updateStats();renderMilestones();renderCardGrid();renderEventCard();
+    showNotice('Chúc mừng!',`Bạn đã nhận được thẻ ${eventCard?.name||'sự kiện'}!`,null,eventCard);
+    return;
+  }
+  if(card.card)addCardToCollection(card.card);
+  save();updateStats();renderMilestones();renderCardGrid();
+  showNotice('Chúc mừng!',`Bạn đã nhận được thẻ ${card.card?.name||('bậc '+card.rarity)}!`,null,card.card);
+}
+function showNotice(title,text,icon='✦',card=null){
+  const noticeBox=document.querySelector('.notice-box');
+  const mediaBox=document.getElementById('noticeCard');
+  const isEventCard=!!card && (card.id===eventCard?.id || card.rarity==='EVENT');
+  noticeBox?.classList.toggle('event-notice',isEventCard);
+  if(card){
+    mediaBox.innerHTML=renderMedia(card,'w-full h-full object-cover');
+    mediaBox.classList.remove('hidden');
+    mediaBox.classList.toggle('event-reward',isEventCard);
+  }else{
+    mediaBox.innerHTML='';
+    mediaBox.classList.add('hidden');
+    mediaBox.classList.remove('event-reward');
+  }
+  document.getElementById('noticeIcon').textContent='';
+  document.getElementById('noticeTitle').textContent=title;
+  document.getElementById('noticeText').textContent=text;
+  document.getElementById('notice').classList.add('show');
+}
+function closeNotice(){document.getElementById('notice').classList.remove('show');document.querySelector('.notice-box')?.classList.remove('event-notice');}
+
+function renderEventCard(){
+  const box=document.getElementById('eventCardBox');
+  if(!eventCard){box.innerHTML='<div class="absolute inset-0 flex items-center justify-center text-slate-500">Không tìm thấy thẻ sự kiện.</div>';return}
+  box.innerHTML=renderMedia(eventCard)+`<div class="event-card-overlay"><div class="text-[9px] font-black tracking-widest text-amber-300">HẠNG ${eventCard.rarity||'CARD'}</div><div class="font-black mt-1">${eventCard.name||'EVENT CARD'}</div></div>`;
+  document.getElementById('eventCardName').textContent=eventCard.name||'EVENT CARD';
+  document.getElementById('eventCardRarity').textContent=`HẠNG ${eventCard.rarity||'CARD'} • #${eventCard.id??'?'}`;
+  document.getElementById('eventCardMini').textContent=`Thẻ: ${eventCard.name||'EVENT CARD'} • ${eventCard.rarity||'CARD'}`;
+  document.getElementById('earlyStatus').textContent=eventState.flipped.some(i=>eventState.board[i]?.kind==='event')?'Đã nhận':'Lật bàn để tìm';
+}
+
+/* =========================================================
+   FLAPPY BIRD
+========================================================= */
+const canvas=document.getElementById('gameCanvas'),ctx=canvas.getContext('2d');
+let game=null,raf=0;
+function resetCanvas(){ctx.clearRect(0,0,canvas.width,canvas.height);drawScene({birdY:260,pipes:[],score:0});}
+function drawScene(g){
+  const W=canvas.width,H=canvas.height;
+  const grad=ctx.createLinearGradient(0,0,0,H);grad.addColorStop(0,'#7dd3fc');grad.addColorStop(1,'#dbeafe');ctx.fillStyle=grad;ctx.fillRect(0,0,W,H);
+  ctx.fillStyle='rgba(255,255,255,.65)';for(let i=0;i<5;i++){const x=(i*220+80)%W,y=70+(i%3)*62;ctx.beginPath();ctx.arc(x,y,20,0,Math.PI*2);ctx.arc(x+25,y-8,26,0,Math.PI*2);ctx.arc(x+55,y,19,0,Math.PI*2);ctx.fill()}
+  ctx.fillStyle='#86efac';ctx.fillRect(0,H-44,W,44);ctx.fillStyle='#4ade80';ctx.fillRect(0,H-48,W,8);
+  (g.pipes||[]).forEach(p=>{ctx.fillStyle='#22c55e';ctx.fillRect(p.x,0,p.w,p.top);ctx.fillRect(p.x,p.bottom,p.w,H-44-p.bottom);ctx.fillStyle='#16a34a';ctx.fillRect(p.x-5,p.top-18,p.w+10,18);ctx.fillRect(p.x-5,p.bottom,p.w+10,18)});
+  ctx.save();ctx.translate(150,g.birdY||260);ctx.rotate(Math.max(-.35,Math.min(.65,(g.vy||0)*.045)));ctx.fillStyle='#facc15';ctx.beginPath();ctx.arc(0,0,18,0,Math.PI*2);ctx.fill();ctx.fillStyle='#f97316';ctx.beginPath();ctx.moveTo(14,2);ctx.lineTo(35,9);ctx.lineTo(14,14);ctx.closePath();ctx.fill();ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(6,-7,6,0,Math.PI*2);ctx.fill();ctx.fillStyle='#111827';ctx.beginPath();ctx.arc(8,-7,2.5,0,Math.PI*2);ctx.fill();ctx.restore();
+  ctx.fillStyle='rgba(2,6,23,.72)';ctx.font='900 38px "Be Vietnam Pro"';ctx.textAlign='center';ctx.fillText(String(g.score||0),W/2,58);
+}
+function startGame(){
+  if(game&&game.running)return;
+  const cost=currentCost();
+  const available=dailyCount+gachaCount;
+  if(available<cost){showNotice('Không đủ lượt Gacha',`Lượt chơi này cần ${cost} lượt Gacha, bạn hiện có ${dailyCount+gachaCount}.`,'⚠');return}
+  const dailyUsed=Math.min(dailyCount,cost);
+  dailyCount=Math.max(0,dailyCount-dailyUsed);
+  gachaCount=Math.max(0,gachaCount-(cost-dailyUsed));
+  eventState.plays++;save();updateStats();
+  document.getElementById('startPanel').classList.add('hidden');document.getElementById('resultPanel').classList.add('hidden');
+  game={running:true,birdY:260,vy:0,pipes:[],score:0,t:0,last:performance.now(),spawn:0};
+  cancelAnimationFrame(raf);raf=requestAnimationFrame(loop);
+}
+function flap(){if(!game||!game.running)return;game.vy=-7.2}
+function spawnPipe(){const gap=158;const min=75,max=330;const top=min+Math.random()*(max-min);game.pipes.push({x:canvas.width+20,w:72,top,bottom:top+gap,passed:false})}
+function loop(now){if(!game||!game.running)return;const dt=Math.min(.032,(now-game.last)/1000);game.last=now;game.t+=dt;game.vy+=17.5*dt;game.birdY+=game.vy;game.spawn+=dt;if(game.spawn>.92){game.spawn=0;spawnPipe()}
+  game.pipes.forEach(p=>p.x-=260*dt);
+  for(const p of game.pipes){if(!p.passed&&p.x+p.w<150){p.passed=true;game.score++;document.getElementById('liveScore').textContent=game.score}const bx=150,by=game.birdY,r=15;if(bx+r>p.x&&bx-r<p.x+p.w&&(by-r<p.top||by+r>p.bottom))return endGame();}
+  game.pipes=game.pipes.filter(p=>p.x>-100);if(game.birdY<0||game.birdY>canvas.height-58)return endGame();drawScene(game);raf=requestAnimationFrame(loop)}
+function endGame(){if(!game||!game.running)return;game.running=false;cancelAnimationFrame(raf);const gained=game.score;eventState.progress=Math.min(MAX_PROGRESS,eventState.progress+gained);document.getElementById('resultScore').textContent=gained;document.getElementById('resultGain').textContent=`+${gained} điểm sự kiện`;document.getElementById('resultPanel').classList.remove('hidden');document.getElementById('startPanel').classList.add('hidden');processRewards();if(gained>0)showNotice('Kết thúc lượt chơi',`Bạn ghi ${gained} điểm và nhận +${gained} điểm tiến trình. Lượt kế tiếp tốn ${currentCost()} lượt Gacha.`,'✦');else showNotice('Kết thúc lượt chơi','Bạn chưa vượt qua ống nào. Tiến trình không tăng.','•');}
+document.getElementById('startBtn').onclick=startGame;document.getElementById('againBtn').onclick=startGame;canvas.addEventListener('pointerdown',e=>{e.preventDefault();if(game?.running)flap();else startGame()});window.addEventListener('keydown',e=>{if(e.code==='Space'){e.preventDefault();if(game?.running)flap();else startGame()}});
+
+load();eventCard=getEventCard();updateStats();renderMilestones();renderCardGrid();renderEventCard();resetCanvas();
+if(eventState.flipped.length===10)showNotice('Bàn thẻ đã hoàn thành','Bạn đã lật đủ 10/10 thẻ của sự kiện.','👑');
+</script>
+</body>
+</html>
