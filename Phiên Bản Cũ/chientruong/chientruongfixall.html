@@ -169,7 +169,7 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mt-7">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-7">
           <div class="rounded-2xl bg-slate-950/65 border border-slate-800 p-4">
             <div class="text-[10px] text-slate-500 uppercase">Tổng Power</div>
             <div id="total-power" class="font-cinzel text-xl font-black text-amber-300 mt-1">0</div>
@@ -184,16 +184,6 @@
             <div class="text-[10px] text-slate-500 uppercase">Bộ thẻ</div>
             <div id="card-count" class="font-cinzel text-xl font-black text-emerald-300 mt-1">0</div>
             <div class="text-[10px] text-slate-600 mt-1">Thẻ độc nhất</div>
-          </div>
-          <div class="rounded-2xl bg-slate-950/65 border border-slate-800 p-4">
-            <div class="text-[10px] text-slate-500 uppercase">Số trận</div>
-            <div id="battle-matches" class="font-cinzel text-xl font-black text-sky-300 mt-1">0</div>
-            <div class="text-[10px] text-slate-600 mt-1">Trận đã tham gia</div>
-          </div>
-          <div class="rounded-2xl bg-slate-950/65 border border-slate-800 p-4">
-            <div class="text-[10px] text-slate-500 uppercase">Tỉ lệ thắng</div>
-            <div id="battle-win-rate" class="font-cinzel text-xl font-black text-emerald-300 mt-1">0%</div>
-            <div class="text-[10px] text-slate-600 mt-1">Tính trên tổng số trận</div>
           </div>
         </div>
         <div class="mt-5 rounded-2xl border border-slate-800 bg-slate-950/45 p-4">
@@ -383,7 +373,6 @@ const STORAGE_MUSIC = "obey7_battle_music_v1";
 const STORAGE_REP = "obey7_battle_representative_v1";
 const STORAGE_BATTLE_ACTIVE = "obey7_battle_active_v1";
 const STORAGE_RANK_SEASON = "obey7_battle_rank_season_v1";
-const STORAGE_BATTLE_STATS = "obey7_battle_stats_v1";
 // Tăng số này mỗi khi mở Season mới. Rank của người chơi sẽ tự reset về 0.
 const RANK_SEASON = 2;
 // Dán URL Web App Google Apps Script của bảng Rank vào đây.
@@ -399,9 +388,9 @@ const RANKING_API_URL = "https://script.google.com/macros/s/AKfycbxuHkLxZWM0pmxO
 ========================================================= */
 const OPPONENT_POWER_RANGES = {
   newbie:  {min: 500, max: 1000},
-  warrior: {min: 1000, max: 5000},
-  knight:  {min: 5000, max: 10000},
-  general: {min: 10000, max: 50000},
+  warrior: {min: 1000, max: 12000},
+  knight:  {min: 10000, max: 25000},
+  general: {min: 22000, max: 50000},
   obey:    {min: 45000, max: 100000}
 };
 
@@ -426,7 +415,6 @@ let musicStarted = false;
 let currentMusicMode = null;
 let matchmaking = {active:false,timer:null,searchTimer:null,readyTimer:null,readyDeadline:0};
 let leaderboardCache = [];
-let battleStats = {matches:0,wins:0};
 
 function safeParse(key, fallback){
   try{const x=JSON.parse(localStorage.getItem(key)); return x ?? fallback}catch(e){return fallback}
@@ -503,8 +491,6 @@ function loadData(){
     tickets:Math.max(0,Number(p.tickets)||0)
   };
   playerName=localStorage.getItem(STORAGE_NAME)||"";
-  const bs=safeParse(STORAGE_BATTLE_STATS,{matches:0,wins:0});
-  battleStats={matches:Math.max(0,Number(bs.matches)||0),wins:Math.max(0,Math.min(Number(bs.matches)||0,Number(bs.wins)||0))};
   const savedSeason=Number(localStorage.getItem(STORAGE_RANK_SEASON)||0);
   const r=safeParse(STORAGE_RANK,{});
   if(savedSeason!==RANK_SEASON){
@@ -522,20 +508,6 @@ function loadData(){
 function saveRank(){
   localStorage.setItem(STORAGE_RANK,JSON.stringify(rankState));
   localStorage.setItem(STORAGE_RANK_SEASON,String(RANK_SEASON));
-}
-function saveBattleStats(){
-  localStorage.setItem(STORAGE_BATTLE_STATS,JSON.stringify(battleStats));
-}
-function recordBattleStarted(){
-  battleStats.matches++;
-  saveBattleStats();
-}
-function recordBattleWin(){
-  battleStats.wins=Math.min(battleStats.matches,battleStats.wins+1);
-  saveBattleStats();
-}
-function battleWinRate(){
-  return battleStats.matches?Math.round((battleStats.wins/battleStats.matches)*1000)/10:0;
 }
 function totalPower(){return collection.reduce((s,c)=>s+(Number(c.power)||0),0)}
 function currentRank(){return RANKS[rankState.index]}
@@ -617,10 +589,6 @@ function refreshLobby(){
   document.getElementById("player-level").textContent=fmt(progress.level);
   document.getElementById("level-detail").textContent=`${fmt(progress.totalPulls)} lượt Gacha`;
   document.getElementById("card-count").textContent=fmt(collection.length);
-  const matchesEl=document.getElementById("battle-matches");
-  const winRateEl=document.getElementById("battle-win-rate");
-  if(matchesEl)matchesEl.textContent=fmt(battleStats.matches);
-  if(winRateEl)winRateEl.textContent=`${battleWinRate()}%`;
   document.getElementById("rank-progress-text").textContent=`${rankState.stars} / 7 sao`;
   renderRepresentative();
   renderStars(document.getElementById("stars"),rankState.stars);
@@ -1046,7 +1014,6 @@ function startBattle(){
   if(!document.getElementById('match-screen') || document.getElementById('match-screen').classList.contains('hidden'))return;
   stopCardSelectionTimer();
   localStorage.setItem(STORAGE_BATTLE_ACTIVE,'1');
-  recordBattleStarted();
   const playerTeam=selectedIds.map(getCharById).filter(Boolean).map(c=>({...c,battlePower:Number(c.power)||0}));
   const range=opponentRange();
   const enemyTarget=randInt(range.min,range.max);
@@ -1279,7 +1246,6 @@ function finishBattle(){
   const win=battle.playerScore>=2;
   const oldIndex=rankState.index,oldStars=rankState.stars;
   if(win){
-    recordBattleWin();
     if(rankState.index<RANKS.length-1){
       rankState.stars++;
       if(rankState.stars>=7){rankState.stars=0;rankState.index++;}

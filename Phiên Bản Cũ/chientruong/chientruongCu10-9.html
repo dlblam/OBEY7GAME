@@ -169,7 +169,7 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mt-7">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-7">
           <div class="rounded-2xl bg-slate-950/65 border border-slate-800 p-4">
             <div class="text-[10px] text-slate-500 uppercase">Tổng Power</div>
             <div id="total-power" class="font-cinzel text-xl font-black text-amber-300 mt-1">0</div>
@@ -184,16 +184,6 @@
             <div class="text-[10px] text-slate-500 uppercase">Bộ thẻ</div>
             <div id="card-count" class="font-cinzel text-xl font-black text-emerald-300 mt-1">0</div>
             <div class="text-[10px] text-slate-600 mt-1">Thẻ độc nhất</div>
-          </div>
-          <div class="rounded-2xl bg-slate-950/65 border border-slate-800 p-4">
-            <div class="text-[10px] text-slate-500 uppercase">Số trận</div>
-            <div id="battle-matches" class="font-cinzel text-xl font-black text-sky-300 mt-1">0</div>
-            <div class="text-[10px] text-slate-600 mt-1">Trận đã tham gia</div>
-          </div>
-          <div class="rounded-2xl bg-slate-950/65 border border-slate-800 p-4">
-            <div class="text-[10px] text-slate-500 uppercase">Tỉ lệ thắng</div>
-            <div id="battle-win-rate" class="font-cinzel text-xl font-black text-emerald-300 mt-1">0%</div>
-            <div class="text-[10px] text-slate-600 mt-1">Tính trên tổng số trận</div>
           </div>
         </div>
         <div class="mt-5 rounded-2xl border border-slate-800 bg-slate-950/45 p-4">
@@ -242,6 +232,7 @@
       </div>
       <div class="flex items-center gap-3">
         <div id="selection-timer" class="selection-timer font-cinzel text-2xl font-black text-amber-300">30.0s</div>
+        <button onclick="backToLobby()" class="btn px-4 py-2 rounded-xl bg-slate-900 border border-slate-700 text-sm">← Về sảnh</button>
       </div>
     </header>
 
@@ -290,7 +281,6 @@
         <div class="rounded-2xl bg-slate-950/60 border border-rose-500/20 p-4 text-right"><div class="text-[10px] text-rose-300 font-black">ĐỐI THỦ</div><div id="enemy-name" class="font-cinzel text-xl font-black mt-1">—</div><div id="enemy-power" class="text-rose-300 font-bold mt-2">0 Power</div></div>
       </div>
       <div id="battle-status" class="mt-5 text-center text-slate-400">Đang tìm đối thủ...</div>
-      <div id="battle-afk-timer" class="mt-2 text-center text-[10px] font-black tracking-[.12em] text-slate-500 uppercase">TỰ ĐỘNG XỬ TREO MÁY: 30.0s</div>
       <div id="battle-accuracy-effect" class="battle-accuracy-effect" aria-live="polite"><div id="battle-accuracy-title" class="effect-title"></div><div id="battle-accuracy-sub" class="effect-sub"></div></div>
       <div id="battle-lanes" class="mt-6"></div>
       <div id="battle-result" class="hidden mt-6"></div>
@@ -383,7 +373,6 @@ const STORAGE_MUSIC = "obey7_battle_music_v1";
 const STORAGE_REP = "obey7_battle_representative_v1";
 const STORAGE_BATTLE_ACTIVE = "obey7_battle_active_v1";
 const STORAGE_RANK_SEASON = "obey7_battle_rank_season_v1";
-const STORAGE_BATTLE_STATS = "obey7_battle_stats_v1";
 // Tăng số này mỗi khi mở Season mới. Rank của người chơi sẽ tự reset về 0.
 const RANK_SEASON = 2;
 // Dán URL Web App Google Apps Script của bảng Rank vào đây.
@@ -399,9 +388,9 @@ const RANKING_API_URL = "https://script.google.com/macros/s/AKfycbxuHkLxZWM0pmxO
 ========================================================= */
 const OPPONENT_POWER_RANGES = {
   newbie:  {min: 500, max: 1000},
-  warrior: {min: 1000, max: 5000},
-  knight:  {min: 5000, max: 10000},
-  general: {min: 10000, max: 50000},
+  warrior: {min: 1000, max: 12000},
+  knight:  {min: 10000, max: 25000},
+  general: {min: 22000, max: 50000},
   obey:    {min: 45000, max: 100000}
 };
 
@@ -426,7 +415,6 @@ let musicStarted = false;
 let currentMusicMode = null;
 let matchmaking = {active:false,timer:null,searchTimer:null,readyTimer:null,readyDeadline:0};
 let leaderboardCache = [];
-let battleStats = {matches:0,wins:0};
 
 function safeParse(key, fallback){
   try{const x=JSON.parse(localStorage.getItem(key)); return x ?? fallback}catch(e){return fallback}
@@ -472,13 +460,6 @@ function cardBotMinPower(c){
   };
   return minPower[t] ?? 1;
 }
-function cardBotPowerUnit(c){
-  return cardBotMinPower(c);
-}
-function snapBotPower(power,unit){
-  const u=Math.max(1,Number(unit)||1);
-  return Math.max(u,Math.floor((Number(power)||0)/u)*u);
-}
 function getCharById(id){
   return collection.find(c=>String(c.id)===String(id)) ||
          (typeof CHARACTER_POOL!=="undefined" ? CHARACTER_POOL.find(c=>String(c.id)===String(id)) : null);
@@ -503,8 +484,6 @@ function loadData(){
     tickets:Math.max(0,Number(p.tickets)||0)
   };
   playerName=localStorage.getItem(STORAGE_NAME)||"";
-  const bs=safeParse(STORAGE_BATTLE_STATS,{matches:0,wins:0});
-  battleStats={matches:Math.max(0,Number(bs.matches)||0),wins:Math.max(0,Math.min(Number(bs.matches)||0,Number(bs.wins)||0))};
   const savedSeason=Number(localStorage.getItem(STORAGE_RANK_SEASON)||0);
   const r=safeParse(STORAGE_RANK,{});
   if(savedSeason!==RANK_SEASON){
@@ -522,20 +501,6 @@ function loadData(){
 function saveRank(){
   localStorage.setItem(STORAGE_RANK,JSON.stringify(rankState));
   localStorage.setItem(STORAGE_RANK_SEASON,String(RANK_SEASON));
-}
-function saveBattleStats(){
-  localStorage.setItem(STORAGE_BATTLE_STATS,JSON.stringify(battleStats));
-}
-function recordBattleStarted(){
-  battleStats.matches++;
-  saveBattleStats();
-}
-function recordBattleWin(){
-  battleStats.wins=Math.min(battleStats.matches,battleStats.wins+1);
-  saveBattleStats();
-}
-function battleWinRate(){
-  return battleStats.matches?Math.round((battleStats.wins/battleStats.matches)*1000)/10:0;
 }
 function totalPower(){return collection.reduce((s,c)=>s+(Number(c.power)||0),0)}
 function currentRank(){return RANKS[rankState.index]}
@@ -617,10 +582,6 @@ function refreshLobby(){
   document.getElementById("player-level").textContent=fmt(progress.level);
   document.getElementById("level-detail").textContent=`${fmt(progress.totalPulls)} lượt Gacha`;
   document.getElementById("card-count").textContent=fmt(collection.length);
-  const matchesEl=document.getElementById("battle-matches");
-  const winRateEl=document.getElementById("battle-win-rate");
-  if(matchesEl)matchesEl.textContent=fmt(battleStats.matches);
-  if(winRateEl)winRateEl.textContent=`${battleWinRate()}%`;
   document.getElementById("rank-progress-text").textContent=`${rankState.stars} / 7 sao`;
   renderRepresentative();
   renderStars(document.getElementById("stars"),rankState.stars);
@@ -826,7 +787,7 @@ function autoLoseCardSelection(){
   stopCardSelectionTimer();
   if(!document.getElementById('match-screen') || document.getElementById('match-screen').classList.contains('hidden'))return;
   const oldIndex=rankState.index;
-  changeRankByStar(-1);
+  rankState.stars=Math.max(0,rankState.stars-1);
   saveRank();
   const r=currentRank();
   alert(`HẾT THỜI GIAN CHỌN THẺ. Bạn bị xử thua và mất 1 sao.`);
@@ -841,7 +802,7 @@ function surrenderCardSelection(reason='manual'){
   if(!screen || screen.classList.contains('hidden'))return false;
   stopCardSelectionTimer();
   localStorage.removeItem(STORAGE_BATTLE_ACTIVE);
-  changeRankByStar(-1);
+  rankState.stars=Math.max(0,rankState.stars-1);
   saveRank();
   playLobbyMusic();
   clearMatchmakingTimers();
@@ -858,12 +819,11 @@ function surrenderCardSelection(reason='manual'){
 }
 function surrenderBattle(reason='manual'){
   if(!battle || battle.finished)return false;
-  clearBattleAfkTimer();
   if(battle.timingRaf)cancelAnimationFrame(battle.timingRaf);
   battle.timingRunning=false;
   battle.finished=true;
   localStorage.removeItem(STORAGE_BATTLE_ACTIVE);
-  changeRankByStar(-1);
+  rankState.stars=Math.max(0,rankState.stars-1);
   saveRank();
   stopCardSelectionTimer();
   playLobbyMusic();
@@ -876,13 +836,12 @@ function surrenderBattle(reason='manual'){
   showOnly('lobby-screen');
   if(reason==='manual') alert('BẠN ĐÃ ĐẦU HÀNG. Mất 1 sao.');
   else if(reason==='reload') alert('BẠN ĐÃ RỜI TRẬN / RELOAD TRONG TRẬN. Tính là đầu hàng và mất 1 sao.');
-  else if(reason==='afk') alert('BẠN ĐÃ TREO MÁY QUÁ 30 GIÂY. Tính là xử thua và mất 1 sao.');
   return true;
 }
 function recoverAbandonedBattle(){
   if(localStorage.getItem(STORAGE_BATTLE_ACTIVE)!=='1')return false;
   localStorage.removeItem(STORAGE_BATTLE_ACTIVE);
-  changeRankByStar(-1);
+  rankState.stars=Math.max(0,rankState.stars-1);
   saveRank();
   stopBattleMusic();
   refreshLobby();
@@ -981,14 +940,10 @@ function randomOpponentTeam(targetPower){
   */
   const weights=base.map(c=>Math.max(1,Number(c.power)||1));
   const total=weights.reduce((a,b)=>a+b,0);
-  const units=base.map(cardBotPowerUnit);
-  const mins=units.slice();
+  const mins=base.map(cardBotMinPower);
   const minTotal=mins.reduce((a,b)=>a+b,0);
   const finalTarget=Math.max(Number(targetPower)||1,minTotal);
 
-  // Mỗi thẻ bot chỉ được nhận Power theo đúng đơn vị của bậc:
-  // VIP +1000/lần, SSS +100/lần, SS +50/lần, S +20/lần,
-  // A +10/lần, B +4/lần, C +2/lần, D +1/lần.
   let remain=finalTarget;
   return base.map((c,i)=>{
     let share;
@@ -996,62 +951,28 @@ function randomOpponentTeam(targetPower){
       share=remain;
     }else{
       share=Math.max(mins[i],Math.round(finalTarget*(weights[i]/total)));
+      // Không để phần còn lại bị âm do sàn VIP.
       const reserve=mins.slice(i+1).reduce((a,b)=>a+b,0);
       share=Math.min(share,Math.max(mins[i],remain-reserve));
-    }
-    share=snapBotPower(share,units[i]);
-    // Sau khi làm tròn theo đơn vị, luôn giữ đủ sàn cho các thẻ còn lại.
-    const reserveAfter=mins.slice(i+1).reduce((a,b)=>a+b,0);
-    if(i<2 && share>remain-reserveAfter){
-      share=snapBotPower(Math.max(mins[i],remain-reserveAfter),units[i]);
     }
     remain-=share;
     return {
       ...c,
       battlePower:Math.max(mins[i],share),
-      battleTier:cardTier(c),
-      battleUnit:units[i]
+      battleTier:cardTier(c)
     };
   });
-}
-function clearBattleAfkTimer(){
-  if(window.battleAfkTimer)clearInterval(window.battleAfkTimer);
-  window.battleAfkTimer=null;
-}
-function resetBattleAfkTimer(){
-  if(!battle||battle.finished)return;
-  const deadline=Date.now()+30000;
-  battle.afkDeadline=deadline;
-  const el=document.getElementById('battle-afk-timer');
-  const tick=()=>{
-    if(!battle||battle.finished){clearBattleAfkTimer();return;}
-    const left=Math.max(0,deadline-Date.now());
-    if(el){
-      el.textContent=`TỰ ĐỘNG XỬ TREO MÁY: ${(left/1000).toFixed(1)}s`;
-      el.classList.toggle('text-rose-400',left<=5000);
-      el.classList.toggle('text-slate-500',left>5000);
-    }
-    if(left<=0){
-      clearBattleAfkTimer();
-      surrenderBattle('afk');
-      return;
-    }
-    window.battleAfkTimer=setTimeout(tick,100);
-  };
-  clearBattleAfkTimer();
-  tick();
 }
 function startBattle(){
   if(selectedIds.length!==3)return;
   if(!document.getElementById('match-screen') || document.getElementById('match-screen').classList.contains('hidden'))return;
   stopCardSelectionTimer();
   localStorage.setItem(STORAGE_BATTLE_ACTIVE,'1');
-  recordBattleStarted();
   const playerTeam=selectedIds.map(getCharById).filter(Boolean).map(c=>({...c,battlePower:Number(c.power)||0}));
   const range=opponentRange();
   const enemyTarget=randInt(range.min,range.max);
   const enemyTeam=randomOpponentTeam(enemyTarget);
-  battle={playerTeam,enemyTeam,playerScore:0,enemyScore:0,round:0,finished:false,revealed:false,rolled:false,lastWinner:null,timingRunning:false,timingPos:.02,timingDir:1,timingDeadline:0,timingZoneTop:.5,timingZoneHeight:.12,timingBreakthroughHeight:.028,playerAccuracy:null,enemyAccuracy:null,timingRaf:null,afkDeadline:Date.now()+30000};
+  battle={playerTeam,enemyTeam,playerScore:0,enemyScore:0,round:0,finished:false,revealed:false,rolled:false,lastWinner:null,timingRunning:false,timingPos:.02,timingDir:1,timingDeadline:0,timingZoneTop:.5,timingZoneHeight:.12,timingBreakthroughHeight:.028,playerAccuracy:null,enemyAccuracy:null,timingRaf:null};
   document.getElementById('battle-player-rank').textContent=currentRank().name;
   document.getElementById('battle-player-name').textContent=playerName;
   document.getElementById('battle-player-power').textContent=fmt(playerTeam.reduce((s,c)=>s+c.battlePower,0))+' Power';
@@ -1063,19 +984,10 @@ function startBattle(){
   document.getElementById('battle-next').disabled=false;document.getElementById('battle-next').onclick=playNextRound;document.getElementById('battle-next').textContent='⚔ BẮT ĐẦU CẶP 1';
   renderBattleLanes();
   showOnly('battle-screen');
-  resetBattleAfkTimer();
 }
-function timingTierBonus(card){
-  const t=cardTier(card);
-  // Bậc càng cao thì được cộng tốc độ một chút, cộng dồn trên Power.
-  const bonus={D:0,C:8,B:16,A:24,S:32,SS:40,SSS:48,VIP:56};
-  return bonus[t] ?? 0;
-}
-function timingSpeedForPower(power,card){
+function timingSpeedForPower(power){
   const p=Math.max(1,Number(power)||1);
-  const base=170+Math.sqrt(p)*2.6;
-  const tier=timingTierBonus(card);
-  return Math.min(620,base+tier);
+  return Math.min(620,170+Math.sqrt(p)*2.6);
 }
 function timingAccuracy(pos){
   const top=Math.max(.05,Math.min(.83,Number(battle?.timingZoneTop)||.5));
@@ -1099,7 +1011,6 @@ function timingLabel(acc){
 function startTiming(){
   if(!battle||battle.finished||!battle.revealed||battle.timingRunning)return;
   battle.timingRunning=true;
-  resetBattleAfkTimer();
   battle.timingPos=.02;
   battle.timingDir=1;
   battle.timingDeadline=performance.now()+4000;
@@ -1121,8 +1032,7 @@ function timingFrame(now){
   }
   const dt=Math.min(.04,(now-(battle.timingLast||now))/1000);
   battle.timingLast=now;
-  const currentCard=battle.playerTeam[battle.round];
-  const speed=timingSpeedForPower(currentCard.battlePower,currentCard);
+  const speed=timingSpeedForPower(battle.playerTeam[battle.round].battlePower);
   battle.timingPos += battle.timingDir*speed*dt/150;
   if(battle.timingPos>=.98){battle.timingPos=.98;battle.timingDir=-1}
   if(battle.timingPos<=.02){battle.timingPos=.02;battle.timingDir=1}
@@ -1145,7 +1055,6 @@ function showAccuracyEffect(acc){
 }
 function stopTiming(){
   if(!battle||battle.finished||!battle.timingRunning)return;
-  resetBattleAfkTimer();
   battle.timingRunning=false;
   battle.timingDeadline=0;
   if(battle.timingRaf)cancelAnimationFrame(battle.timingRaf);
@@ -1173,7 +1082,6 @@ function resolveTimingResult(){
   document.getElementById('battle-status').textContent=`Cặp ${i+1}: ${winnerName} chiếm ưu thế với ${fmt(Math.max(battle.playerCombo,battle.enemyCombo))} DAMAGE.`;
   if(battle.playerScore>=2||battle.enemyScore>=2||battle.round>=2){finishBattle();return}
   battle.round++;battle.revealed=false;battle.rolled=false;battle.lastWinner=null;battle.timingPos=.5;battle.timingDeadline=0;
-  resetBattleAfkTimer();
   const btn=document.getElementById('battle-next');btn.disabled=false;btn.onclick=playNextRound;btn.textContent=`⚔ BẮT ĐẦU CẶP ${battle.round+1}`;
 }
 function renderBattleLanes(){
@@ -1231,62 +1139,23 @@ function revealCurrentPair(){
 }
 function playNextRound(){
   if(!battle||battle.finished)return;
-  resetBattleAfkTimer();
   revealCurrentPair();
 }
-function changeRankByStar(delta){
-  let d=Number(delta)||0;
-  while(d>0){
-    if(rankState.index>=RANKS.length-1){
-      rankState.stars++;
-      d--;
-      continue;
-    }
-    rankState.stars++;
-    d--;
-    if(rankState.stars>=7){
-      rankState.stars=0;
-      rankState.index++;
-    }
-  }
-  while(d<0){
-    // TÂN BINH là bậc thấp nhất: không thể rớt thấp hơn 0 sao.
-    if(rankState.index<=0){
-      rankState.index=0;
-      rankState.stars=Math.max(0,rankState.stars-1);
-      d++;
-      continue;
-    }
-    if(rankState.stars>0){
-      rankState.stars--;
-    }else{
-      rankState.index--;
-      // Rớt từ 0 sao của bậc hiện tại xuống bậc dưới và đứng ở 6 sao.
-      rankState.stars=6;
-    }
-    d++;
-  }
-  rankState.index=Math.max(0,Math.min(RANKS.length-1,rankState.index));
-  rankState.stars=Math.max(0,Number(rankState.stars)||0);
-}
-
 function finishBattle(){
   localStorage.removeItem(STORAGE_BATTLE_ACTIVE);
   if(battle?.timingRaf)cancelAnimationFrame(battle.timingRaf);
-  clearBattleAfkTimer();
   if(battle)battle.timingRunning=false;
   battle.finished=true;
   const win=battle.playerScore>=2;
   const oldIndex=rankState.index,oldStars=rankState.stars;
   if(win){
-    recordBattleWin();
     if(rankState.index<RANKS.length-1){
       rankState.stars++;
       if(rankState.stars>=7){rankState.stars=0;rankState.index++;}
     }else{
       rankState.stars++;
     }
-  }else changeRankByStar(-1);
+  }else rankState.stars=Math.max(0,rankState.stars-1);
   saveRank();
   const r=currentRank();
   const promoted=rankState.index>oldIndex;
