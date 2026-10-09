@@ -143,6 +143,52 @@
       #battle-screen .mt-6.flex.flex-wrap.justify-center{position:sticky;bottom:8px;z-index:20;background:rgba(7,9,16,.92);padding:8px;border-radius:16px;backdrop-filter:blur(10px)}
       #battle-screen .mt-6.flex.flex-wrap.justify-center button{flex:1 1 100%;padding:13px;font-size:12px}
     }
+
+    /* MOBILE BO3 polish: compact header, balanced cards, and visible final result */
+    @media(max-width:700px){
+      #battle-screen{padding:7px 7px calc(18px + env(safe-area-inset-bottom))!important}
+      #battle-screen>.max-w-6xl{width:100%;max-width:none}
+      #battle-screen>.max-w-6xl>.glass{padding:10px;border-radius:17px}
+      #battle-screen .battle-topline{gap:6px}
+      #battle-screen .battle-topline h1{font-size:1.25rem;line-height:1.15;margin-top:4px}
+      #battle-screen .battle-topline .score-wrap .font-cinzel{font-size:1.45rem}
+      #battle-screen .battle-players{
+        display:grid;grid-template-columns:minmax(0,1fr) 28px minmax(0,1fr);
+        align-items:center;gap:5px;margin-top:10px
+      }
+      #battle-screen .battle-players .player-info{padding:8px 7px;border-radius:12px;min-width:0}
+      #battle-screen .battle-players .player-info .player-name{font-size:clamp(10px,3.2vw,13px);line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+      #battle-screen .battle-players .player-info .player-power{font-size:10px;margin-top:4px}
+      #battle-screen .battle-players .player-rank{font-size:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+      #battle-screen .battle-players .versus{font-size:14px;text-align:center}
+      #battle-screen #battle-status{font-size:11px;line-height:1.4;margin-top:10px}
+      #battle-screen #battle-afk-timer{font-size:8px;margin-top:5px}
+      #battle-screen #battle-result{position:sticky;top:6px;z-index:25;margin-top:10px;scroll-margin-top:8px}
+      #battle-screen #battle-result .battle-result-card{padding:13px 12px;border-radius:14px;text-align:center;box-shadow:0 10px 32px rgba(0,0,0,.42);backdrop-filter:blur(12px)}
+      #battle-screen #battle-result .battle-result-title{font-size:clamp(19px,6vw,27px);line-height:1.15}
+      #battle-screen #battle-result .battle-result-score{font-size:15px;font-weight:900;margin-top:7px}
+      #battle-screen #battle-result .battle-result-rank{font-size:10px;margin-top:5px}
+      #battle-screen .round-lane{grid-template-columns:minmax(0,1fr) 42px minmax(0,1fr);gap:5px;align-items:start;padding:8px 0}
+      #battle-screen .round-card .aspect-\\[3\\/4\\]{max-height:155px}
+      #battle-screen .round-card .p-4{padding:7px 4px}
+      #battle-screen .round-card .font-cinzel{font-size:11px}
+      #battle-screen .round-vs{padding-top:5px}
+      #battle-screen .timing-track{width:38px;height:170px}
+      #battle-screen .mt-6.flex.flex-wrap.justify-center{position:sticky;bottom:5px;z-index:20;background:rgba(7,9,16,.94);padding:7px;gap:6px;border:1px solid rgba(148,163,184,.12);border-radius:13px;backdrop-filter:blur(12px)}
+      #battle-screen .mt-6.flex.flex-wrap.justify-center button{flex:1 1 100%;padding:11px;font-size:11px;border-radius:12px}
+      #match-screen .glass{backdrop-filter:blur(8px)}
+      #match-screen .card-choice,#match-screen .round-card{contain:layout paint}
+      #match-screen .card-choice:hover{transform:none}
+      #match-screen .card-choice.selected{transform:translateY(-2px)}
+    }
+    @media(max-width:380px){
+      #battle-screen .battle-players{grid-template-columns:minmax(0,1fr) 22px minmax(0,1fr);gap:4px}
+      #battle-screen .battle-players .player-info{padding:7px 5px}
+      #battle-screen .round-lane{grid-template-columns:minmax(0,1fr) 34px minmax(0,1fr);gap:4px}
+      #battle-screen .round-card .aspect-\\[3\\/4\\]{max-height:135px}
+      #battle-screen .timing-track{width:32px;height:150px}
+    }
+
     @media(max-width:380px){
       #match-screen #collection-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
       #match-screen #collection-grid .aspect-\[3\/4\]{aspect-ratio:3/4;max-height:none}
@@ -300,7 +346,7 @@
     <header class="flex flex-wrap items-center justify-between gap-3 mb-5">
       <div>
         <div class="text-violet-300 text-[10px] font-black tracking-[.3em] uppercase">ĐÃ SẴN SÀNG • CHỌN THẺ</div>
-        <h1 class="font-cinzel text-3xl font-black">Chọn đội hình 3 thẻ</h1>
+        <h1 class="font-cinzel text-3xl font-black">Chuẩn bị chiến đấu</h1>
         <p class="text-xs text-slate-500 mt-1">Chọn đủ 3 thẻ, sau đó ấn <b class="text-amber-300">XÁC NHẬN & BẮT ĐẦU TRẬN</b> để vào trận.</p>
       </div>
       <div class="flex items-center gap-3">
@@ -1032,40 +1078,19 @@ function renderSelectedTeam(){
   const box=document.getElementById("selected-team");
   const cards=selectedIds.map(getCharById).filter(Boolean);
   document.getElementById("team-summary").textContent=`${cards.length} / 3 thẻ`;
-  document.getElementById("team-power").textContent=fmt(cards.reduce((s,c)=>s+(Number(c.power)||0),0));
+  document.getElementById("team-power").textContent=fmt(cards.reduce((sum,c)=>sum+(Number(c.power)||0),0));
   document.getElementById("start-battle-btn").disabled=cards.length!==3;
 
-  // Reuse existing selected-card elements by ID, moving them into their new slots
-  // instead of recreating their <video> elements on every selection change.
-  const existing=new Map([...box.querySelectorAll("[data-team-card-id]")].map(el=>[el.dataset.teamCardId,el]));
-  const placeholders=new Map([...box.querySelectorAll("[data-empty-slot]")].map(el=>[el.dataset.emptySlot,el]));
-  const wanted=[];
-  for(let i=0;i<3;i++){
+  box.innerHTML=Array.from({length:3},(_,i)=>{
     const c=cards[i];
-    if(c){
-      let el=existing.get(String(c.id));
-      if(!el){
-        const holder=document.createElement("div");
-        holder.innerHTML=`<div data-team-card-id="${esc(String(c.id))}" class="relative overflow-hidden rounded-2xl border border-amber-500/30 bg-slate-950">
-          <div class="aspect-[3/4]">${renderMedia(c)}</div>
-          <div class="p-2 text-center"><div class="text-[10px] font-bold truncate">${esc(c.name||"")}</div>
-            <div class="text-[8px] text-violet-300 font-black mt-1">${esc(cardTierLabel(c))}</div>
-            <div class="text-[9px] text-amber-300 mt-1">${fmt(c.power)} Power</div></div>
-        </div>`;
-        el=holder.firstElementChild;
-      }
-      wanted.push(el);
-    }else{
-      let el=placeholders.get(String(i+1));
-      if(!el){
-        const holder=document.createElement("div");
-        holder.innerHTML=`<div data-empty-slot="${i+1}" class="rounded-2xl empty min-h-40 grid place-items-center text-slate-600 text-xs">SLOT ${i+1}</div>`;
-        el=holder.firstElementChild;
-      }
-      wanted.push(el);
-    }
-  }
-  wanted.forEach(el=>box.appendChild(el));
+    if(!c)return `<div data-empty-slot="${i+1}" class="rounded-2xl empty min-h-40 grid place-items-center text-slate-600 text-xs">SLOT ${i+1}</div>`;
+    return `<div class="relative overflow-hidden rounded-2xl border border-amber-500/30 bg-slate-950">
+      <div class="aspect-[3/4]">${renderMedia(c)}</div>
+      <div class="p-2 text-center"><div class="text-[10px] font-bold truncate">${esc(c.name||"")}</div>
+        <div class="text-[8px] text-violet-300 font-black mt-1">${esc(cardTierLabel(c))}</div>
+        <div class="text-[9px] text-amber-300 mt-1">${fmt(c.power)} Power</div></div>
+    </div>`;
+  }).join("");
 }
 function opponentRange(){
   const cfg=OPPONENT_POWER_RANGES[currentRank().key] || {min:1,max:1};
@@ -1411,7 +1436,7 @@ function finishBattle(){
   const r=currentRank();
   const promoted=rankState.index>oldIndex;
   const text=win?(promoted?`THĂNG HẠNG — ${r.name}!`:'CHIẾN THẮNG'):'THẤT BẠI';
-  document.getElementById('battle-result').innerHTML=`<div class="rounded-2xl p-5 ${win?'bg-emerald-500/10 border border-emerald-400/30':'bg-rose-500/10 border border-rose-400/30'}"><div class="font-cinzel text-2xl font-black ${win?'text-emerald-300':'text-rose-300'}">${text}</div><div class="text-sm text-slate-300 mt-2">Kết quả BO3: ${battle.playerScore} — ${battle.enemyScore}</div><div class="text-xs text-slate-400 mt-2">Rank hiện tại: <b class="text-white">${r.name}</b> · ${rankState.stars}${rankState.index===RANKS.length-1?' sao':' / 7 sao'}</div></div>`;
+  document.getElementById('battle-result').innerHTML=`<div class="battle-result-card rounded-2xl p-5 ${win?'bg-gradient-to-br from-amber-300 via-yellow-500 to-amber-600 border border-yellow-200/80 text-slate-950 shadow-[0_0_35px_rgba(250,204,21,.24)]':'bg-gradient-to-br from-red-700 via-rose-800 to-red-950 border border-red-400/70 text-white shadow-[0_0_35px_rgba(239,68,68,.22)]'}"><div class="battle-result-title font-cinzel text-2xl font-black ${win?'text-slate-950':'text-white'}"><i class="fa-solid ${win?'fa-trophy':'fa-skull-crossbones'} mr-2"></i>${text}</div><div class="battle-result-score">KẾT QUẢ BO3: ${battle.playerScore} — ${battle.enemyScore}</div><div class="battle-result-rank ${win?'text-slate-900/80':'text-red-100'}">Rank hiện tại: <b>${r.name}</b> · ${rankState.stars}${rankState.index===RANKS.length-1?' sao':' / 7 sao'}</div></div>`;
   document.getElementById('battle-result').classList.remove('hidden');
   document.getElementById('battle-next').disabled=true;
   document.getElementById('battle-next').textContent='TRẬN ĐÃ KẾT THÚC';document.getElementById('battle-next').onclick=function(){};
