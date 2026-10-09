@@ -118,20 +118,27 @@
       #match-screen #collection-grid .text-\\[9px\\]{font-size:9px}
       #match-screen #collection-grid .text-\\[10px\\]{font-size:10px}
       #match-screen #collection-grid .card-choice span{padding:3px 5px;font-size:8px}
+      /* Giữ video MP4 ổn định khi chọn thẻ, bỏ hiệu ứng dịch chuyển gây nhấp nháy */
+      #match-screen #collection-grid .card-choice,
+      #match-screen #collection-grid .card-choice:hover,
+      #match-screen #collection-grid .card-choice.selected{transform:none!important}
+      #match-screen #collection-grid .card-choice video{transform:translateZ(0);backface-visibility:hidden}
       #match-screen .sticky.bottom-4{position:fixed;left:0;right:0;bottom:0;z-index:45;margin:0;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(180deg,rgba(7,9,16,0),rgba(7,9,16,.96) 28%);pointer-events:none}
       #start-battle-btn{width:100%;max-width:520px;padding:14px 12px;border-radius:15px;font-size:13px}
       #match-screen .mobile-selection-hint{display:block}
       #battle-screen{padding:10px}
       #battle-screen .glass{padding:13px;border-radius:20px}
       #battle-screen h1{font-size:1.65rem}
-      #battle-screen .grid.md\\:grid-cols-\\[1fr_auto_1fr\\]{gap:8px;margin-top:14px}
+      /* BO3 mobile: hai khung tên nằm cùng một hàng */
+      #battle-screen .glass > .grid.mt-6{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:6px;margin-top:12px;align-items:center}
+      #battle-screen .glass > .grid.mt-6 > div{min-width:0;padding:8px 6px;border-radius:12px}
+      #battle-screen .glass > .grid.mt-6 > div:nth-child(2){padding:0 2px;font-size:15px;white-space:nowrap}
+      #battle-screen #battle-player-name,#battle-screen #enemy-name{font-size:clamp(10px,3.1vw,13px);line-height:1.3;overflow-wrap:anywhere}
+      #battle-screen #battle-player-rank,#battle-screen .glass > .grid.mt-6 > div:nth-child(3) > div:first-child{font-size:8px;line-height:1.3}
+      #battle-screen #battle-player-power,#battle-screen #enemy-power{font-size:10px;margin-top:5px;line-height:1.3}
+      #battle-screen .grid.md\\:grid-cols-\\[1fr_auto_1fr\\]{gap:6px;margin-top:12px}
       #battle-screen .grid.md\\:grid-cols-\\[1fr_auto_1fr\\] > div{padding:10px}
-      #battle-screen .grid.md\\:grid-cols-\\[1fr_auto_1fr\\]{grid-template-columns:minmax(0,1fr) 28px minmax(0,1fr);align-items:stretch;gap:6px}
-      #battle-screen .grid.md\\:grid-cols-\\[1fr_auto_1fr\\] > div{min-width:0;padding:7px 8px;border-radius:12px}
-      #battle-screen #battle-player-rank,#battle-screen .grid.md\\:grid-cols-\\[1fr_auto_1fr\\] > div > .text-\\[10px\\]{font-size:8px;letter-spacing:0}
-      #battle-screen #battle-player-name,#battle-screen #enemy-name{font-size:clamp(10px,3.2vw,13px);line-height:1.25;overflow-wrap:anywhere;word-break:break-word;margin-top:3px}
-      #battle-screen #battle-player-power,#battle-screen #enemy-power{font-size:10px;line-height:1.3;margin-top:5px}
-      #battle-screen .grid.md\\:grid-cols-\\[1fr_auto_1fr\\] > .font-cinzel{font-size:15px;display:flex;align-items:center;justify-content:center}
+      #battle-screen #battle-player-name,#battle-screen #enemy-name{font-size:14px;overflow-wrap:anywhere}
       #battle-screen #battle-player-power,#battle-screen #enemy-power{font-size:12px}
       #battle-screen #battle-lanes{margin-top:12px}
       #battle-screen .round-lane{grid-template-columns:minmax(0,1fr) 54px minmax(0,1fr);gap:7px;align-items:start}
@@ -153,10 +160,6 @@
       #match-screen #collection-grid .aspect-\[3\/4\]{aspect-ratio:3/4;max-height:none}
       #match-screen #selected-team .aspect-\[3\/4\]{aspect-ratio:3/4;max-height:none}
       #match-screen #collection-grid .p-3{padding:5px}
-      #battle-screen .grid.md\\:grid-cols-\\[1fr_auto_1fr\\]{grid-template-columns:minmax(0,1fr) 24px minmax(0,1fr);gap:4px}
-      #battle-screen .grid.md\\:grid-cols-\\[1fr_auto_1fr\\] > div{padding:6px 5px}
-      #battle-screen #battle-player-name,#battle-screen #enemy-name{font-size:10px}
-      #battle-screen .grid.md\\:grid-cols-\\[1fr_auto_1fr\\] > .font-cinzel{font-size:12px}
       #battle-screen .round-lane{grid-template-columns:minmax(0,1fr) 42px minmax(0,1fr);gap:5px}
       #battle-screen .timing-track{width:40px;height:185px}
     }
@@ -182,6 +185,17 @@
     .timing-timeout{font-size:10px;color:#fb7185;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
     .match-pulse{animation:pulseGlow 1.8s infinite}
     @media(max-width:700px){.hide-sm{display:none}.grid-ranks{grid-template-columns:repeat(2,1fr)}}
+
+    /* BO3 mobile portrait: keep player and opponent panels on one compact row. */
+    @media(max-width:700px){
+      #battle-screen .grid.md\:grid-cols-\[1fr_auto_1fr\]{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr)!important;gap:5px;margin-top:10px}
+      #battle-screen .grid.md\:grid-cols-\[1fr_auto_1fr\] > div{padding:7px 6px;min-width:0;border-radius:12px}
+      #battle-screen .grid.md\:grid-cols-\[1fr_auto_1fr\] > div > div:first-child{font-size:8px;letter-spacing:0}
+      #battle-screen #battle-player-name,#battle-screen #enemy-name{font-size:clamp(10px,3.1vw,13px);line-height:1.2;overflow-wrap:anywhere;word-break:break-word;margin-top:3px}
+      #battle-screen #battle-player-power,#battle-screen #enemy-power{font-size:10px;margin-top:5px}
+      #battle-screen .grid.md\:grid-cols-\[1fr_auto_1fr\] > div:nth-child(2){padding-left:2px;padding-right:2px}
+      #battle-screen .grid.md\:grid-cols-\[1fr_auto_1fr\] > div:nth-child(2){font-size:16px}
+    }
   </style>
 </head>
 <body>
@@ -996,7 +1010,19 @@ function renderCollection(){
   delete grid.dataset.empty;
   const sortedCollection=[...collection].sort((a,b)=>(Number(b.power)||0)-(Number(a.power)||0));
 
-  // Re-render collection cards when selection changes.
+  // If the card list is unchanged, update only selected styling. Keep video nodes alive
+  // so autoplay MP4 cards don't restart or flash on every tap.
+  const currentButtons=[...grid.querySelectorAll("button[data-card-id]")];
+  const sameCards=currentButtons.length===sortedCollection.length &&
+    currentButtons.every((el,i)=>el.dataset.cardId===String(sortedCollection[i].id));
+  if(sameCards){
+    currentButtons.forEach(el=>{
+      const selected=selectedIds.includes(el.dataset.cardId);
+      el.classList.toggle("selected",selected);
+      el.classList.toggle("border-slate-800",!selected);
+    });
+    return;
+  }
 
   grid.innerHTML=sortedCollection.map(c=>{
     const selected=selectedIds.includes(String(c.id));
@@ -1032,17 +1058,16 @@ function renderSelectedTeam(){
   document.getElementById("team-power").textContent=fmt(cards.reduce((s,c)=>s+(Number(c.power)||0),0));
   document.getElementById("start-battle-btn").disabled=cards.length!==3;
 
+  // Render lại khu vực đội hình mỗi khi chọn/bỏ thẻ; không tái sử dụng video cũ.
   box.innerHTML=Array.from({length:3},(_,i)=>{
     const c=cards[i];
-    if(c){
-      return `<div class="relative overflow-hidden rounded-2xl border border-amber-500/30 bg-slate-950">
-        <div class="aspect-[3/4]">${renderMedia(c)}</div>
-        <div class="p-2 text-center"><div class="text-[10px] font-bold truncate">${esc(c.name||"")}</div>
-          <div class="text-[8px] text-violet-300 font-black mt-1">${esc(cardTierLabel(c))}</div>
-          <div class="text-[9px] text-amber-300 mt-1">${fmt(c.power)} Power</div></div>
-      </div>`;
-    }
-    return `<div class="rounded-2xl empty min-h-40 grid place-items-center text-slate-600 text-xs">SLOT ${i+1}</div>`;
+    if(!c) return `<div data-empty-slot="${i+1}" class="rounded-2xl empty min-h-40 grid place-items-center text-slate-600 text-xs">SLOT ${i+1}</div>`;
+    return `<div data-team-card-id="${esc(String(c.id))}" class="relative overflow-hidden rounded-2xl border border-amber-500/30 bg-slate-950">
+      <div class="aspect-[3/4]">${renderMedia(c)}</div>
+      <div class="p-2 text-center"><div class="text-[10px] font-bold truncate">${esc(c.name||"")}</div>
+        <div class="text-[8px] text-violet-300 font-black mt-1">${esc(cardTierLabel(c))}</div>
+        <div class="text-[9px] text-amber-300 mt-1">${fmt(c.power)} Power</div></div>
+    </div>`;
   }).join("");
 }
 function opponentRange(){
