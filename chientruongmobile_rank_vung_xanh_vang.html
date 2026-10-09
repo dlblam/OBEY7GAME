@@ -553,7 +553,7 @@ function renderMedia(c){
   const url=String(c.mediaUrl||"");
   const videoExts=["mp4","webm","ogg","ogv","mov","m4v"];
   const isVideo=type==="video"||videoExts.includes(type)||videoExts.includes(ext)||videoExts.includes((url.split("?")[0].split(".").pop()||"").toLowerCase());
-  if(isVideo) return `<video src="${url}" autoplay loop muted playsinline preload="auto" class="media"></video>`;
+  if(isVideo) return `<video src="${url}" autoplay loop muted playsinline class="media"></video>`;
   return `<img src="${url}" alt="${esc(c.name||"Character")}" class="media" draggable="false" onerror="this.style.display='none';this.parentElement.classList.add('bg-slate-800')">`;
 }
 function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
@@ -978,32 +978,13 @@ function renderCollection(){
   const grid=document.getElementById("collection-grid");
   document.getElementById("owned-label").textContent=`${collection.length} thẻ sở hữu`;
   if(!collection.length){
-    if(grid.dataset.empty!=="1"){
-      grid.innerHTML=`<div class="empty rounded-2xl p-10 text-center text-slate-500 col-span-full">Chưa có thẻ nào trong Túi Thẻ.</div>`;
-      grid.dataset.empty="1";
-    }
+    grid.innerHTML=`<div class="empty rounded-2xl p-10 text-center text-slate-500 col-span-full">Chưa có thẻ nào trong Túi Thẻ.</div>`;
     return;
   }
-  delete grid.dataset.empty;
   const sortedCollection=[...collection].sort((a,b)=>(Number(b.power)||0)-(Number(a.power)||0));
-
-  // If the card list is unchanged, update only selected styling. Keep video nodes alive
-  // so autoplay MP4 cards don't restart or flash on every tap.
-  const currentButtons=[...grid.querySelectorAll("button[data-card-id]")];
-  const sameCards=currentButtons.length===sortedCollection.length &&
-    currentButtons.every((el,i)=>el.dataset.cardId===String(sortedCollection[i].id));
-  if(sameCards){
-    currentButtons.forEach(el=>{
-      const selected=selectedIds.includes(el.dataset.cardId);
-      el.classList.toggle("selected",selected);
-      el.classList.toggle("border-slate-800",!selected);
-    });
-    return;
-  }
-
   grid.innerHTML=sortedCollection.map(c=>{
     const selected=selectedIds.includes(String(c.id));
-    return `<button type="button" data-card-id="${esc(String(c.id))}" onclick="toggleCard('${esc(String(c.id))}')" class="card-choice ${selected?"selected":""} relative text-left rounded-2xl overflow-hidden bg-slate-950 ${selected?"":"border-slate-800"}">
+    return `<button type="button" onclick="toggleCard('${esc(String(c.id))}')" class="card-choice ${selected?"selected":""} relative text-left rounded-2xl overflow-hidden bg-slate-950 ${selected?"":"border-slate-800"}">
       <div class="aspect-[3/4] relative bg-slate-900">${renderMedia(c)}
         <span class="absolute top-2 left-2 px-2 py-1 rounded-md bg-black/70 text-[9px] font-black">${esc(cardTierLabel(c))}</span>
         <span class="absolute top-2 right-2 px-2 py-1 rounded-md bg-black/70 text-[9px] font-mono">#${esc(c.id)}</span>
@@ -1034,38 +1015,15 @@ function renderSelectedTeam(){
   document.getElementById("team-summary").textContent=`${cards.length} / 3 thẻ`;
   document.getElementById("team-power").textContent=fmt(cards.reduce((s,c)=>s+(Number(c.power)||0),0));
   document.getElementById("start-battle-btn").disabled=cards.length!==3;
-
-  // Reuse existing selected-card elements by ID, moving them into their new slots
-  // instead of recreating their <video> elements on every selection change.
-  const existing=new Map([...box.querySelectorAll("[data-team-card-id]")].map(el=>[el.dataset.teamCardId,el]));
-  const placeholders=new Map([...box.querySelectorAll("[data-empty-slot]")].map(el=>[el.dataset.emptySlot,el]));
-  const wanted=[];
-  for(let i=0;i<3;i++){
+  box.innerHTML=[0,1,2].map(i=>{
     const c=cards[i];
-    if(c){
-      let el=existing.get(String(c.id));
-      if(!el){
-        const holder=document.createElement("div");
-        holder.innerHTML=`<div data-team-card-id="${esc(String(c.id))}" class="relative overflow-hidden rounded-2xl border border-amber-500/30 bg-slate-950">
-          <div class="aspect-[3/4]">${renderMedia(c)}</div>
-          <div class="p-2 text-center"><div class="text-[10px] font-bold truncate">${esc(c.name||"")}</div>
-            <div class="text-[8px] text-violet-300 font-black mt-1">${esc(cardTierLabel(c))}</div>
-            <div class="text-[9px] text-amber-300 mt-1">${fmt(c.power)} Power</div></div>
-        </div>`;
-        el=holder.firstElementChild;
-      }
-      wanted.push(el);
-    }else{
-      let el=placeholders.get(String(i+1));
-      if(!el){
-        const holder=document.createElement("div");
-        holder.innerHTML=`<div data-empty-slot="${i+1}" class="rounded-2xl empty min-h-40 grid place-items-center text-slate-600 text-xs">SLOT ${i+1}</div>`;
-        el=holder.firstElementChild;
-      }
-      wanted.push(el);
-    }
-  }
-  wanted.forEach(el=>box.appendChild(el));
+    return c?`<div class="relative overflow-hidden rounded-2xl border border-amber-500/30 bg-slate-950">
+      <div class="aspect-[3/4]">${renderMedia(c)}</div>
+      <div class="p-2 text-center"><div class="text-[10px] font-bold truncate">${esc(c.name)}</div>
+        <div class="text-[8px] text-violet-300 font-black mt-1">${esc(cardTierLabel(c))}</div>
+        <div class="text-[9px] text-amber-300 mt-1">${fmt(c.power)} Power</div></div>
+    </div>`:`<div class="rounded-2xl empty min-h-40 grid place-items-center text-slate-600 text-xs">SLOT ${i+1}</div>`;
+  }).join("");
 }
 function opponentRange(){
   const cfg=OPPONENT_POWER_RANGES[currentRank().key] || {min:1,max:1};
