@@ -126,12 +126,7 @@
       #battle-screen h1{font-size:1.65rem}
       #battle-screen .grid.md\\:grid-cols-\\[1fr_auto_1fr\\]{gap:8px;margin-top:14px}
       #battle-screen .grid.md\\:grid-cols-\\[1fr_auto_1fr\\] > div{padding:10px}
-      #battle-screen .grid.md\\:grid-cols-\\[1fr_auto_1fr\\]{grid-template-columns:minmax(0,1fr) 28px minmax(0,1fr);align-items:stretch;gap:6px}
-      #battle-screen .grid.md\\:grid-cols-\\[1fr_auto_1fr\\] > div{min-width:0;padding:7px 8px;border-radius:12px}
-      #battle-screen #battle-player-rank,#battle-screen .grid.md\\:grid-cols-\\[1fr_auto_1fr\\] > div > .text-\\[10px\\]{font-size:8px;letter-spacing:0}
-      #battle-screen #battle-player-name,#battle-screen #enemy-name{font-size:clamp(10px,3.2vw,13px);line-height:1.25;overflow-wrap:anywhere;word-break:break-word;margin-top:3px}
-      #battle-screen #battle-player-power,#battle-screen #enemy-power{font-size:10px;line-height:1.3;margin-top:5px}
-      #battle-screen .grid.md\\:grid-cols-\\[1fr_auto_1fr\\] > .font-cinzel{font-size:15px;display:flex;align-items:center;justify-content:center}
+      #battle-screen #battle-player-name,#battle-screen #enemy-name{font-size:14px;overflow-wrap:anywhere}
       #battle-screen #battle-player-power,#battle-screen #enemy-power{font-size:12px}
       #battle-screen #battle-lanes{margin-top:12px}
       #battle-screen .round-lane{grid-template-columns:minmax(0,1fr) 54px minmax(0,1fr);gap:7px;align-items:start}
@@ -153,10 +148,6 @@
       #match-screen #collection-grid .aspect-\[3\/4\]{aspect-ratio:3/4;max-height:none}
       #match-screen #selected-team .aspect-\[3\/4\]{aspect-ratio:3/4;max-height:none}
       #match-screen #collection-grid .p-3{padding:5px}
-      #battle-screen .grid.md\\:grid-cols-\\[1fr_auto_1fr\\]{grid-template-columns:minmax(0,1fr) 24px minmax(0,1fr);gap:4px}
-      #battle-screen .grid.md\\:grid-cols-\\[1fr_auto_1fr\\] > div{padding:6px 5px}
-      #battle-screen #battle-player-name,#battle-screen #enemy-name{font-size:10px}
-      #battle-screen .grid.md\\:grid-cols-\\[1fr_auto_1fr\\] > .font-cinzel{font-size:12px}
       #battle-screen .round-lane{grid-template-columns:minmax(0,1fr) 42px minmax(0,1fr);gap:5px}
       #battle-screen .timing-track{width:40px;height:185px}
     }
@@ -996,7 +987,19 @@ function renderCollection(){
   delete grid.dataset.empty;
   const sortedCollection=[...collection].sort((a,b)=>(Number(b.power)||0)-(Number(a.power)||0));
 
-  // Re-render collection cards when selection changes.
+  // If the card list is unchanged, update only selected styling. Keep video nodes alive
+  // so autoplay MP4 cards don't restart or flash on every tap.
+  const currentButtons=[...grid.querySelectorAll("button[data-card-id]")];
+  const sameCards=currentButtons.length===sortedCollection.length &&
+    currentButtons.every((el,i)=>el.dataset.cardId===String(sortedCollection[i].id));
+  if(sameCards){
+    currentButtons.forEach(el=>{
+      const selected=selectedIds.includes(el.dataset.cardId);
+      el.classList.toggle("selected",selected);
+      el.classList.toggle("border-slate-800",!selected);
+    });
+    return;
+  }
 
   grid.innerHTML=sortedCollection.map(c=>{
     const selected=selectedIds.includes(String(c.id));
@@ -1032,18 +1035,37 @@ function renderSelectedTeam(){
   document.getElementById("team-power").textContent=fmt(cards.reduce((s,c)=>s+(Number(c.power)||0),0));
   document.getElementById("start-battle-btn").disabled=cards.length!==3;
 
-  box.innerHTML=Array.from({length:3},(_,i)=>{
+  // Reuse existing selected-card elements by ID, moving them into their new slots
+  // instead of recreating their <video> elements on every selection change.
+  const existing=new Map([...box.querySelectorAll("[data-team-card-id]")].map(el=>[el.dataset.teamCardId,el]));
+  const placeholders=new Map([...box.querySelectorAll("[data-empty-slot]")].map(el=>[el.dataset.emptySlot,el]));
+  const wanted=[];
+  for(let i=0;i<3;i++){
     const c=cards[i];
     if(c){
-      return `<div class="relative overflow-hidden rounded-2xl border border-amber-500/30 bg-slate-950">
-        <div class="aspect-[3/4]">${renderMedia(c)}</div>
-        <div class="p-2 text-center"><div class="text-[10px] font-bold truncate">${esc(c.name||"")}</div>
-          <div class="text-[8px] text-violet-300 font-black mt-1">${esc(cardTierLabel(c))}</div>
-          <div class="text-[9px] text-amber-300 mt-1">${fmt(c.power)} Power</div></div>
-      </div>`;
+      let el=existing.get(String(c.id));
+      if(!el){
+        const holder=document.createElement("div");
+        holder.innerHTML=`<div data-team-card-id="${esc(String(c.id))}" class="relative overflow-hidden rounded-2xl border border-amber-500/30 bg-slate-950">
+          <div class="aspect-[3/4]">${renderMedia(c)}</div>
+          <div class="p-2 text-center"><div class="text-[10px] font-bold truncate">${esc(c.name||"")}</div>
+            <div class="text-[8px] text-violet-300 font-black mt-1">${esc(cardTierLabel(c))}</div>
+            <div class="text-[9px] text-amber-300 mt-1">${fmt(c.power)} Power</div></div>
+        </div>`;
+        el=holder.firstElementChild;
+      }
+      wanted.push(el);
+    }else{
+      let el=placeholders.get(String(i+1));
+      if(!el){
+        const holder=document.createElement("div");
+        holder.innerHTML=`<div data-empty-slot="${i+1}" class="rounded-2xl empty min-h-40 grid place-items-center text-slate-600 text-xs">SLOT ${i+1}</div>`;
+        el=holder.firstElementChild;
+      }
+      wanted.push(el);
     }
-    return `<div class="rounded-2xl empty min-h-40 grid place-items-center text-slate-600 text-xs">SLOT ${i+1}</div>`;
-  }).join("");
+  }
+  wanted.forEach(el=>box.appendChild(el));
 }
 function opponentRange(){
   const cfg=OPPONENT_POWER_RANGES[currentRank().key] || {min:1,max:1};
