@@ -196,86 +196,6 @@
       #battle-screen .grid.md\:grid-cols-\[1fr_auto_1fr\] > div:nth-child(2){padding-left:2px;padding-right:2px}
       #battle-screen .grid.md\:grid-cols-\[1fr_auto_1fr\] > div:nth-child(2){font-size:16px}
     }
-
-    /* AVATAR FRAME COLLECTION — cosmetic only; game data/algorithms remain untouched */
-    .rep-card.avatar-framed{isolation:isolate}
-    .rep-card.avatar-framed:after{content:"";position:absolute;inset:0;border:4px solid var(--frame-color,#f59e0b);border-radius:inherit;pointer-events:none;z-index:5;box-shadow:inset 0 0 10px var(--frame-glow,#f59e0b),0 0 12px var(--frame-glow,#f59e0b)}
-    .rep-card.avatar-framed .frame-corner{position:absolute;inset:3px;border:1px solid rgba(255,255,255,.75);border-radius:9px;z-index:6;pointer-events:none}
-    .frame-preview{height:112px;border-radius:13px;position:relative;overflow:hidden;background:radial-gradient(circle at 50% 35%,#263449,#050814 70%);border:3px solid var(--frame-color,#f59e0b);box-shadow:inset 0 0 18px var(--frame-glow,#f59e0b),0 0 12px var(--frame-glow,#f59e0b)}
-    .frame-preview:before{content:"";position:absolute;inset:5px;border:1px solid rgba(255,255,255,.42);border-radius:8px;pointer-events:none;z-index:2}
-    .frame-preview .frame-sheen{display:none;position:absolute;z-index:3;top:-45%;left:-70%;width:42%;height:190%;pointer-events:none;transform:rotate(25deg);background:linear-gradient(90deg,transparent,rgba(255,255,255,.05) 25%,rgba(255,255,255,.48) 50%,rgba(255,255,255,.08) 72%,transparent);filter:blur(1px);animation:mirrorSweep 5.8s ease-in-out infinite}
-    .rep-card.avatar-framed[class*="frame-premium-"] .frame-corner:after{content:"";position:absolute;top:-20%;bottom:-20%;left:-65%;width:32%;transform:rotate(24deg);background:linear-gradient(90deg,transparent,rgba(255,255,255,.03),rgba(255,255,255,.38),rgba(255,255,255,.04),transparent);animation:mirrorSweep 6.5s ease-in-out infinite;pointer-events:none}
-    @keyframes mirrorSweep{0%,62%{left:-70%;opacity:0}68%{opacity:.8}88%{left:140%;opacity:.35}100%{left:140%;opacity:0}}
-    .frame-preview:after{content:"✦";position:absolute;right:9px;top:6px;color:#fff;text-shadow:0 0 10px var(--frame-glow,#f59e0b);font-size:19px}
-    .frame-preview .frame-symbol{position:absolute;inset:0;display:grid;place-items:center;font-size:31px;color:white;text-shadow:0 0 15px var(--frame-glow,#f59e0b)}
-    .frame-preview .frame-rune{position:absolute;left:8px;bottom:6px;font-size:8px;font-weight:900;letter-spacing:.18em;color:var(--frame-color,#f59e0b)}
-    .frame-card{border:1px solid rgba(148,163,184,.2);border-radius:17px;padding:10px;background:linear-gradient(150deg,rgba(15,23,42,.95),rgba(2,6,23,.96));min-width:0}
-    .frame-card.owned{border-color:rgba(74,222,128,.45)}
-    .frame-card.equipped{border-color:#facc15;box-shadow:0 0 0 1px rgba(250,204,21,.35),0 0 22px rgba(250,204,21,.12)}
-    .frame-card.premium-frame{background:linear-gradient(150deg,rgba(88,28,135,.22),rgba(2,6,23,.98));border-color:rgba(217,70,239,.32)}
-    .frame-basic-1{--frame-color:#fb923c;--frame-glow:#f97316}.frame-basic-2{--frame-color:#7dd3fc;--frame-glow:#38bdf8}.frame-basic-3{--frame-color:#c4b5fd;--frame-glow:#8b5cf6}.frame-basic-4{--frame-color:#fde047;--frame-glow:#eab308}.frame-basic-5{--frame-color:#bef264;--frame-glow:#84cc16}.frame-basic-6{--frame-color:#f0abfc;--frame-glow:#d946ef}.frame-basic-7{--frame-color:#94a3b8;--frame-glow:#64748b}.frame-basic-8{--frame-color:#fda4af;--frame-glow:#f43f5e}.frame-basic-9{--frame-color:#67e8f9;--frame-glow:#06b6d4}.frame-basic-10{--frame-color:#fef3c7;--frame-glow:#f59e0b}
-    .frame-premium-1{--frame-color:#ff7777;--frame-glow:#ff4545}.frame-premium-2{--frame-color:#a5f3fc;--frame-glow:#22d3ee}.frame-premium-3{--frame-color:#facc15;--frame-glow:#f59e0b}.frame-premium-4{--frame-color:#e879f9;--frame-glow:#c026d3}.frame-premium-5{--frame-color:#bef264;--frame-glow:#65a30d}.frame-premium-6{--frame-color:#67e8f9;--frame-glow:#06b6d4}.frame-premium-7{--frame-color:#cbd5e1;--frame-glow:#64748b}.frame-premium-8{--frame-color:#fb7185;--frame-glow:#e11d48}.frame-premium-9{--frame-color:#60a5fa;--frame-glow:#2563eb}.frame-premium-10{--frame-color:#fef08a;--frame-glow:#facc15}
-    .rep-card.frame-premium-1:after,.rep-card.frame-premium-2:after,.rep-card.frame-premium-3:after,.rep-card.frame-premium-4:after,.rep-card.frame-premium-5:after,.rep-card.frame-premium-6:after,.rep-card.frame-premium-7:after,.rep-card.frame-premium-8:after,.rep-card.frame-premium-9:after,.rep-card.frame-premium-10:after{border-width:4px;animation:frameBorderPulse 3.8s ease-in-out infinite}
-    @keyframes frameBorderPulse{0%,100%{filter:brightness(.98);box-shadow:inset 0 0 5px var(--frame-glow),0 0 5px var(--frame-glow)}50%{filter:brightness(1.12);box-shadow:inset 0 0 10px var(--frame-glow),0 0 10px var(--frame-glow),0 0 16px color-mix(in srgb,var(--frame-glow),transparent 45%)}}
-    @keyframes frameInferno{50%{filter:brightness(1.5) saturate(1.5);box-shadow:0 0 28px #ef4444,inset 0 0 22px #f97316}}
-    @keyframes frameGlacier{50%{filter:brightness(1.55);box-shadow:0 0 30px #67e8f9,inset 0 0 25px #cffafe}}
-    @keyframes frameRoyal{to{filter:hue-rotate(30deg) brightness(1.3)}}
-    @keyframes frameNebula{50%{filter:hue-rotate(45deg) brightness(1.45);box-shadow:0 0 32px #d946ef}}
-    @keyframes frameVenom{50%{filter:brightness(1.5);box-shadow:0 0 28px #84cc16,inset 0 0 20px #a3e635}}
-    @keyframes frameCyber{50%{filter:hue-rotate(65deg) brightness(1.6)}}
-    @keyframes framePhantom{50%{opacity:.72;filter:brightness(1.7)}}
-    @keyframes frameDragon{50%{filter:brightness(1.5) saturate(1.6);box-shadow:0 0 35px #e11d48}}
-    @keyframes frameOcean{50%{filter:hue-rotate(-25deg) brightness(1.5);box-shadow:0 0 32px #2563eb}}
-    @keyframes frameCelestial{to{filter:hue-rotate(360deg) brightness(1.3)}}
-
-    /* Mythic-only effects: restrained mirror sweep, sparks, and unique signatures */
-    .frame-preview[class*="frame-premium-"] .frame-sheen{display:block}
-    .frame-preview .frame-effects,.rep-card .frame-effects{position:absolute;inset:-5px;pointer-events:none;z-index:4;overflow:visible;border-radius:inherit}
-    .frame-preview[class*="frame-premium-"] .frame-effects:before,.rep-card[class*="frame-premium-"] .frame-effects:before{content:"";position:absolute;inset:-5px;border-radius:inherit;opacity:.7;background:radial-gradient(circle at 8% 18%,#fff 0 1px,transparent 2px),radial-gradient(circle at 91% 24%,var(--frame-color) 0 1.5px,transparent 3px),radial-gradient(circle at 14% 83%,#fff 0 1px,transparent 2px),radial-gradient(circle at 88% 78%,var(--frame-color) 0 1.5px,transparent 3px);animation:mythicSparks 3.2s ease-in-out infinite}
-    .frame-preview[class*="frame-premium-"] .frame-effects:after,.rep-card[class*="frame-premium-"] .frame-effects:after{content:"";position:absolute;inset:-7px;border-radius:inherit;border:1px solid color-mix(in srgb,var(--frame-color),transparent 40%);opacity:.35;animation:mythicAura 4s ease-in-out infinite}
-    @keyframes mythicSparks{0%,100%{opacity:.25;transform:scale(.99)}50%{opacity:.85;transform:scale(1.015)}}
-    @keyframes mythicAura{0%,100%{opacity:.15;transform:scale(1)}50%{opacity:.55;transform:scale(1.035)}}
-    /* Each mythic frame has its own signature */
-    .frame-preview.frame-premium-1 .frame-effects:after,.rep-card.frame-premium-1 .frame-effects:after{border-radius:48% 52% 42% 58%;box-shadow:0 -4px 12px #ff777755;animation:phoenixRise 3s ease-in-out infinite}
-    @keyframes phoenixRise{50%{transform:translateY(-3px) scale(1.04);filter:brightness(1.5)}}
-    .frame-preview.frame-premium-2 .frame-effects:after,.rep-card.frame-premium-2 .frame-effects:after{border-style:dotted;box-shadow:inset 0 0 9px #67e8f955;animation:frostRing 4s linear infinite}
-    @keyframes frostRing{to{transform:rotate(360deg)}}
-    .frame-preview.frame-premium-3 .frame-effects:after,.rep-card.frame-premium-3 .frame-effects:after{border-width:2px;box-shadow:0 0 12px #facc1555,inset 0 0 9px #facc1533;animation:royalCrown 2.8s ease-in-out infinite}
-    @keyframes royalCrown{50%{filter:brightness(1.25);transform:scale(1.02)}}
-    .frame-preview.frame-premium-4 .frame-effects:before,.rep-card.frame-premium-4 .frame-effects:before{background:radial-gradient(circle at 25% 28%,#fff 0 1px,transparent 2px),radial-gradient(circle at 72% 65%,#e879f9 0 1px,transparent 2px),radial-gradient(circle at 82% 18%,#fff 0 1px,transparent 2px);animation:starDrift 5s linear infinite}
-    @keyframes starDrift{to{background-position:12px -10px,-10px 12px,8px 6px}}
-    .frame-preview.frame-premium-5 .frame-effects:after,.rep-card.frame-premium-5 .frame-effects:after{border-style:dashed;box-shadow:inset 0 0 10px #84cc1633;animation:ancientPulse 5s ease-in-out infinite}
-    @keyframes ancientPulse{50%{transform:scale(1.025);opacity:.7}}
-    /* Cyber Huyền Quang: electric arcs travel around the OUTSIDE of the frame */
-    .frame-preview.frame-premium-6 .frame-effects:before,.rep-card.frame-premium-6 .frame-effects:before{
-      inset:-10px;opacity:.95;
-      background:
-        radial-gradient(ellipse at 8% 18%,#fff 0 1px,#67e8f9 2px,transparent 5px),
-        radial-gradient(ellipse at 92% 28%,#fff 0 1px,#22d3ee 2px,transparent 6px),
-        radial-gradient(ellipse at 15% 88%,#fff 0 1px,#22d3ee 2px,transparent 5px),
-        radial-gradient(ellipse at 84% 82%,#fff 0 1px,#67e8f9 2px,transparent 6px),
-        linear-gradient(108deg,transparent 0 10%,#22d3ee 11%,#fff 11.5%,transparent 12.5% 100%),
-        linear-gradient(252deg,transparent 0 16%,#67e8f9 16.7%,#fff 17.2%,transparent 18% 100%);
-      filter:drop-shadow(0 0 3px #22d3ee);animation:cyberArcFlicker 1.9s steps(1,end) infinite;
-    }
-    .frame-preview.frame-premium-6 .frame-effects:after,.rep-card.frame-premium-6 .frame-effects:after{
-      inset:-9px;border:0;border-radius:inherit;opacity:0;clip-path:none;
-      background:repeating-conic-gradient(from 7deg,transparent 0deg 17deg,#22d3ee 18deg 19deg,#e0fcff 19.5deg 20deg,transparent 21deg 43deg);
-      -webkit-mask:radial-gradient(closest-side,transparent calc(100% - 5px),#000 calc(100% - 3px));mask:radial-gradient(closest-side,transparent calc(100% - 5px),#000 calc(100% - 3px));
-      animation:cyberRingStrike 2.8s steps(1,end) infinite;
-    }
-    @keyframes cyberArcFlicker{0%,16%,20%,48%,52%,100%{opacity:.28}17%,19%,49%,51%{opacity:1;filter:drop-shadow(0 0 5px #22d3ee) drop-shadow(0 0 9px #67e8f9)}}
-    @keyframes cyberRingStrike{0%,34%,39%,72%,77%,100%{opacity:0;transform:rotate(0deg)}35%,38%,73%,76%{opacity:.95;transform:rotate(12deg);filter:drop-shadow(0 0 5px #22d3ee)}}
-    .frame-preview.frame-premium-7 .frame-effects:after,.rep-card.frame-premium-7 .frame-effects:after{border-color:#cbd5e155;box-shadow:inset 0 0 16px #64748b55;animation:voidRipple 4s ease-out infinite}
-    @keyframes voidRipple{50%{transform:scale(.96);opacity:.8;box-shadow:inset 0 0 20px #94a3b855}}
-    .frame-preview.frame-premium-8 .frame-effects:before,.rep-card.frame-premium-8 .frame-effects:before{background:radial-gradient(circle at 10% 20%,#fb7185 0 2px,transparent 3px),radial-gradient(circle at 90% 78%,#fff 0 1px,transparent 2px),radial-gradient(circle at 86% 18%,#e11d48 0 2px,transparent 3px);animation:bloodEmbers 2.4s ease-in-out infinite}
-    @keyframes bloodEmbers{50%{transform:translateY(-3px);filter:brightness(1.5)}}
-    .frame-preview.frame-premium-9 .frame-effects:after,.rep-card.frame-premium-9 .frame-effects:after{border-top-color:#93c5fd;border-bottom-color:#1d4ed8;animation:oceanOrbit 4.5s ease-in-out infinite}
-    @keyframes oceanOrbit{50%{transform:scale(1.025) rotate(2deg);box-shadow:0 0 12px #2563eb55}}
-    .frame-preview.frame-premium-10 .frame-effects:before,.rep-card.frame-premium-10 .frame-effects:before{background:radial-gradient(circle at 50% 0,#fff 0 1px,transparent 3px),radial-gradient(circle at 100% 50%,#fef08a 0 1px,transparent 3px),radial-gradient(circle at 50% 100%,#fff 0 1px,transparent 3px),radial-gradient(circle at 0 50%,#facc15 0 1px,transparent 3px);animation:celestialHalo 3.8s linear infinite}
-    @keyframes celestialHalo{to{transform:rotate(360deg)}}
-    @media(prefers-reduced-motion:reduce){.frame-premium-1,.frame-premium-2,.frame-premium-3,.frame-premium-4,.frame-premium-5,.frame-premium-6,.frame-premium-7,.frame-premium-8,.frame-premium-9,.frame-premium-10,.rep-card.frame-premium-1:after,.rep-card.frame-premium-2:after,.rep-card.frame-premium-3:after,.rep-card.frame-premium-4:after,.rep-card.frame-premium-5:after,.rep-card.frame-premium-6:after,.rep-card.frame-premium-7:after,.rep-card.frame-premium-8:after,.rep-card.frame-premium-9:after,.rep-card.frame-premium-10:after{animation:none!important}.frame-effects:before,.frame-effects:after,.frame-preview .frame-sheen,.rep-card .frame-corner:after{animation:none!important}}
-
   </style>
 </head>
 <body>
@@ -506,30 +426,7 @@
       <div><div class="text-amber-400 text-[10px] font-black tracking-[.25em]">THẺ ĐẠI DIỆN</div><h2 class="font-cinzel text-3xl font-black mt-1">Chọn thẻ trong túi</h2><p class="text-xs text-slate-500 mt-2">Thẻ được lưu cố định trên trình duyệt này.</p></div>
       <button onclick="hideRepresentativePicker()" class="btn w-10 h-10 rounded-xl bg-slate-900 border border-slate-700">×</button>
     </div>
-    <div class="grid grid-cols-2 gap-2 mt-6 p-1 rounded-2xl bg-slate-950/80 border border-slate-700">
-      <button id="rep-tab-cards" onclick="switchRepresentativeTab('cards')" class="btn rounded-xl py-3 px-3 text-sm font-black bg-amber-400 text-slate-950"><i class="fa-solid fa-id-card mr-2"></i>CHỌN THẺ</button>
-      <button id="rep-tab-frames" onclick="switchRepresentativeTab('frames')" class="btn rounded-xl py-3 px-3 text-sm font-black text-slate-300"><i class="fa-solid fa-wand-magic-sparkles mr-2"></i>CHỌN & MUA VIỀN</button>
-    </div>
     <div id="rep-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-4 mt-6"></div>
-    <div id="avatar-frame-panel" class="hidden mt-5">
-      <div class="rounded-2xl border border-amber-400/25 bg-gradient-to-r from-amber-500/10 via-slate-950 to-fuchsia-500/10 p-4 mb-4">
-        <div class="flex flex-wrap items-center justify-between gap-2"><div><div class="text-xs font-black tracking-widest text-amber-300">BỘ SƯU TẬP VIỀN AVATAR</div><p class="text-xs text-slate-400 mt-1">Viền thường: 50.000 π · Viền động thần thoại: 200.000 π</p></div><div class="text-sm font-black text-amber-200">Số dư: <span id="frame-shop-balance">0</span> π</div></div>
-      </div>
-      <div class="flex flex-wrap items-center justify-between gap-2 text-xs font-black tracking-widest text-slate-400 mb-3"><span>10 VIỀN THƯỜNG · 50.000 π / VIỀN</span><button onclick="equipAvatarFrame('')" class="btn rounded-lg border border-slate-600 bg-slate-800/80 px-3 py-2 text-[10px] text-slate-200">KHÔNG SỬ DỤNG VIỀN</button></div>
-      <div id="normal-frame-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3"></div>
-      <div class="text-xs font-black tracking-widest text-fuchsia-300 mt-7 mb-3">10 VIỀN THẦN THOẠI · HIỆU ỨNG ĐỘNG · 200.000 π / VIỀN</div>
-      <div id="premium-frame-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3"></div>
-    </div>
-  </div>
-</div>
-
-<!-- IN-PAGE PURCHASE CONFIRMATION -->
-<div id="avatar-frame-confirm" class="fixed inset-0 z-[120] hidden items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="avatar-frame-confirm-title">
-  <div class="w-full max-w-md rounded-3xl border border-fuchsia-300/30 bg-slate-950 p-6 shadow-2xl shadow-fuchsia-950/30">
-    <div class="mx-auto mb-4 grid h-14 w-14 place-items-center rounded-2xl border border-fuchsia-300/30 bg-fuchsia-500/10 text-2xl text-fuchsia-200"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
-    <h3 id="avatar-frame-confirm-title" class="text-center text-xl font-black text-white">XÁC NHẬN MUA VIỀN</h3>
-    <p id="avatar-frame-confirm-text" class="mt-3 text-center text-sm leading-6 text-slate-300">Bạn có chắc chắn muốn mua viền này?</p>
-    <div class="mt-5 flex gap-3"><button onclick="cancelAvatarFramePurchase()" class="btn flex-1 rounded-xl border border-slate-700 bg-slate-900 py-3 font-bold text-slate-300">ĐỂ SAU</button><button onclick="confirmAvatarFramePurchase()" class="btn flex-1 rounded-xl bg-gradient-to-r from-fuchsia-500 to-violet-500 py-3 font-black text-white">XÁC NHẬN MUA</button></div>
   </div>
 </div>
 
@@ -562,16 +459,6 @@
   </div>
 </div>
 
-<!-- CẢNH BÁO TÊN NHÂN VẬT BỊ BAN: không có nút đóng -->
-<div id="name-ban-overlay" class="hidden fixed inset-0 z-[99999] items-center justify-center bg-slate-950/95 p-5" role="alertdialog" aria-modal="true" aria-labelledby="name-ban-title">
-  <div class="w-full max-w-lg rounded-3xl border border-rose-500/60 bg-slate-900 p-7 text-center shadow-2xl shadow-rose-950/50">
-    <div class="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-full border border-rose-500/50 bg-rose-500/10 text-rose-400"><i class="fa-solid fa-ban text-3xl"></i></div>
-    <h2 id="name-ban-title" class="font-cinzel text-2xl font-black text-rose-300">TRUY CẬP BỊ TỪ CHỐI</h2>
-    <p id="name-ban-message" class="mt-4 text-sm leading-6 text-slate-200">Tên nhân vật này đã bị cấm truy cập Chiến Trường.</p>
-    <p class="mt-4 text-xs text-slate-500">Nếu đây là nhầm lẫn, hãy liên hệ quản trị viên.</p>
-  </div>
-</div>
-
 <!-- MUSIC -->
 <button id="music-toggle" onclick="toggleMusic(event)" title="Bật/tắt nhạc"
   class="fixed left-4 bottom-4 z-40 w-11 h-11 rounded-full bg-slate-900/90 border border-violet-500/30 text-violet-300 shadow-xl">
@@ -597,12 +484,6 @@ const RANK_SEASON = 3;
 // Dán URL Web App Google Apps Script của bảng Rank vào đây.
 // Ví dụ: https://script.google.com/macros/s/XXXX/exec
 const RANKING_API_URL = "https://script.google.com/macros/s/AKfycbxuHkLxZWM0pmxO32JcF7Uykf7G9rpumX3UQLCxbKmoLdUryh57QN9vRqrgS1_8CeA7GA/exec";
-// DANH SÁCH BAN: thêm tên nhân vật vào mảng này, ví dụ ["Tên Vi Phạm", "Player123"].
-// Tên được so khớp không phân biệt chữ hoa/thường và khoảng trắng thừa.
-const BANNED_CHARACTER_NAMES = ["BanVinhVien","Bố tới"];
-// Đồng bộ giao dịch nạp Pi đã được duyệt, dùng chung endpoint với naptien.html.
-const TOPUP_API_URL = "https://script.google.com/macros/s/AKfycbx0CnIHGCaCFbymJIlqZSv3QzXNUvirEe5TIBOH0ZGAGmg62oCfc-pAD1WyZtHFFaOY/exec";
-const TOPUP_PENDING_PREFIX = "obey7_topup_pending_v1_";
 
 /* =========================================================
    CHỈNH POWER ĐỐI THỦ THEO RANK
@@ -682,51 +563,6 @@ function creditRankPi(requested){
 }
 function openTopUp(){window.location.href="naptien.html";}
 function openShop(){window.location.href="shop.html";}
-
-// Kiểm tra mã nạp được lưu khi người chơi gửi yêu cầu ở naptien.html.
-// Chỉ cộng khi máy chủ trả về APPROVED và dùng cùng khóa chống cộng trùng với trang nạp.
-let topupSyncBusy = false;
-function topupPendingKey(name=playerName){
-  return TOPUP_PENDING_PREFIX + encodeURIComponent(String(name||"").trim().toLowerCase());
-}
-async function syncApprovedTopUp(){
-  if(!playerName || topupSyncBusy || !TOPUP_API_URL.startsWith("https://script.google.com/")) return;
-  let pending;
-  try{ pending=JSON.parse(localStorage.getItem(topupPendingKey())||"null"); }catch(e){ return; }
-  if(!pending || !pending.tx) return;
-  const tx=String(pending.tx).trim().toUpperCase();
-  if(!/^[A-Z0-9]{9}$/.test(tx)) return;
-  const creditedKey="obey7_topup_credited_"+tx;
-  if(localStorage.getItem(creditedKey)==="1") return;
-  topupSyncBusy=true;
-  try{
-    const response=await fetch(TOPUP_API_URL+"?action=status&tx="+encodeURIComponent(tx)+"&t="+Date.now(),{method:"GET",cache:"no-store"});
-    if(!response.ok) return;
-    const data=await response.json();
-    if(data.status!=="APPROVED") return;
-    const approvedName=String(data.characterName||pending.name||playerName).trim();
-    if(approvedName.toLocaleLowerCase("vi")!==String(playerName).trim().toLocaleLowerCase("vi")) return;
-    const pi=Math.max(0,Math.floor(Number(data.pi||data.creditedPi)||0));
-    if(pi<=0) return;
-    // Đọc lại số dư mới nhất trước khi cộng để tránh ghi đè các thay đổi gần đây.
-    if(localStorage.getItem(creditedKey)==="1") return;
-    savePiBalance(getPiBalance()+pi);
-    localStorage.setItem(creditedKey,"1");
-    refreshLobby();
-  }catch(e){
-    // Lỗi mạng tạm thời sẽ được thử lại ở chu kỳ kế tiếp.
-  }finally{
-    topupSyncBusy=false;
-  }
-}
-function startTopUpSync(){
-  syncApprovedTopUp();
-  if(!window.__obey7TopupSyncTimer){
-    window.__obey7TopupSyncTimer=window.setInterval(syncApprovedTopUp,8000);
-  }
-}
-window.addEventListener("focus",syncApprovedTopUp);
-document.addEventListener("visibilitychange",()=>{if(!document.hidden)syncApprovedTopUp();});
 function safeParse(key, fallback){
   try{const x=JSON.parse(localStorage.getItem(key)); return x ?? fallback}catch(e){return fallback}
 }
@@ -839,83 +675,18 @@ function battleWinRate(){
 function totalPower(){return collection.reduce((s,c)=>s+(Number(c.power)||0),0)}
 function currentRank(){return RANKS[rankState.index]}
 
-const BUILTIN_BOT_NAMES = [
-  'Kẻ Lang Thang','Chiến Binh Bóng Tối','Đấu Sĩ Ẩn Danh','OBEY Challenger',
-  'Hắc Kiếm Sĩ','Chiến Tướng Vô Danh','Bóng Ma Chiến Trường','Thợ Săn Sao',
-  'Cuồng Chiến Giả','Vệ Binh Hoàng Hôn','Alex_99','John Wick','ShadowFox',
-  'NightWalker','GhostRider','ViperX','ZeroCool','DarkKnight','Skyline',
-  'BlazeRunner','CyberPunk','TitanFall','LoneWolf','StormBreaker','ApexPredator'
-];
-function normalizeCharacterName(value){
-  return String(value||'').normalize('NFC').trim().replace(/\s+/g,' ').toLocaleLowerCase('vi');
-}
-function showNameBanWarning(name, reason){
-  const overlay=document.getElementById('name-ban-overlay');
-  const message=document.getElementById('name-ban-message');
-  if(message)message.textContent=reason||`Tên nhân vật “${name}” đã bị cấm truy cập Chiến Trường.`;
-  if(overlay){overlay.classList.remove('hidden');overlay.classList.add('flex');}
-  ['name-screen','lobby-screen','match-screen','battle-screen'].forEach(id=>{
-    const el=document.getElementById(id);if(el)el.classList.add('hidden');
-  });
-  try{localStorage.removeItem(STORAGE_NAME);}catch(e){}
-  playerName='';
-}
-function isBannedCharacterName(name){
-  const target=normalizeCharacterName(name);
-  return !!target && BANNED_CHARACTER_NAMES.some(n=>normalizeCharacterName(n)===target);
-}
-async function validateCharacterName(name, allowSavedName=false){
-  const normalized=normalizeCharacterName(name);
-  if(!normalized)return {ok:false,message:'Hãy nhập tên nhân vật.'};
-  if(isBannedCharacterName(name))return {ok:false,banned:true,message:`Tên nhân vật “${name}” đã bị quản trị viên cấm truy cập.`};
-  if(BUILTIN_BOT_NAMES.some(n=>normalizeCharacterName(n)===normalized))
-    return {ok:false,message:'Tên này trùng với tên bot của hệ thống. Vui lòng chọn tên nhân vật khác.'};
-  if(!RANKING_API_URL)return {ok:true};
-  try{
-    const response=await fetch(RANKING_API_URL,{method:'GET',mode:'cors',cache:'no-store'});
-    if(!response.ok)throw new Error('Không tải được bảng xếp hạng');
-    const data=await response.json();
-    const rows=Array.isArray(data)?data:(Array.isArray(data.players)?data.players:[]);
-    leaderboardCache=rows;
-    const duplicate=rows.find(row=>normalizeCharacterName(row&&row.name)===normalized);
-    const saved=normalizeCharacterName(localStorage.getItem(STORAGE_NAME)||'');
-    // Chỉ cho phép giữ tên đã lưu trên chính trình duyệt này; tên mới không được trùng BXH.
-    if(duplicate && !(allowSavedName && saved===normalized))
-      return {ok:false,message:'Tên nhân vật này đã tồn tại. Vui lòng chọn một tên khác để tránh giả mạo người chơi.'};
-    return {ok:true};
-  }catch(error){
-    // Không thể kiểm tra BXH thì chặn đăng ký tên mới để tránh lọt tên trùng.
-    const saved=normalizeCharacterName(localStorage.getItem(STORAGE_NAME)||'');
-    if(allowSavedName && saved===normalized)return {ok:true,warning:'Không thể kiểm tra bảng xếp hạng lúc này.'};
-    return {ok:false,message:'Không thể kiểm tra tên trên bảng xếp hạng. Hãy thử lại sau.'};
-  }
-}
-async function enterLobby(){
+function enterLobby(){
   const input=document.getElementById("player-name-input");
   const name=input.value.trim();
   const err=document.getElementById("name-error");
   if(!name){err.textContent="Hãy nhập tên nhân vật.";err.classList.remove("hidden");input.focus();return}
-  const button=input.parentElement.querySelector('button[onclick="enterLobby()"]');
-  if(button){button.disabled=true;button.classList.add('opacity-60');}
-  err.textContent='Đang kiểm tra tên nhân vật...';err.classList.remove('hidden');
-  try{
-    const savedName=normalizeCharacterName(localStorage.getItem(STORAGE_NAME)||'');
-    const check=await validateCharacterName(name,!!savedName && savedName===normalizeCharacterName(name));
-    if(!check.ok){
-      if(check.banned){showNameBanWarning(name,check.message);return;}
-      err.textContent=check.message;input.focus();return;
-    }
-    err.classList.add('hidden');
-    playerName=name;
-    localStorage.setItem(STORAGE_NAME,name);
-    startTopUpSync();
-    showOnly("lobby-screen");
-    playLobbyMusic();
-    refreshLobby();
-    syncLeaderboard();
-  }finally{
-    if(button){button.disabled=false;button.classList.remove('opacity-60');}
-  }
+  err.classList.add("hidden");
+  playerName=name;
+  localStorage.setItem(STORAGE_NAME,name);
+  showOnly("lobby-screen");
+  playLobbyMusic();
+  refreshLobby();
+  syncLeaderboard();
 }
 function leaveLobby(){ playLobbyMusic(); refreshLobby(); showOnly("lobby-screen"); }
 function showOnly(id){
@@ -926,97 +697,12 @@ function representativeCard(){
   const id=localStorage.getItem(STORAGE_REP);
   return id ? getCharById(id) : null;
 }
-
-const STORAGE_AVATAR_FRAMES = "obey7_avatar_frames_owned_v2";
-const STORAGE_AVATAR_FRAME_EQUIPPED = "obey7_avatar_frame_equipped_v2";
-const AVATAR_FRAME_LIST = [
-  {id:"basic-1",name:"Hỏa Diệm",icon:"fa-fire",kind:"normal"},
-  {id:"basic-2",name:"Băng Tâm",icon:"fa-snowflake",kind:"normal"},
-  {id:"basic-3",name:"Hoàng Gia",icon:"fa-crown",kind:"normal"},
-  {id:"basic-4",name:"Kim Long",icon:"fa-dragon",kind:"normal"},
-  {id:"basic-5",name:"Độc Tố",icon:"fa-biohazard",kind:"normal"},
-  {id:"basic-6",name:"Neon Mộng Ảo",icon:"fa-wand-magic-sparkles",kind:"normal"},
-  {id:"basic-7",name:"Hắc Ảnh",icon:"fa-moon",kind:"normal"},
-  {id:"basic-8",name:"Xích Viêm",icon:"fa-bolt",kind:"normal"},
-  {id:"basic-9",name:"Hải Vương",icon:"fa-water",kind:"normal"},
-  {id:"basic-10",name:"Thiên Mệnh",icon:"fa-star",kind:"normal"},
-  {id:"premium-1",name:"Phượng Hoàng Bất Diệt",icon:"fa-fire-flame-curved",kind:"premium"},
-  {id:"premium-2",name:"Băng Long Vĩnh Cửu",icon:"fa-snowflake",kind:"premium"},
-  {id:"premium-3",name:"Đế Vương Kim Quang",icon:"fa-crown",kind:"premium"},
-  {id:"premium-4",name:"Tinh Hà Vũ Trụ",icon:"fa-galaxy",kind:"premium"},
-  {id:"premium-5",name:"Thần Mộc Cổ Đại",icon:"fa-leaf",kind:"premium"},
-  {id:"premium-6",name:"Cyber Huyền Quang",icon:"fa-bolt",kind:"premium"},
-  {id:"premium-7",name:"Hư Không Vô Ảnh",icon:"fa-eye",kind:"premium"},
-  {id:"premium-8",name:"Long Thần Huyết Nguyệt",icon:"fa-dragon",kind:"premium"},
-  {id:"premium-9",name:"Hải Thần Thức Tỉnh",icon:"fa-water",kind:"premium"},
-  {id:"premium-10",name:"Thiên Thần Tối Thượng",icon:"fa-sun",kind:"premium"}
-];
-function ownedAvatarFrames(){return safeParse(STORAGE_AVATAR_FRAMES,[]).filter(id=>AVATAR_FRAME_LIST.some(f=>f.id===id))}
-function equippedAvatarFrame(){return localStorage.getItem(STORAGE_AVATAR_FRAME_EQUIPPED)||""}
-function switchRepresentativeTab(tab){
-  const cards=tab==="cards";
-  document.getElementById("rep-grid").classList.toggle("hidden",!cards);
-  document.getElementById("avatar-frame-panel").classList.toggle("hidden",cards);
-  const cardBtn=document.getElementById("rep-tab-cards"),frameBtn=document.getElementById("rep-tab-frames");
-  cardBtn.className="btn rounded-xl py-3 px-3 text-sm font-black "+(cards?"bg-amber-400 text-slate-950":"text-slate-300");
-  frameBtn.className="btn rounded-xl py-3 px-3 text-sm font-black "+(!cards?"bg-fuchsia-500 text-white":"text-slate-300");
-  if(!cards)renderAvatarFrameShop();
-}
-function openAvatarFrameShop(){openRepresentativePicker();switchRepresentativeTab("frames")}
-function renderAvatarFrameShop(){
-  const owned=ownedAvatarFrames(),equipped=equippedAvatarFrame();
-  const balance=document.getElementById("frame-shop-balance");if(balance)balance.textContent=fmt(getPiBalance());
-  const renderGroup=(kind,target)=>{const el=document.getElementById(target);if(!el)return;
-    el.innerHTML=AVATAR_FRAME_LIST.filter(f=>f.kind===kind).map(f=>{
-      const has=owned.includes(f.id),active=equipped===f.id,price=kind==="normal"?50000:200000;
-      return `<div class="frame-card ${has?'owned':''} ${active?'equipped':''} ${kind==='premium'?'premium-frame':''}">
-        <div class="frame-preview frame-${f.id}"><span class="frame-sheen"></span><span class="frame-effects"></span><div class="frame-symbol"><i class="fa-solid ${f.icon}"></i></div><span class="frame-rune">${kind==="premium"?"MYTHIC • ANIMATED":"STANDARD FRAME"}</span></div>
-        <div class="font-black text-xs mt-3 min-h-[34px]">${esc(f.name)}</div>
-        <div class="text-[10px] ${kind==='premium'?'text-fuchsia-300':'text-amber-300'} font-black mt-1">${fmt(price)} π</div>
-        <button onclick="${has?`equipAvatarFrame('${f.id}')`:`buyAvatarFrame('${f.id}')`}" class="btn w-full mt-3 rounded-xl py-2 text-[10px] font-black ${active?'bg-emerald-500/20 text-emerald-300 border border-emerald-400/40':has?'bg-amber-400 text-slate-950':'bg-slate-800 border border-slate-700 text-white'}">${active?"✓ ĐANG DÙNG":has?"TRANG BỊ":"MUA VIỀN"}</button>
-      </div>`;
-    }).join("");
-  };
-  renderGroup("normal","normal-frame-grid");renderGroup("premium","premium-frame-grid");
-}
-let pendingAvatarFramePurchase="";
-function buyAvatarFrame(id){
-  const f=AVATAR_FRAME_LIST.find(x=>x.id===id);if(!f)return;
-  const owned=ownedAvatarFrames();if(owned.includes(id)){equipAvatarFrame(id);return}
-  const price=f.kind==="normal"?50000:200000,balance=getPiBalance();
-  if(balance<price){showAvatarFrameNotice(`Không đủ Pi để mua viền “${f.name}”. Cần ${fmt(price)} π, hiện có ${fmt(balance)} π.`,"warning");return}
-  pendingAvatarFramePurchase=id;
-  const box=document.getElementById("avatar-frame-confirm"),message=document.getElementById("avatar-frame-confirm-text");
-  message.innerHTML=`Bạn có chắc chắn muốn mua viền <b class="text-fuchsia-200">“${esc(f.name)}”</b> với giá <b class="text-amber-300">${fmt(price)} π</b>?<br><span class="text-xs text-slate-400">Số dư sau khi mua: ${fmt(balance-price)} π</span>`;
-  box.classList.remove("hidden");box.classList.add("flex");
-}
-function cancelAvatarFramePurchase(){pendingAvatarFramePurchase="";const box=document.getElementById("avatar-frame-confirm");box.classList.add("hidden");box.classList.remove("flex")}
-function confirmAvatarFramePurchase(){
-  const id=pendingAvatarFramePurchase;if(!id)return;const f=AVATAR_FRAME_LIST.find(x=>x.id===id);if(!f){cancelAvatarFramePurchase();return}
-  const owned=ownedAvatarFrames(),price=f.kind==="normal"?50000:200000,balance=getPiBalance();
-  if(owned.includes(id)){cancelAvatarFramePurchase();equipAvatarFrame(id);return}
-  if(balance<price){cancelAvatarFramePurchase();showAvatarFrameNotice(`Không đủ Pi để mua viền “${f.name}”.`,"warning");return}
-  savePiBalance(balance-price);owned.push(id);localStorage.setItem(STORAGE_AVATAR_FRAMES,JSON.stringify(owned));
-  localStorage.setItem(STORAGE_AVATAR_FRAME_EQUIPPED,id);cancelAvatarFramePurchase();renderAvatarFrameShop();renderRepresentative();showAvatarFrameNotice(`Mua thành công viền “${f.name}”! Viền đã được tự động trang bị.`,f.kind);
-}
-function showAvatarFrameNotice(message,kind="normal"){
-  let toast=document.getElementById("avatar-frame-notice");
-  if(!toast){toast=document.createElement("div");toast.id="avatar-frame-notice";toast.className="fixed top-5 left-1/2 -translate-x-1/2 z-[100] max-w-[92vw] rounded-2xl border px-5 py-4 text-sm font-black text-white shadow-2xl";toast.style.transition="opacity .25s, transform .25s";document.body.appendChild(toast)}
-  toast.className="fixed top-5 left-1/2 -translate-x-1/2 z-[100] max-w-[92vw] rounded-2xl border px-5 py-4 text-sm font-black text-white shadow-2xl "+(kind==="premium"?"border-fuchsia-300/50 bg-slate-950":kind==="warning"?"border-rose-300/50 bg-slate-950":"border-emerald-300/50 bg-slate-950");
-  toast.innerHTML=`<span class="mr-2 text-emerald-300">✦</span>${esc(message)}`;toast.style.opacity="1";toast.style.transform="translate(-50%,0)";
-  clearTimeout(window.__avatarFrameToastTimer);window.__avatarFrameToastTimer=setTimeout(()=>{toast.style.opacity="0";toast.style.transform="translate(-50%,-10px)"},2800);
-}
-function equipAvatarFrame(id){
-  if(id&&!ownedAvatarFrames().includes(id))return;
-  if(id)localStorage.setItem(STORAGE_AVATAR_FRAME_EQUIPPED,id);else localStorage.removeItem(STORAGE_AVATAR_FRAME_EQUIPPED);
-  renderAvatarFrameShop();renderRepresentative();
-  if(!id)showAvatarFrameNotice("Đã tắt viền avatar. Avatar trở về kiểu mặc định.");
-}
 function openRepresentativePicker(){
+  if(!collection.length){alert("Bạn chưa có thẻ trong túi.");return;}
   const grid=document.getElementById("rep-grid");
   const current=localStorage.getItem(STORAGE_REP);
   const sorted=[...collection].sort((a,b)=>(Number(b.power)||0)-(Number(a.power)||0));
-  grid.innerHTML=sorted.length?sorted.map(c=>{
+  grid.innerHTML=sorted.map(c=>{
     const active=String(c.id)===String(current);
     return `<button onclick="setRepresentative('${esc(String(c.id))}')" class="card-choice ${active?'selected':''} relative text-left rounded-2xl overflow-hidden bg-slate-950">
       <div class="aspect-[3/4] relative bg-slate-900">${renderMedia(c)}
@@ -1026,9 +712,8 @@ function openRepresentativePicker(){
         <div class="text-[9px] text-violet-300 font-black mt-1">${esc(cardTierLabel(c))}</div>
         <div class="text-[10px] text-slate-300 mt-2">${fmt(c.power)} Power</div></div>
     </button>`;
-  }).join(''):'<div class="col-span-full rounded-2xl border border-slate-700 p-8 text-center text-sm text-slate-400">Bạn chưa có thẻ trong túi. Có thể chuyển sang tab <b>CHỌN & MUA VIỀN</b> để xem viền avatar.</div>';
+  }).join('');
   document.getElementById('rep-modal').classList.remove('hidden');document.getElementById('rep-modal').classList.add('flex');
-  switchRepresentativeTab("cards");
 }
 function hideRepresentativePicker(){document.getElementById('rep-modal').classList.add('hidden');document.getElementById('rep-modal').classList.remove('flex')}
 function setRepresentative(id){localStorage.setItem(STORAGE_REP,String(id));hideRepresentativePicker();refreshLobby()}
@@ -1036,9 +721,7 @@ function renderRepresentative(){
   const el=document.getElementById('representative-card'); if(!el)return;
   const c=representativeCard();
   if(!c){el.className='rep-card empty shrink-0';el.innerHTML='<span class="absolute inset-0 grid place-items-center text-center p-2 z-10"><i class="fa-solid fa-plus text-amber-300 text-xl"></i><span class="text-[9px] font-black text-slate-400 uppercase tracking-wider">Thẻ đại diện</span></span>';return;}
-  const frame=equippedAvatarFrame();
-  el.className='rep-card shrink-0'+(frame?' avatar-framed frame-'+frame:'');
-  el.innerHTML=`${renderMedia(c)}<span class="frame-corner"></span>${frame.startsWith("premium-")?`<span class="frame-effects"></span>`:""}<span class="absolute bottom-0 left-0 right-0 bg-black/75 p-1.5 text-[8px] font-black text-center truncate z-[7]">${esc(c.name||'')}</span>`;
+  el.className='rep-card shrink-0';el.innerHTML=`${renderMedia(c)}<span class="absolute bottom-0 left-0 right-0 bg-black/75 p-1.5 text-[8px] font-black text-center truncate">${esc(c.name||'')}</span>`;
 }
 function renderMatchRankCard(){
   const el=document.getElementById("match-rank-card");
@@ -1938,11 +1621,6 @@ window.addEventListener('pagehide',markBattleForExit);
 
 window.addEventListener("DOMContentLoaded",()=>{
   loadData();
-  if(playerName && isBannedCharacterName(playerName)){
-    showNameBanWarning(playerName,`Tên nhân vật “${playerName}” đã bị quản trị viên cấm truy cập.`);
-    return;
-  }
-  if(playerName)startTopUpSync();
   const recovered=recoverAbandonedBattle();
   document.getElementById("player-name-input").addEventListener("keydown",e=>{if(e.key==="Enter")enterLobby()});
   if(recovered){
